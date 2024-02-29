@@ -118,6 +118,10 @@ export const integration = defineIntegration({
               locale: ${options.locales
                 .map((locale) => `"${locale}"`)
                 .join(" | ")};
+              getHtmlAttrs: () => {
+                lang: string;
+                dir: "rtl" | "ltr";
+              };
             };
           }`,
         });

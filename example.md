@@ -7,8 +7,10 @@ const {
     locale, // DONE
     localePath,
     switchLocalePath,
-    getHtmlAttrs,
-    setDynamicParams } = useI18n(Astro)
+    getHtmlAttrs, // DONE
+    getHead,
+    setDynamicParams
+} = useI18n(Astro)
 
 t('welcome')
 localePath('index')
