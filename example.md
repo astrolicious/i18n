@@ -9,7 +9,7 @@ const {
     switchLocalePath,
     getHtmlAttrs, // DONE
     getHead,
-    setDynamicParams
+    setDynamicParams // DONE
 } = useI18n(Astro)
 
 t('welcome')

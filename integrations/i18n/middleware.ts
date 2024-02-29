@@ -24,6 +24,7 @@ const extractLocaleFromUrl = (url: URL) => {
 export const onRequest = defineMiddleware((context, next) => {
   context.locals.__i18n = {
     locale: extractLocaleFromUrl(context.url),
+    dynamicParams: {}
   };
 
   next();

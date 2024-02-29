@@ -84,5 +84,15 @@ export const useI18n = (context) => {
       lang: locale,
       dir: dir(locale),
     }),
+    /**
+     *
+     * @param {Record<string, string>} params
+     */
+    setDynamicParams: (params) => {
+      context.locals.__i18n.dynamicParams = {
+        ...context.locals.__i18n.dynamicParams,
+        ...params,
+      };
+    },
   };
 };

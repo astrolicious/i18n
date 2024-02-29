@@ -122,6 +122,7 @@ export const integration = defineIntegration({
                 lang: string;
                 dir: "rtl" | "ltr";
               };
+              setDynamicParams: (params: Record<string, string>) => void;
             };
           }`,
         });
