@@ -1,10 +1,11 @@
 import { createResolver, defineIntegration } from "astro-integration-kit";
 import { corePlugins } from "astro-integration-kit/plugins";
 import { z } from "astro/zod";
-import addPageDirPlugin from "astro-pages/plugins/astro-integration-kit.ts";
+import { addPageDir } from "astro-pages";
 import { fileURLToPath } from "node:url";
 import { withoutTrailingSlash, withLeadingSlash } from "ufo";
 import { readFileSync } from "node:fs";
+import type { HookParameters, InjectedRoute } from "astro";
 
 const optionsSchema = z.object({
   strategy: z
@@ -50,9 +51,59 @@ const optionsSchema = z.object({
 
 export type Options = z.infer<typeof optionsSchema>;
 
+export type Route = {
+  locale: string;
+  originalPattern: string;
+  staticPattern: string;
+  injectedRoute: InjectedRoute;
+};
+
+const computeRoutes = (
+  params: Pick<
+    HookParameters<"astro:config:setup">,
+    "config" | "injectRoute" | "logger"
+  >,
+  { strategy, locales, defaultLocale, pages: customPages }: Options
+) => {
+  const routes: Array<Route> = [];
+
+  const { pages } = addPageDir({
+    ...params,
+    dir: "routes",
+    glob: ["**.{astro,ts,js}", "!**/_*"],
+  });
+  for (const locale of locales) {
+    for (const [originalPattern, entrypoint] of Object.entries(pages)) {
+      const isDefaultLocale = locale === defaultLocale;
+      const prefix =
+        isDefaultLocale && strategy === "prefixExceptDefault"
+          ? ""
+          : `/${locale}`;
+      const staticPattern = withLeadingSlash(
+        isDefaultLocale
+          ? originalPattern
+          : customPages?.[originalPattern]?.[locale] ?? originalPattern
+      );
+      const pattern = prefix + staticPattern;
+
+      routes.push({
+        locale,
+        originalPattern,
+        staticPattern,
+        injectedRoute: {
+          pattern,
+          entrypoint,
+        },
+      });
+    }
+  }
+
+  return routes;
+};
+
 export const integration = defineIntegration({
   name: "astro-i18n",
-  plugins: [...corePlugins, addPageDirPlugin],
+  plugins: [...corePlugins],
   optionsSchema,
   setup({ options }) {
     const { resolve } = createResolver(import.meta.url);
@@ -60,46 +111,29 @@ export const integration = defineIntegration({
     return {
       "astro:config:setup": ({
         config,
-        addPageDir,
         watchIntegration,
         injectRoute,
         addMiddleware,
         addVirtualImport,
         addDts,
+        logger,
       }) => {
         watchIntegration(resolve());
         watchIntegration(
           createResolver(fileURLToPath(config.srcDir)).resolve("routes")
         );
 
-        const { pages } = addPageDir({
-          dir: "routes",
-          glob: ["**.{astro,ts,js}", "!**/_*"],
-        });
-        for (const locale of options.locales) {
-          for (const [defaultPattern, entrypoint] of Object.entries(pages)) {
-            const isDefaultLocale = locale === options.defaultLocale;
-            const prefix =
-              isDefaultLocale && options.strategy === "prefixExceptDefault"
-                ? ""
-                : `/${locale}`;
-            const staticPattern = withLeadingSlash(
-              isDefaultLocale
-                ? defaultPattern
-                : options.pages?.[defaultPattern]?.[locale] ?? defaultPattern
-            );
-            const pattern = prefix + staticPattern;
-
-            injectRoute({
-              pattern,
-              entrypoint,
-            });
-          }
+        const routes = computeRoutes({ config, injectRoute, logger }, options);
+        for (const { injectedRoute } of routes) {
+          injectRoute(injectedRoute);
         }
 
         addVirtualImport({
-          name: "virtual:astro-i18n/options",
-          content: `export const options = ${JSON.stringify(options)}`,
+          name: "virtual:astro-i18n/internal",
+          content: `
+            export const options = ${JSON.stringify(options)};
+            export const routes = ${JSON.stringify(routes)};
+          `,
         });
 
         addMiddleware({
@@ -114,6 +148,11 @@ export const integration = defineIntegration({
         addDts({
           name: "astro-i18n",
           content: `declare module "i18n:astro/server" {
+            type LocalePath = ${routes
+              .filter((route) => route.locale === options.defaultLocale)
+              .map((route) => `"${route.originalPattern}"`)
+              .join(" | ")};
+
             export const useI18n: (context: import("astro").AstroGlobal | import("astro").APIContext) => {
               locale: ${options.locales
                 .map((locale) => `"${locale}"`)
@@ -123,34 +162,10 @@ export const integration = defineIntegration({
                 dir: "rtl" | "ltr";
               };
               setDynamicParams: (params: Record<string, string>) => void;
+              getLocalePath: (path: LocalePath, params?: Record<string, string | undefined>) => string;
             };
           }`,
         });
-      },
-      "astro:config:done": ({}) => {},
-      "astro:server:setup": ({}) => {},
-      "astro:server:start": ({}) => {},
-      "astro:server:done": ({}) => {},
-      "astro:build:setup": ({ pages, target }) => {
-        console.dir({ pages, target }, { depth: null });
-        const indexPageKey = "src/pages/index.astro";
-        const indexPage = pages.get("src/pages/index.astro")!;
-
-        pages.set(indexPageKey, {
-          ...indexPage,
-          route: { ...indexPage.route, route: "/about" },
-        });
-      },
-      "astro:build:start": ({}) => {},
-      "astro:build:generated": ({}) => {},
-      "astro:build:ssr": ({ entryPoints, manifest, middlewareEntryPoint }) => {
-        console.dir(
-          { entryPoints, manifest, middlewareEntryPoint },
-          { depth: null }
-        );
-      },
-      "astro:build:done": ({ pages, routes }) => {
-        console.dir({ pages, routes }, { depth: null });
       },
     };
   },

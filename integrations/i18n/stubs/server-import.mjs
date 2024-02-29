@@ -1,3 +1,5 @@
+import { routes } from "virtual:astro-i18n/internal";
+
 /**
  *
  * @param {string} locale
@@ -93,6 +95,34 @@ export const useI18n = (context) => {
         ...context.locals.__i18n.dynamicParams,
         ...params,
       };
+    },
+    /**
+     *
+     * @param {string} path
+     * @param {Record<string, string | undefined>} params
+     */
+    getLocalePath: (path, params = {}) => {
+      const route = routes.find(
+        (route) => route.locale === locale && route.originalPattern === path
+      );
+      if (!route) {
+        throw new Error("Invalid path");
+      }
+
+      let newPath = route.injectedRoute.pattern;
+      const matches = newPath.match(/\[([^\]]+)]/g);
+      if (matches) {
+        for (const match of matches) {
+          const key = match.slice(1, -1);
+          const value = params[key];
+          if (!value) {
+            throw new Error(`Must provide "${key}" param`);
+          }
+          newPath = newPath.replace(match, value);
+        }
+      }
+
+      return newPath;
     },
   };
 };

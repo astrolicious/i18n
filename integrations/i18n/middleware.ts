@@ -1,5 +1,5 @@
 import { defineMiddleware } from "astro:middleware";
-import { options } from "virtual:astro-i18n/options";
+import { options } from "virtual:astro-i18n/internal";
 import { withTrailingSlash } from "ufo";
 
 const extractLocaleFromUrl = (url: URL) => {

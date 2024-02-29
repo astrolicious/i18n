@@ -1,0 +1,3 @@
+- [ ] All server utilities
+- [ ] All client utilities
+- [ ] Handle trailingSlash

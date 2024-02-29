@@ -1,10 +1,12 @@
 ---
 import { useI18n } from "i18n:astro/server";
 
-const { locale, getHtmlAttrs, setDynamicParams } = useI18n(Astro);
+const { locale, getHtmlAttrs, setDynamicParams, getLocalePath } =
+  useI18n(Astro);
 console.log(`Locale from page: ${locale}`);
 
 setDynamicParams({ foo: "bar" });
+console.log(getLocalePath("/blog/[slug]", { slug: "abc" }));
 ---
 
 <html {...getHtmlAttrs()}>
