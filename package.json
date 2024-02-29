@@ -1,0 +1,23 @@
+{
+  "name": "astro-i18n-test",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.5.6",
+    "astro": "^4.4.6",
+    "astro-integration-kit": "^0.3.1",
+    "astro-pages": "^0.1.5",
+    "typescript": "^5.3.3",
+    "ufo": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.22"
+  }
+}
