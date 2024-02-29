@@ -6,7 +6,7 @@ const {
     t,
     locale, // DONE
     localePath, // DONE
-    switchLocalePath,
+    switchLocalePath, // DONE
     getHtmlAttrs, // DONE
     getHead,
     setDynamicParams // DONE

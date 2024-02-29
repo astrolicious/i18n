@@ -76,37 +76,6 @@ const dir = (locale) => {
 
 /**
  *
- * @param {string} patternString
- * @returns
- */
-const createRegExp = (patternString) => {
-  // Escape special characters in the input string
-  const escapedPattern = patternString.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-  // Construct the regular expression
-  const regexPattern = new RegExp(escapedPattern);
-
-  return regexPattern;
-};
-
-/**
- *
- * @param {string} inputString
- * @returns
- */
-function convertStringToRegExpPattern(inputString) {
-  // Escape special characters in the input string
-  const escapedString = inputString.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-  const regexPattern = escapedString.replace(/\[([^\]]+)\]/g, () => {
-    return `([a-zA-Z_]+)`;
-  });
-
-  return regexPattern;
-}
-
-/**
- *
  * @param {import("astro").AstroGlobal | import("astro").APIContext} context
  */
 export const useI18n = (context) => {
@@ -163,23 +132,30 @@ export const useI18n = (context) => {
    */
   const switchLocalePath = (locale) => {
     // TODO: sort routes so that more specific routes come first
-    const currentLocaleRoute = routes.find((route) => {
-      const regex = createRegExp(
-        convertStringToRegExpPattern(
-          withTrailingSlash(route.injectedRoute.pattern)
-        )
-      );
+    const currentLocaleRoute = routes
+      .filter((route) => route.locale === context.locals.__i18n.locale)
+      .find((route) => {
+        if (
+          Object.keys(context.locals.__i18n.dynamicParams).length === 0 &&
+          route.injectedRoute.pattern === context.locals.__i18n.pathname
+        ) {
+          return true;
+        }
 
-      // TODO: remove
-      console.log({ regex, pathname: context.locals.__i18n.pathname });
+        for (const param of Object.keys(
+          context.locals.__i18n.dynamicParams[locale]
+        )) {
+          if (!route.injectedRoute.pattern.includes(param)) {
+            return false;
+          }
+        }
 
-      return regex.test(context.locals.__i18n.pathname);
-    });
+        return true;
+      });
+
     if (!currentLocaleRoute) {
       throw new Error("Couldn't find a currentLocaleRoute. Open an issue");
     }
-    // TODO: remove
-    console.log(currentLocaleRoute);
 
     const route = routes.find(
       (route) =>
