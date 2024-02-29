@@ -3,7 +3,7 @@
 import { useI18n } from "i18n:astro/server"
 
 const {
-    t,
+    t, // DONE
     locale, // DONE
     localePath, // DONE
     switchLocalePath, // DONE

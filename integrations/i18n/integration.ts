@@ -264,9 +264,7 @@ export const integration = defineIntegration({
 
         addVirtualImport({
           name: "i18n:astro/server",
-          content:
-            readFileSync(resolve("./stubs/server-import.mjs"), "utf-8") +
-            `\nexport const locales = ${JSON.stringify(options.locales)};`,
+          content: readFileSync(resolve("./stubs/server-import.mjs"), "utf-8"),
         });
 
         const serverDts = `declare module "i18n:astro/server" {
@@ -290,6 +288,7 @@ export const integration = defineIntegration({
             };
             export const locales: ${JSON.stringify(options.locales)};
             export const getLocalePlaceholder: () => Locale;
+            export const t: typeof import("i18next").t;
           }`;
 
         addDts({

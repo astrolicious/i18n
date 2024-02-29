@@ -1,4 +1,7 @@
-import { routes } from "virtual:astro-i18n/internal";
+import { routes, options } from "virtual:astro-i18n/internal";
+export { t } from "i18next";
+
+export const locales = options.locales;
 
 /**
  *
