@@ -4,7 +4,8 @@ declare namespace App {
   interface Locals {
     __i18n: {
       locale: string;
-      dynamicParams: Record<string, string>;
+      pathname: string;
+      dynamicParams: Record<string, Record<string, string>>;
     };
   }
 }

@@ -4,8 +4,9 @@ import { z } from "astro/zod";
 import { addPageDir } from "astro-pages";
 import { fileURLToPath } from "node:url";
 import { withoutTrailingSlash, withLeadingSlash } from "ufo";
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import type { HookParameters, InjectedRoute } from "astro";
+import { dirname, relative, resolve } from "node:path";
 
 const optionsSchema = z.object({
   strategy: z
@@ -55,6 +56,7 @@ export type Route = {
   locale: string;
   originalPattern: string;
   staticPattern: string;
+  originalEntrypoint: string;
   injectedRoute: InjectedRoute;
 };
 
@@ -67,13 +69,18 @@ const computeRoutes = (
 ) => {
   const routes: Array<Route> = [];
 
+  const dir = "routes";
   const { pages } = addPageDir({
     ...params,
-    dir: "routes",
+    dir,
     glob: ["**.{astro,ts,js}", "!**/_*"],
   });
+
+  const dirPath = fileURLToPath(new URL(dir, params.config.srcDir));
+
   for (const locale of locales) {
     for (const [originalPattern, entrypoint] of Object.entries(pages)) {
+      // Handle pattern
       const isDefaultLocale = locale === defaultLocale;
       const prefix =
         isDefaultLocale && strategy === "prefixExceptDefault"
@@ -86,13 +93,26 @@ const computeRoutes = (
       );
       const pattern = prefix + staticPattern;
 
+      // Handle entrypoint
+      const newEntrypoint = resolve(
+        fileURLToPath(params.config.root),
+        "./.astro/astro-i18n/entrypoints",
+        locale,
+        relative(dirPath, entrypoint).replaceAll("\\", "/")
+      );
+      mkdirSync(dirname(newEntrypoint), { recursive: true });
+      let content = readFileSync(entrypoint, "utf-8");
+      content = content.replaceAll("getLocalePlaceholder()", `"${locale}"`);
+      writeFileSync(newEntrypoint, content, "utf-8");
+
       routes.push({
         locale,
         originalPattern,
         staticPattern,
+        originalEntrypoint: entrypoint,
         injectedRoute: {
           pattern,
-          entrypoint,
+          entrypoint: newEntrypoint,
         },
       });
     }
@@ -143,27 +163,33 @@ export const integration = defineIntegration({
 
         addVirtualImport({
           name: "i18n:astro/server",
-          content: readFileSync(resolve("./stubs/server-import.mjs"), "utf-8"),
+          content:
+            readFileSync(resolve("./stubs/server-import.mjs"), "utf-8") +
+            `\nexport const locales = ${JSON.stringify(options.locales)};`,
         });
         addDts({
           name: "astro-i18n",
           content: `declare module "i18n:astro/server" {
+            type Locale = ${options.locales
+              .map((locale) => `"${locale}"`)
+              .join(" | ")};
             type LocalePath = ${routes
               .filter((route) => route.locale === options.defaultLocale)
               .map((route) => `"${route.originalPattern}"`)
               .join(" | ")};
 
             export const useI18n: (context: import("astro").AstroGlobal | import("astro").APIContext) => {
-              locale: ${options.locales
-                .map((locale) => `"${locale}"`)
-                .join(" | ")};
+              locale: Locale;
               getHtmlAttrs: () => {
                 lang: string;
                 dir: "rtl" | "ltr";
               };
-              setDynamicParams: (params: Record<string, string>) => void;
+              setDynamicParams: (params: Record<string, Record<string, string>>) => void;
               getLocalePath: (path: LocalePath, params?: Record<string, string | undefined>) => string;
+              switchLocalePath: (locale: Locale) => string;
             };
+            export const locales: ${JSON.stringify(options.locales)};
+            export const getLocalePlaceholder: () => Locale;
           }`,
         });
       },

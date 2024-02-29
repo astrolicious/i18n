@@ -5,7 +5,7 @@ import { useI18n } from "i18n:astro/server"
 const {
     t,
     locale, // DONE
-    localePath,
+    localePath, // DONE
     switchLocalePath,
     getHtmlAttrs, // DONE
     getHead,

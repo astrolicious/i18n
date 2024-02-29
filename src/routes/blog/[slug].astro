@@ -1,0 +1,68 @@
+---
+import type { GetStaticPaths } from "astro";
+import { useI18n } from "i18n:astro/server";
+import { getLocalePlaceholder } from "i18n:astro/server";
+
+export const getStaticPaths = (() => {
+  const locale = getLocalePlaceholder();
+
+  const slugs = [
+    {
+      en: "a",
+      fr: "d",
+    },
+    {
+      en: "b",
+      fr: "e",
+    },
+    {
+      en: "c",
+      fr: "f",
+    },
+  ];
+
+  return slugs.map((slug) => ({
+    params: {
+      slug: slug[locale],
+    },
+    props: {
+      slugs: slug,
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+const { slugs } = Astro.props;
+
+const { setDynamicParams, switchLocalePath } = useI18n(Astro);
+
+setDynamicParams(
+  Object.entries(slugs)
+    .map(([locale, slug]) => ({ [locale]: { slug } }))
+    .reduce(
+      (e, obj) => ({
+        ...obj,
+        ...e,
+      }),
+      {}
+    )
+);
+
+console.log({
+  en: switchLocalePath('en'),
+  fr: switchLocalePath('fr'),
+})
+---
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Blog</title>
+  </head>
+  <body>
+    <h1>Blog {slug}</h1>
+  </body>
+</html>
