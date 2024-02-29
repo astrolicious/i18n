@@ -1,8 +1,8 @@
 ---
 import type { GetStaticPaths } from "astro";
-import { useI18n } from "i18n:astro/server";
-import { getLocalePlaceholder } from "i18n:astro/server";
+import { useI18n, getLocalePlaceholder } from "i18n:astro/server";
 import I18nHead from "#i18n/I18nHead.astro";
+import { t } from "i18next"
 
 export const getStaticPaths = (() => {
   const locale = getLocalePlaceholder();
@@ -53,6 +53,7 @@ console.log({
   en: switchLocalePath("en"),
   fr: switchLocalePath("fr"),
 });
+console.log(t('test:foo'))
 ---
 
 <html>

@@ -1,5 +1,7 @@
 ---
 import { useI18n } from "i18n:astro/server";
+import I18nHead from "#i18n/I18nHead.astro";
+import { t } from "i18next"
 
 const {
   locale,
@@ -16,6 +18,8 @@ console.log({
   en: switchLocalePath("en"),
   fr: switchLocalePath("fr"),
 });
+
+console.log(t('test:foo'))
 ---
 
 <html {...getHtmlAttrs()}>
@@ -25,6 +29,7 @@ console.log({
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>About</title>
+    <I18nHead />
   </head>
   <body>
     <h1>About</h1>

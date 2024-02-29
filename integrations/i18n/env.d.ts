@@ -13,6 +13,10 @@ declare namespace App {
 declare module "virtual:astro-i18n/internal" {
   export const options: import("./integration.js").Options;
   export const routes: Array<import("./integration.js").Route>;
+  export const i18nextConfig: {
+    namespaces: Array<string>;
+    defaultNamespace: string;
+  };
 }
 
 // TODO: reenable when proper monorepo

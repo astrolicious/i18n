@@ -1,3 +1,4 @@
 - [ ] All server utilities
 - [ ] All client utilities
+- [ ] test ssg + ssr
 - [ ] Handle trailingSlash

@@ -21,6 +21,7 @@ export default defineConfig({
         },
       },
       localesDir: "./src/locales",
+      defaultNamespace: "test",
       client: false,
       rootRedirect: undefined,
     }),

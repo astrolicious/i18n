@@ -14,10 +14,12 @@
     "astro": "^4.4.6",
     "astro-integration-kit": "^0.3.1",
     "astro-pages": "^0.1.5",
+    "i18next": "^23.10.0",
     "typescript": "^5.3.3",
     "ufo": "^1.4.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.22"
+    "@types/node": "^20.11.22",
+    "vite": "^5.1.4"
   }
 }

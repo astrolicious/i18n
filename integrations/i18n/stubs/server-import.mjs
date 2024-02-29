@@ -1,4 +1,3 @@
-import { withTrailingSlash } from "ufo";
 import { routes } from "virtual:astro-i18n/internal";
 
 /**
@@ -131,7 +130,6 @@ export const useI18n = (context) => {
    * @param {string} locale
    */
   const switchLocalePath = (locale) => {
-    // TODO: sort routes so that more specific routes come first
     const currentLocaleRoute = routes
       .filter((route) => route.locale === context.locals.__i18n.locale)
       .find((route) => {
@@ -143,7 +141,7 @@ export const useI18n = (context) => {
         }
 
         for (const param of Object.keys(
-          context.locals.__i18n.dynamicParams[locale]
+          context.locals.__i18n.dynamicParams?.[locale] ?? {}
         )) {
           if (!route.injectedRoute.pattern.includes(param)) {
             return false;

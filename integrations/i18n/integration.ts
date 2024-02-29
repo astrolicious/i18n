@@ -4,9 +4,16 @@ import { z } from "astro/zod";
 import { addPageDir } from "astro-pages";
 import { fileURLToPath } from "node:url";
 import { withoutTrailingSlash, withLeadingSlash } from "ufo";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+} from "node:fs";
 import type { HookParameters, InjectedRoute } from "astro";
-import { dirname, relative, resolve } from "node:path";
+import { basename, dirname, extname, join, relative, resolve } from "node:path";
+import { normalizePath } from "vite";
 
 const optionsSchema = z.object({
   strategy: z
@@ -37,6 +44,7 @@ const optionsSchema = z.object({
       )
     ),
   localesDir: z.string().optional().default("./src/locales"),
+  defaultNamespace: z.string().optional().default("common"),
   client: z.boolean().optional().default(false),
   rootRedirect: z
     .object({
@@ -98,7 +106,7 @@ const computeRoutes = (
         fileURLToPath(params.config.root),
         "./.astro/astro-i18n/entrypoints",
         locale,
-        relative(dirPath, entrypoint).replaceAll("\\", "/")
+        normalizePath(relative(dirPath, entrypoint))
       );
       mkdirSync(dirname(newEntrypoint), { recursive: true });
       // TODO: handle relative paths? or at least put it as a limitation
@@ -124,6 +132,76 @@ const computeRoutes = (
   return routes;
 };
 
+const handleI18next = (
+  { defaultLocale, defaultNamespace }: Options,
+  { root }: HookParameters<"astro:config:setup">["config"],
+  localesDirPath: string
+) => {
+  const getLocalesImports = (localesDir: string) => {
+    const data: Array<{
+      namespaceName: string;
+      fileName: string;
+      importName: string;
+    }> = [];
+
+    if (!existsSync(localesDir)) {
+      return data;
+    }
+
+    const filenames = readdirSync(localesDir).filter((f) =>
+      f.endsWith(".json")
+    );
+    let i = 0;
+    for (const fileName of filenames) {
+      data.push({
+        namespaceName: basename(fileName, extname(fileName)),
+        fileName,
+        importName: `_i18next${i}`,
+      });
+      i++;
+    }
+
+    return data;
+  };
+
+  const defaultLocalesDirPath = join(localesDirPath, defaultLocale);
+  const relativeLocalesPrefix =
+    normalizePath(
+      relative(fileURLToPath(new URL("./.astro/", root)), defaultLocalesDirPath)
+    ) + "/";
+
+  const localesImports = getLocalesImports(defaultLocalesDirPath);
+
+  const i18nextDts = `
+    import "i18next";
+    ${localesImports
+      .map(
+        ({ importName, fileName }) =>
+          `import type ${importName} from "${normalizePath(
+            join(relativeLocalesPrefix, fileName)
+          )}";`
+      )
+      .join("\n")}
+    declare module "i18next" {
+      interface CustomTypeOptions {
+        defaultNS: "${defaultNamespace}";
+        resources: {
+          ${localesImports
+            .map(
+              ({ namespaceName, importName }) =>
+                `"${namespaceName}": typeof ${importName};`
+            )
+            .join("\n")}
+        }
+      }
+    }`;
+
+  return {
+    i18nextDts,
+    i18nextNamespaces: localesImports.map((e) => e.namespaceName),
+  };
+};
+
 export const integration = defineIntegration({
   name: "astro-i18n",
   plugins: [...corePlugins],
@@ -146,16 +224,36 @@ export const integration = defineIntegration({
           createResolver(fileURLToPath(config.srcDir)).resolve("routes")
         );
 
+        const localesDirPath = fileURLToPath(
+          new URL(options.localesDir, config.root)
+        );
+        watchIntegration(localesDirPath);
+
         const routes = computeRoutes({ config, injectRoute, logger }, options);
         for (const { injectedRoute } of routes) {
           injectRoute(injectedRoute);
         }
+
+        const { i18nextDts, i18nextNamespaces } = handleI18next(
+          options,
+          config,
+          localesDirPath
+        );
+
+        addDts({
+          name: "i18next",
+          content: i18nextDts,
+        });
 
         addVirtualImport({
           name: "virtual:astro-i18n/internal",
           content: `
             export const options = ${JSON.stringify(options)};
             export const routes = ${JSON.stringify(routes)};
+            export const i18nextConfig = ${JSON.stringify({
+              namespaces: i18nextNamespaces,
+              defaultNamespace: options.defaultNamespace,
+            })};
           `,
         });
 
@@ -170,9 +268,8 @@ export const integration = defineIntegration({
             readFileSync(resolve("./stubs/server-import.mjs"), "utf-8") +
             `\nexport const locales = ${JSON.stringify(options.locales)};`,
         });
-        addDts({
-          name: "astro-i18n",
-          content: `declare module "i18n:astro/server" {
+
+        const serverDts = `declare module "i18n:astro/server" {
             type Locale = ${options.locales
               .map((locale) => `"${locale}"`)
               .join(" | ")};
@@ -193,7 +290,11 @@ export const integration = defineIntegration({
             };
             export const locales: ${JSON.stringify(options.locales)};
             export const getLocalePlaceholder: () => Locale;
-          }`,
+          }`;
+
+        addDts({
+          name: "astro-i18n",
+          content: [serverDts].join("\n\n"),
         });
       },
     };
