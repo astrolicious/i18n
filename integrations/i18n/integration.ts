@@ -164,6 +164,11 @@ const handleI18next = (
     return data;
   };
 
+  // TODO:
+  const getResources = () => {
+    return []
+  }
+
   const defaultLocalesDirPath = join(localesDirPath, defaultLocale);
   const relativeLocalesPrefix =
     normalizePath(
@@ -253,6 +258,7 @@ export const integration = defineIntegration({
             export const i18nextConfig = ${JSON.stringify({
               namespaces: i18nextNamespaces,
               defaultNamespace: options.defaultNamespace,
+              // TODO: resources
             })};
           `,
         });
