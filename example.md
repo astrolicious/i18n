@@ -8,7 +8,6 @@ const {
     localePath, // DONE
     switchLocalePath, // DONE
     getHtmlAttrs, // DONE
-    getHead,
     setDynamicParams // DONE
 } = useI18n(Astro)
 
@@ -20,7 +19,7 @@ switchLocalePath('fr')
 
 <html {...getHtmlAttrs()}>
     <head>
-        {getHead()}
+        <I18nHead /> <!-- DONE -->
     </head>
     <body>
         <h1>{t('title')}</h1>

@@ -101,8 +101,11 @@ const computeRoutes = (
         relative(dirPath, entrypoint).replaceAll("\\", "/")
       );
       mkdirSync(dirname(newEntrypoint), { recursive: true });
-      let content = readFileSync(entrypoint, "utf-8");
-      content = content.replaceAll("getLocalePlaceholder()", `"${locale}"`);
+      // TODO: handle relative paths? or at least put it as a limitation
+      const content = readFileSync(entrypoint, "utf-8").replaceAll(
+        "getLocalePlaceholder()",
+        `"${locale}"`
+      );
       writeFileSync(newEntrypoint, content, "utf-8");
 
       routes.push({

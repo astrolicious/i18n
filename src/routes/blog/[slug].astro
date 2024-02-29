@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from "astro";
 import { useI18n } from "i18n:astro/server";
 import { getLocalePlaceholder } from "i18n:astro/server";
+import I18nHead from "#i18n/I18nHead.astro";
 
 export const getStaticPaths = (() => {
   const locale = getLocalePlaceholder();
@@ -49,9 +50,9 @@ setDynamicParams(
 );
 
 console.log({
-  en: switchLocalePath('en'),
-  fr: switchLocalePath('fr'),
-})
+  en: switchLocalePath("en"),
+  fr: switchLocalePath("fr"),
+});
 ---
 
 <html>
@@ -61,6 +62,7 @@ console.log({
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Blog</title>
+    <I18nHead />
   </head>
   <body>
     <h1>Blog {slug}</h1>

@@ -1,0 +1,15 @@
+---
+import { locales, useI18n } from "i18n:astro/server";
+
+const { switchLocalePath } = useI18n(Astro);
+const data = locales.map((locale) => ({
+  locale,
+  href: Astro.url.origin + switchLocalePath(locale),
+}));
+---
+
+{
+  data.map(({ locale, href }) => (
+    <link rel="alternate" hreflang={locale} {href} />
+  ))
+}
