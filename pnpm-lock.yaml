@@ -10,7 +10,7 @@ dependencies:
     version: 0.5.6(typescript@5.3.3)
   '@astrojs/node':
     specifier: ^8.2.3
-    version: 8.2.3(astro@4.4.6)
+    version: 8.2.3(astro@4.4.8)
   '@astrojs/react':
     specifier: ^3.0.10
     version: 3.0.10(@types/react-dom@18.2.19)(@types/react@18.2.61)(react-dom@18.2.0)(react@18.2.0)(vite@5.1.4)
@@ -21,14 +21,14 @@ dependencies:
     specifier: ^18.2.19
     version: 18.2.19
   astro:
-    specifier: ^4.4.6
-    version: 4.4.6(@types/node@20.11.22)(typescript@5.3.3)
+    specifier: ^4.4.8
+    version: 4.4.8(@types/node@20.11.22)(typescript@5.3.3)
   astro-integration-kit:
-    specifier: ^0.3.1
-    version: 0.3.1(astro@4.4.6)
+    specifier: ^0.4.0
+    version: 0.4.0(astro@4.4.8)(react@18.2.0)
   astro-pages:
     specifier: ^0.1.5
-    version: 0.1.5(astro-integration-kit@0.3.1)(astro@4.4.6)
+    version: 0.1.5(astro-integration-kit@0.4.0)(astro@4.4.8)
   i18next:
     specifier: ^23.10.0
     version: 23.10.0
@@ -141,12 +141,12 @@ packages:
       - supports-color
     dev: false
 
-  /@astrojs/node@8.2.3(astro@4.4.6):
+  /@astrojs/node@8.2.3(astro@4.4.8):
     resolution: {integrity: sha512-VQQy7QIv4X+5dlKCEchYIxMFryS+BwDOFGNzeRmHe1/P819TlNup9/M8XqnWW4aZPxV7P6CoDeFxX6HuT/kOmQ==}
     peerDependencies:
       astro: ^4.2.0
     dependencies:
-      astro: 4.4.6(@types/node@20.11.22)(typescript@5.3.3)
+      astro: 4.4.8(@types/node@20.11.22)(typescript@5.3.3)
       send: 0.18.0
       server-destroy: 1.0.1
     transitivePeerDependencies:
@@ -1061,28 +1061,48 @@ packages:
     resolution: {integrity: sha512-I1jXZMjAgCMmxT4qxXfPXa6SthSoE8h6gkSI9BGGNv8mP8G/v0blc+qFnZu6K42vTOiuME596QaLO0TP3Lk0xg==}
     dev: false
 
-  /astro-integration-kit@0.3.1(astro@4.4.6):
-    resolution: {integrity: sha512-xM3SpeMerq0aQdgV9QyDBwGm/IptgRDbdOSlmoP3ErXLD4sPeb82itfNuatXFbsudjxqcrhsPGqbapvksPG7Bw==}
+  /astro-integration-kit@0.4.0(astro@4.4.8)(react@18.2.0):
+    resolution: {integrity: sha512-idgFQySnNnmccwjJ90FS51l3/U3RfKMb9RHT3St67iW8R5BJw+ZQl44n9HHAwT5k1uwS1wFTpCR0WKI5HiLe4Q==}
     peerDependencies:
-      astro: ^4.0.0
+      '@vitejs/plugin-react': ^4.2.1
+      astro: ^4.4.1
+      preact: ^10.19.4
+      react: ^18.2.0
+      solid-js: ^1.8.15
+      svelte: ^4.2.11
+      vue: ^3.4.19
+    peerDependenciesMeta:
+      '@vitejs/plugin-react':
+        optional: true
+      preact:
+        optional: true
+      react:
+        optional: true
+      solid-js:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
     dependencies:
-      astro: 4.4.6(@types/node@20.11.22)(typescript@5.3.3)
+      astro: 4.4.8(@types/node@20.11.22)(typescript@5.3.3)
       pathe: 1.1.2
+      react: 18.2.0
     dev: false
 
-  /astro-pages@0.1.5(astro-integration-kit@0.3.1)(astro@4.4.6):
+  /astro-pages@0.1.5(astro-integration-kit@0.4.0)(astro@4.4.8):
     resolution: {integrity: sha512-7nF4rfdWZlbYXrU9kII2qZQLugBlRYjgqqLxahlQiqqeGOwZH8E3mw2MpOucaY90D9srTzV89rnFA5YyZmDDfA==}
     peerDependencies:
       astro: ^4.4.0
       astro-integration-kit: ^0.3.0
     dependencies:
-      astro: 4.4.6(@types/node@20.11.22)(typescript@5.3.3)
-      astro-integration-kit: 0.3.1(astro@4.4.6)
+      astro: 4.4.8(@types/node@20.11.22)(typescript@5.3.3)
+      astro-integration-kit: 0.4.0(astro@4.4.8)(react@18.2.0)
       fast-glob: 3.3.2
     dev: false
 
-  /astro@4.4.6(@types/node@20.11.22)(typescript@5.3.3):
-    resolution: {integrity: sha512-kns2TtiMYTyDPgcvtaQjMfBhY/F/2+O3eSX4XWH13FFQW1hp7AcTXfGwq8SvJ14JNoU4bsKeJbaB9CxUN9ZQlQ==}
+  /astro@4.4.8(@types/node@20.11.22)(typescript@5.3.3):
+    resolution: {integrity: sha512-jAAfzvgHOfuZmqJjnSDownVNuWKYmsGkrFqecEppHarMA/cZ5QIboW6GQHZ8eGZQdtYRCjON3h4i64XFZfuwSg==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
