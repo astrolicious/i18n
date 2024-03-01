@@ -1,18 +1,19 @@
+import type { HookParameters, InjectedRoute } from "astro";
 import { createResolver, defineIntegration } from "astro-integration-kit";
 import { corePlugins } from "astro-integration-kit/plugins";
-import { z } from "astro/zod";
 import { addPageDir } from "astro-pages";
-import { fileURLToPath } from "node:url";
-import { withoutTrailingSlash, withLeadingSlash } from "ufo";
+import { z } from "astro/zod";
 import {
   existsSync,
   mkdirSync,
   readFileSync,
   readdirSync,
+  rmSync,
   writeFileSync,
 } from "node:fs";
-import type { HookParameters, InjectedRoute } from "astro";
 import { basename, dirname, extname, join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { withLeadingSlash, withoutTrailingSlash } from "ufo";
 import { normalizePath } from "vite";
 
 const routeStringSchema = z.string().regex(/^[a-zA-Z0-9_/[\]-]+$/);
@@ -100,6 +101,11 @@ const computeRoutes = (
   });
 
   const dirPath = fileURLToPath(new URL(dir, params.config.srcDir));
+  const entrypointsDirPath = resolve(
+    fileURLToPath(params.config.root),
+    "./.astro/astro-i18n/entrypoints"
+  );
+  rmSync(entrypointsDirPath, { recursive: true, force: true });
 
   for (const locale of locales) {
     for (const [originalPattern, entrypoint] of Object.entries(pages)) {
@@ -117,9 +123,8 @@ const computeRoutes = (
       const pattern = prefix + staticPattern;
 
       // Handle entrypoint
-      const newEntrypoint = resolve(
-        fileURLToPath(params.config.root),
-        "./.astro/astro-i18n/entrypoints",
+      const newEntrypoint = join(
+        entrypointsDirPath,
         locale,
         normalizePath(relative(dirPath, entrypoint))
       );
