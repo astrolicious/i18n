@@ -1,11 +1,27 @@
 ---
+import { i18nextConfig } from "virtual:astro-i18n/internal";
+
 const { locale, pathname, dynamicParams } = Astro.locals.__i18n;
 ---
 
-<script define:vars={{ locale, pathname, dynamicParams }}>
+<script define:vars={{ locale, pathname, dynamicParams, i18nextConfig }}>
   window.__i18n = {
     locale,
     pathname,
     dynamicParams,
+    i18nextConfig,
   };
+</script>
+
+<script>
+  import { init as initI18next } from "i18next";
+
+  const { locale, i18nextConfig } = window.__i18n;
+
+  initI18next({
+    lng: locale,
+    defaultNS: i18nextConfig.defaultNamespace,
+    ns: i18nextConfig.namespaces,
+    resources: i18nextConfig.resources,
+  });
 </script>

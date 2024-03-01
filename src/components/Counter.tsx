@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { locale, getLocalePath, switchLocalePath } from "i18n:astro/client";
+import { locale, getLocalePath, switchLocalePath, t } from "i18n:astro/client";
 
 console.log("A");
 console.log({
@@ -11,6 +11,7 @@ console.log({
   },
 });
 console.log("B");
+console.log(t("test:foo"));
 export default function Counter({
   children,
   count: initialCount,

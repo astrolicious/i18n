@@ -10,14 +10,16 @@ declare namespace App {
   }
 }
 
+type I18nextConfig = {
+  namespaces: Array<string>;
+  defaultNamespace: string;
+  resources: Record<string, Record<string, any>>;
+};
+
 declare module "virtual:astro-i18n/internal" {
   export const options: import("./integration.js").Options;
   export const routes: Array<import("./integration.js").Route>;
-  export const i18nextConfig: {
-    namespaces: Array<string>;
-    defaultNamespace: string;
-    resources: Record<string, Record<string, any>>;
-  };
+  export const i18nextConfig: I18nextConfig;
 }
 
 type InternalGlobalI18n = {
@@ -28,7 +30,9 @@ type InternalGlobalI18n = {
 
 declare const __i18n: InternalGlobalI18n;
 interface Window {
-  __i18n: InternalGlobalI18n;
+  __i18n: InternalGlobalI18n & {
+    i18nextConfig: I18nextConfig;
+  };
 }
 
 // TODO: reenable when proper monorepo

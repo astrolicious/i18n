@@ -1,4 +1,5 @@
 import { routes } from "virtual:astro-i18n/internal";
+export { t } from "i18next"
 
 const polymorphicContext = import.meta.env.SSR ? __i18n : window.__i18n;
 

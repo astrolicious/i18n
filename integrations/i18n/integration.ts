@@ -333,6 +333,7 @@ export const integration = defineIntegration({
             export const locale: Locale;
             export const getLocalePath: (path: LocalePath, params?: Record<string, string | undefined>) => string;
             export const switchLocalePath: (locale: Locale) => string;
+            export const t: typeof import("i18next").t;
           }`;
         }
 
