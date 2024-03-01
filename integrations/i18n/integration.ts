@@ -133,8 +133,9 @@ const computeRoutes = (
 };
 
 const handleI18next = (
-  { defaultLocale, defaultNamespace }: Options,
+  { defaultLocale, locales, defaultNamespace }: Options,
   { root }: HookParameters<"astro:config:setup">["config"],
+  logger: HookParameters<"astro:config:setup">["logger"],
   localesDirPath: string
 ) => {
   const getLocalesImports = (localesDir: string) => {
@@ -166,8 +167,32 @@ const handleI18next = (
 
   // TODO:
   const getResources = () => {
-    return []
-  }
+    const resources: Record<string, Record<string, any>> = {};
+
+    const localesDirs = locales
+      .map((locale) => ({
+        locale,
+        dir: normalizePath(join(localesDirPath, locale)),
+      }))
+      .filter((e) => existsSync(e.dir));
+
+    for (const { locale, dir } of localesDirs) {
+      const filenames = readdirSync(dir).filter((f) => f.endsWith(".json"));
+
+      for (const fileName of filenames) {
+        const path = normalizePath(join(dir, fileName));
+        try {
+          const content = JSON.parse(readFileSync(path, "utf-8"));
+
+          resources[locale] ??= {};
+          resources[locale][basename(fileName, extname(fileName))] = content;
+        } catch (err) {
+          logger.warn(`Can't parse "${path}", skipping.`);
+        }
+      }
+    }
+    return resources;
+  };
 
   const defaultLocalesDirPath = join(localesDirPath, defaultLocale);
   const relativeLocalesPrefix =
@@ -178,7 +203,6 @@ const handleI18next = (
   const localesImports = getLocalesImports(defaultLocalesDirPath);
 
   const i18nextDts = `
-    import "i18next";
     ${localesImports
       .map(
         ({ importName, fileName }) =>
@@ -204,6 +228,7 @@ const handleI18next = (
   return {
     i18nextDts,
     i18nextNamespaces: localesImports.map((e) => e.namespaceName),
+    i18nextResources: getResources(),
   };
 };
 
@@ -229,8 +254,8 @@ export const integration = defineIntegration({
           createResolver(fileURLToPath(config.srcDir)).resolve("routes")
         );
 
-        const localesDirPath = fileURLToPath(
-          new URL(options.localesDir, config.root)
+        const localesDirPath = normalizePath(
+          fileURLToPath(new URL(options.localesDir, config.root))
         );
         watchIntegration(localesDirPath);
 
@@ -239,11 +264,8 @@ export const integration = defineIntegration({
           injectRoute(injectedRoute);
         }
 
-        const { i18nextDts, i18nextNamespaces } = handleI18next(
-          options,
-          config,
-          localesDirPath
-        );
+        const { i18nextDts, i18nextNamespaces, i18nextResources } =
+          handleI18next(options, config, logger, localesDirPath);
 
         addDts({
           name: "i18next",
@@ -258,7 +280,7 @@ export const integration = defineIntegration({
             export const i18nextConfig = ${JSON.stringify({
               namespaces: i18nextNamespaces,
               defaultNamespace: options.defaultNamespace,
-              // TODO: resources
+              resources: i18nextResources,
             })};
           `,
         });

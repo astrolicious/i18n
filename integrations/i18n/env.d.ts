@@ -16,6 +16,7 @@ declare module "virtual:astro-i18n/internal" {
   export const i18nextConfig: {
     namespaces: Array<string>;
     defaultNamespace: string;
+    resources: Record<string, Record<string, any>>;
   };
 }
 

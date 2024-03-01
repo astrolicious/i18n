@@ -34,15 +34,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   initI18next({
     lng: locale,
-    debug: import.meta.env.DEV,
     defaultNS: i18nextConfig.defaultNamespace,
     ns: i18nextConfig.namespaces,
-    // TODO: load via virtual module
-    resources: {
-      en: {
-        test: tmp,
-      },
-    },
+    resources: i18nextConfig.resources
   });
 
   next();
