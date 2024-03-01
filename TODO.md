@@ -2,6 +2,9 @@
   - [x] t: load `resources` using a virtual module
 - [x] All client utilities
 - [ ] test ssg + ssr
+- [ ] handle relative paths
 - [ ] Handle trailingSlash
 - [ ] check namings
+- [ ] list limitations
+- [ ] sitemap
 - [ ] create a proper new integration + repo

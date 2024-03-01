@@ -1,7 +1,7 @@
 import { defineConfig } from "astro/config";
 import i18n from "./integrations/i18n";
-
 import react from "@astrojs/react";
+import node from "@astrojs/node";
 
 // https://astro.build/config
 export default defineConfig({
@@ -25,5 +25,9 @@ export default defineConfig({
     defaultNamespace: "test",
     client: true,
     rootRedirect: undefined
-  }), react()]
+  }), react()],
+  output: "static",
+  // adapter: node({
+    // mode: "standalone"
+  // })
 });
