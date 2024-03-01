@@ -331,6 +331,7 @@ export const integration = defineIntegration({
 
           clientDts = `declare module "i18n:astro/client" {
             export const locale: Locale;
+            export const getLocalePath: (path: LocalePath, params?: Record<string, string | undefined>) => string;
           }`;
         }
 

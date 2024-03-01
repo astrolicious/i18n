@@ -3,4 +3,5 @@
 - [ ] All client utilities
 - [ ] test ssg + ssr
 - [ ] Handle trailingSlash
+- [ ] check namings
 - [ ] create a proper new integration + repo

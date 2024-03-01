@@ -26,7 +26,7 @@ switchLocalePath('fr')
         <script>
             import {
                 t,
-                localePath,
+                localePath, //
                 switchLocalePath,
                 locale // DONE
             } from "i18n:astro/client"
