@@ -77,8 +77,16 @@ const computeRoutes = (
 ) => {
   const routes: Array<Route> = [];
 
+  const isPrerendered = (str: string) => {
+    const match = str.match(/export const prerender = (\w+)/);
+    if (match) {
+      return match[1] === "true";
+    }
+    return undefined;
+  };
+
   const dir = "routes";
-  const { pages } = addPageDir({
+  let { pages } = addPageDir({
     ...params,
     dir,
     glob: ["**.{astro,ts,js}", "!**/_*"],
@@ -115,6 +123,7 @@ const computeRoutes = (
         `"${locale}"`
       );
       writeFileSync(newEntrypoint, content, "utf-8");
+      const prerender = isPrerendered(content);
 
       routes.push({
         locale,
@@ -124,6 +133,7 @@ const computeRoutes = (
         injectedRoute: {
           pattern,
           entrypoint: newEntrypoint,
+          prerender,
         },
       });
     }

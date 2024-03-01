@@ -1,6 +1,6 @@
 - [x] All server utilities
   - [x] t: load `resources` using a virtual module
-- [ ] All client utilities
+- [x] All client utilities
 - [ ] test ssg + ssr
 - [ ] Handle trailingSlash
 - [ ] check namings

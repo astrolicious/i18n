@@ -1,5 +1,9 @@
 ---
-import { i18nextConfig } from "virtual:astro-i18n/internal";
+import { options, i18nextConfig } from "virtual:astro-i18n/internal";
+
+if (!options.client) {
+  throw new Error(`You need to set "client: true" in the integration config in order to use this component.`)
+}
 
 const { locale, pathname, dynamicParams } = Astro.locals.__i18n;
 ---
