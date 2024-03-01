@@ -97,6 +97,9 @@ export const useI18n = (context) => {
       ...context.locals.__i18n.dynamicParams,
       ...params,
     };
+    globalThis.__i18n.dynamicParams = {
+      ...context.locals.__i18n.dynamicParams,
+    };
   };
 
   /**

@@ -22,6 +22,8 @@ declare module "virtual:astro-i18n/internal" {
 
 type InternalGlobalI18n = {
   locale: string;
+  pathname: string;
+  dynamicParams: Record<string, Record<string, string>>;
 };
 
 declare const __i18n: InternalGlobalI18n;

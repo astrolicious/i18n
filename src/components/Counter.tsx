@@ -1,9 +1,16 @@
 import { useState } from "react";
-import { locale, getLocalePath } from "i18n:astro/client";
+import { locale, getLocalePath, switchLocalePath } from "i18n:astro/client";
 
-console.log('A')
-console.log({ locale, path: getLocalePath("/about") });
-console.log('B')
+console.log("A");
+console.log({
+  locale,
+  path: getLocalePath("/about"),
+  switch: {
+    en: switchLocalePath("en"),
+    fr: switchLocalePath("fr"),
+  },
+});
+console.log("B");
 export default function Counter({
   children,
   count: initialCount,

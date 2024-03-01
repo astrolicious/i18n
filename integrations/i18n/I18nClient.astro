@@ -1,10 +1,11 @@
 ---
-import { locales, useI18n } from "i18n:astro/server";
-
-const { locale } = useI18n(Astro)
+const { locale, pathname, dynamicParams } = Astro.locals.__i18n;
 ---
-<script define:vars={{ locale }}>
-    window.__i18n = {
-        locale
-    }
+
+<script define:vars={{ locale, pathname, dynamicParams }}>
+  window.__i18n = {
+    locale,
+    pathname,
+    dynamicParams,
+  };
 </script>
