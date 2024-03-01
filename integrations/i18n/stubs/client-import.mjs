@@ -1,5 +1,15 @@
-import { routes } from "virtual:astro-i18n/internal";
-export { t } from "i18next"
+import { routes, options } from "virtual:astro-i18n/internal";
+export { t } from "i18next";
+
+// On first run, globalThis.__i18n is not yet injected by the middleware
+if (import.meta.env.SSR) {
+  globalThis.__i18n ??= {
+    locale: options.defaultLocale,
+    pathname:
+      options.strategy === "prefix" ? `/${options.defaultLocale}/` : "/",
+    dynamicParams: {},
+  };
+}
 
 const polymorphicContext = import.meta.env.SSR ? __i18n : window.__i18n;
 
