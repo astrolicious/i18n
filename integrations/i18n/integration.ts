@@ -144,6 +144,7 @@ const computeRoutes = (
         originalEntrypoint: entrypoint,
         injectedRoute: {
           pattern,
+          // TODO: https://github.com/withastro/astro/issues/10294
           entrypoint: newEntrypoint,
           prerender,
         },
