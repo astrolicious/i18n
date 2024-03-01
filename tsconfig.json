@@ -1,9 +1,14 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "C:/Users/Admin/Documents/github/florian-lefebvre/astro-i18n-test",
     "paths": {
-      "#i18n/*": ["./integrations/i18n/*"]
-    }
+      "~/*": ["./src/*"],
+      "#i18n/*": [
+        "./integrations/i18n/*"
+      ]
+    },
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
   }
 }

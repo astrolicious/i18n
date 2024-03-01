@@ -1,0 +1,10 @@
+---
+import { locales, useI18n } from "i18n:astro/server";
+
+const { locale } = useI18n(Astro)
+---
+<script define:vars={{ locale }}>
+    window.__i18n = {
+        locale
+    }
+</script>

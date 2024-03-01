@@ -20,6 +20,15 @@ declare module "virtual:astro-i18n/internal" {
   };
 }
 
+type InternalGlobalI18n = {
+  locale: string;
+};
+
+declare const __i18n: InternalGlobalI18n;
+interface Window {
+  __i18n: InternalGlobalI18n;
+}
+
 // TODO: reenable when proper monorepo
 // declare module "i18n:astro/server" {
 //   type Locale = string;

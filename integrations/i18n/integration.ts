@@ -295,15 +295,15 @@ export const integration = defineIntegration({
           content: readFileSync(resolve("./stubs/server-import.mjs"), "utf-8"),
         });
 
-        const serverDts = `declare module "i18n:astro/server" {
-            type Locale = ${options.locales
-              .map((locale) => `"${locale}"`)
-              .join(" | ")};
-            type LocalePath = ${routes
-              .filter((route) => route.locale === options.defaultLocale)
-              .map((route) => `"${route.originalPattern}"`)
-              .join(" | ")};
+        const serverDts = `type Locale = ${options.locales
+          .map((locale) => `"${locale}"`)
+          .join(" | ")};
+        type LocalePath = ${routes
+          .filter((route) => route.locale === options.defaultLocale)
+          .map((route) => `"${route.originalPattern}"`)
+          .join(" | ")};
 
+          declare module "i18n:astro/server" {
             export const useI18n: (context: import("astro").AstroGlobal | import("astro").APIContext) => {
               locale: Locale;
               getHtmlAttrs: () => {
@@ -319,9 +319,26 @@ export const integration = defineIntegration({
             export const t: typeof import("i18next").t;
           }`;
 
+        let clientDts: string | undefined = undefined;
+        if (options.client) {
+          addVirtualImport({
+            name: "i18n:astro/client",
+            content: readFileSync(
+              resolve("./stubs/client-import.mjs"),
+              "utf-8"
+            ),
+          });
+
+          clientDts = `declare module "i18n:astro/client" {
+            export const locale: Locale;
+          }`;
+        }
+
         addDts({
           name: "astro-i18n",
-          content: [serverDts].join("\n\n"),
+          content: [serverDts, clientDts]
+            .filter((dts) => dts !== undefined)
+            .join("\n\n"),
         });
       },
     };
