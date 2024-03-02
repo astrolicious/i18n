@@ -4,6 +4,7 @@
 - [ ] test ssg + ssr
 - [ ] handle relative paths
 - [ ] Handle trailingSlash
+- [ ] `localePath`: type Params
 - [ ] check namings
 - [ ] list limitations
 - [ ] sitemap

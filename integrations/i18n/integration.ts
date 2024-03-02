@@ -77,10 +77,10 @@ export type Route = {
 };
 
 const computeRoutes = (
-  params: Pick<
-    HookParameters<"astro:config:setup">,
-    "config" | "injectRoute" | "logger"
-  >,
+  {
+    config,
+    logger,
+  }: Pick<HookParameters<"astro:config:setup">, "config" | "logger">,
   { strategy, locales, defaultLocale, pages: customPages }: Options
 ) => {
   const routes: Array<Route> = [];
@@ -95,14 +95,15 @@ const computeRoutes = (
 
   const dir = "routes";
   let { pages } = addPageDir({
-    ...params,
+    config,
+    logger,
     dir,
     glob: ["**.{astro,ts,js}", "!**/_*"],
   });
 
-  const dirPath = fileURLToPath(new URL(dir, params.config.srcDir));
+  const dirPath = fileURLToPath(new URL(dir, config.srcDir));
   const entrypointsDirPath = resolve(
-    fileURLToPath(params.config.root),
+    fileURLToPath(config.root),
     "./.astro/astro-i18n/entrypoints"
   );
   rmSync(entrypointsDirPath, { recursive: true, force: true });
@@ -267,7 +268,7 @@ export const integration = defineIntegration({
         watchIntegration,
         injectRoute,
         addMiddleware,
-        addVirtualImport,
+        addVirtualImports,
         addDts,
         logger,
       }) => {
@@ -281,7 +282,7 @@ export const integration = defineIntegration({
         );
         watchIntegration(localesDirPath);
 
-        const routes = computeRoutes({ config, injectRoute, logger }, options);
+        const routes = computeRoutes({ config, logger }, options);
         for (const { injectedRoute } of routes) {
           injectRoute(injectedRoute);
         }
@@ -294,9 +295,9 @@ export const integration = defineIntegration({
           content: i18nextDts,
         });
 
-        addVirtualImport({
-          name: "virtual:astro-i18n/internal",
-          content: `
+        const imports: Record<string, string> = {};
+
+        imports["virtual:astro-i18n/internal"] = `
             export const options = ${JSON.stringify(options)};
             export const routes = ${JSON.stringify(routes)};
             export const i18nextConfig = ${JSON.stringify({
@@ -304,18 +305,17 @@ export const integration = defineIntegration({
               defaultNamespace: options.defaultNamespace,
               resources: i18nextResources,
             })};
-          `,
-        });
+          `;
 
         addMiddleware({
           entrypoint: resolve("./middleware.ts"),
           order: "pre",
         });
 
-        addVirtualImport({
-          name: "i18n:astro/server",
-          content: readFileSync(resolve("./stubs/server-import.mjs"), "utf-8"),
-        });
+        imports["i18n:astro/server"] = readFileSync(
+          resolve("./stubs/server-import.mjs"),
+          "utf-8"
+        );
 
         const serverDts = `type Locale = ${options.locales
           .map((locale) => `"${locale}"`)
@@ -343,13 +343,10 @@ export const integration = defineIntegration({
 
         let clientDts: string | undefined = undefined;
         if (options.client) {
-          addVirtualImport({
-            name: "i18n:astro/client",
-            content: readFileSync(
-              resolve("./stubs/client-import.mjs"),
-              "utf-8"
-            ),
-          });
+          imports["i18n:astro/client"] = readFileSync(
+            resolve("./stubs/client-import.mjs"),
+            "utf-8"
+          );
 
           clientDts = `declare module "i18n:astro/client" {
             export const locale: Locale;
@@ -358,6 +355,8 @@ export const integration = defineIntegration({
             export const t: typeof import("i18next").t;
           }`;
         }
+
+        addVirtualImports(imports);
 
         addDts({
           name: "astro-i18n",
