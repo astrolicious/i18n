@@ -1,11 +1,10 @@
 - [x] All server utilities
-  - [x] t: load `resources` using a virtual module
 - [x] All client utilities
-- [ ] test ssg + ssr
-- [ ] handle relative paths
+- [ ] Test ssg + ssr
+- [x] Handle relative paths
 - [ ] Handle trailingSlash
 - [ ] `localePath`: type Params
-- [ ] check namings
-- [ ] list limitations
-- [ ] sitemap
-- [ ] create a proper new integration + repo
+- [ ] Check namings
+- [ ] List limitations
+- [ ] Create a proper new integration + repo
+- [ ] Sitemap

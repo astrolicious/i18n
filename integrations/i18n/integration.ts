@@ -130,11 +130,48 @@ const computeRoutes = (
         normalizePath(relative(dirPath, entrypoint))
       );
       mkdirSync(dirname(newEntrypoint), { recursive: true });
-      // TODO: handle relative paths? or at least put it as a limitation
-      const content = readFileSync(entrypoint, "utf-8").replaceAll(
+      let content = readFileSync(entrypoint, "utf-8").replaceAll(
         "getLocalePlaceholder()",
         `"${locale}"`
       );
+
+      let [, frontmatter, ...remainingParts] = content.split("---");
+
+      function updateRelativeImports(
+        originalPath: string,
+        currentFilePath: string,
+        newFilePath: string
+      ) {
+        const absolutePath = resolve(dirname(currentFilePath), originalPath);
+        const relativePath = relative(dirname(newFilePath), absolutePath);
+        return normalizePath(relativePath);
+      }
+
+      // Handle static imports
+      frontmatter = frontmatter.replace(
+        /import\s+([\s\S]*?)\s+from\s+['"](.+?)['"]/g,
+        (_match, p1: string, p2: string) => {
+          console.log(p1);
+          const updatedPath =
+            p2.startsWith("./") || p2.startsWith("../")
+              ? updateRelativeImports(p2, entrypoint, newEntrypoint)
+              : p2;
+          return `import ${p1} from '${updatedPath}'`;
+        }
+      );
+      // Handle dynamic imports
+      frontmatter = frontmatter.replace(
+        /import\s*\(\s*['"](.+?)['"]\s*\)/g,
+        (_match, p1: string) => {
+          const updatedPath =
+            p1.startsWith("./") || p1.startsWith("../")
+              ? updateRelativeImports(p1, entrypoint, newEntrypoint)
+              : p1;
+          return `import('${updatedPath}')`;
+        }
+      );
+
+      content = `---${frontmatter}---${remainingParts.join("---")}`;
       writeFileSync(newEntrypoint, content, "utf-8");
       const prerender = isPrerendered(content);
 

@@ -2,7 +2,7 @@
 import { useI18n, t } from "i18n:astro/server";
 import I18nHead from "#i18n/I18nHead.astro";
 import I18nClient from "#i18n/I18nClient.astro";
-import Counter from "~/components/Counter";
+import Counter from "../components/Counter";
 
 const { locale, getHtmlAttrs, getLocalePath, switchLocalePath } =
   useI18n(Astro);
