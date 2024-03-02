@@ -2,7 +2,6 @@ import type { HookParameters, InjectedRoute } from "astro";
 import { createResolver, defineIntegration } from "astro-integration-kit";
 import { corePlugins } from "astro-integration-kit/plugins";
 import { addPageDir } from "astro-pages";
-import { z } from "astro/zod";
 import {
   existsSync,
   mkdirSync,
@@ -13,60 +12,9 @@ import {
 } from "node:fs";
 import { basename, dirname, extname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { withLeadingSlash, withoutTrailingSlash } from "ufo";
+import { withLeadingSlash } from "ufo";
 import { normalizePath } from "vite";
-
-const routeStringSchema = z.string().regex(/^[a-zA-Z0-9_/[\]-]+$/);
-
-const optionsSchema = z
-  .object({
-    strategy: z
-      .enum(["prefix", "prefixExceptDefault"])
-      .optional()
-      .default("prefixExceptDefault"),
-    defaultLocale: z.string(),
-    locales: z.array(z.string()),
-    pages: z
-      .record(
-        routeStringSchema,
-        z.record(z.string(), routeStringSchema.optional())
-      )
-      .optional()
-      .default({})
-      .transform((val) =>
-        Object.fromEntries(
-          Object.entries(val).map(([key, value]) => [
-            withLeadingSlash(withoutTrailingSlash(key)),
-            value,
-          ])
-        )
-      ),
-    localesDir: z.string().optional().default("./src/locales"),
-    defaultNamespace: z.string().optional().default("common"),
-    client: z.boolean().optional().default(false),
-    rootRedirect: z
-      .object({
-        status: z.number(),
-        path: z.string(),
-      })
-      .optional(),
-  })
-  .refine((val) => val.locales.includes(val.defaultLocale), {
-    message: "`locales` must include the `defaultLocale`",
-    path: ["locales"],
-  })
-  .refine(
-    (val) =>
-      Object.values(val.pages).every((record) =>
-        Object.keys(record).every((locale) => val.locales.includes(locale))
-      ),
-    {
-      message: "`pages` locale keys must be included in `locales`",
-      path: ["pages"],
-    }
-  );
-
-export type Options = z.infer<typeof optionsSchema>;
+import { optionsSchema, type Options } from "./options.js";
 
 export type Route = {
   locale: string;
