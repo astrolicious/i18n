@@ -1,146 +1,28 @@
-import type { HookParameters } from "astro";
 import { createResolver, defineIntegration } from "astro-integration-kit";
-import { corePlugins } from "astro-integration-kit/plugins";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { basename, extname, join, relative } from "node:path";
-import { fileURLToPath } from "node:url";
-import { normalizePath } from "vite";
-import { optionsSchema, type Options } from "./options.js";
+import { readFileSync } from "node:fs";
+import { handleI18next } from "./i18next/index.js";
+import { optionsSchema } from "./options.js";
 import { handleRouting } from "./routing/index.js";
-
-const handleI18next = (
-  { defaultLocale, locales, defaultNamespace }: Options,
-  { root }: HookParameters<"astro:config:setup">["config"],
-  logger: HookParameters<"astro:config:setup">["logger"],
-  localesDirPath: string
-) => {
-  const getLocalesImports = (localesDir: string) => {
-    const data: Array<{
-      namespaceName: string;
-      fileName: string;
-      importName: string;
-    }> = [];
-
-    if (!existsSync(localesDir)) {
-      return data;
-    }
-
-    const filenames = readdirSync(localesDir).filter((f) =>
-      f.endsWith(".json")
-    );
-    let i = 0;
-    for (const fileName of filenames) {
-      data.push({
-        namespaceName: basename(fileName, extname(fileName)),
-        fileName,
-        importName: `_i18next${i}`,
-      });
-      i++;
-    }
-
-    return data;
-  };
-
-  const getResources = () => {
-    const resources: Record<string, Record<string, any>> = {};
-
-    const localesDirs = locales
-      .map((locale) => ({
-        locale,
-        dir: normalizePath(join(localesDirPath, locale)),
-      }))
-      .filter((e) => existsSync(e.dir));
-
-    for (const { locale, dir } of localesDirs) {
-      const filenames = readdirSync(dir).filter((f) => f.endsWith(".json"));
-
-      for (const fileName of filenames) {
-        const path = normalizePath(join(dir, fileName));
-        try {
-          const content = JSON.parse(readFileSync(path, "utf-8"));
-
-          resources[locale] ??= {};
-          resources[locale][basename(fileName, extname(fileName))] = content;
-        } catch (err) {
-          logger.warn(`Can't parse "${path}", skipping.`);
-        }
-      }
-    }
-    return resources;
-  };
-
-  const defaultLocalesDirPath = join(localesDirPath, defaultLocale);
-  const relativeLocalesPrefix =
-    normalizePath(
-      relative(fileURLToPath(new URL("./.astro/", root)), defaultLocalesDirPath)
-    ) + "/";
-
-  const localesImports = getLocalesImports(defaultLocalesDirPath);
-
-  const i18nextDts = `
-    ${localesImports
-      .map(
-        ({ importName, fileName }) =>
-          `import type ${importName} from "${normalizePath(
-            join(relativeLocalesPrefix, fileName)
-          )}";`
-      )
-      .join("\n")}
-    declare module "i18next" {
-      interface CustomTypeOptions {
-        defaultNS: "${defaultNamespace}";
-        resources: {
-          ${localesImports
-            .map(
-              ({ namespaceName, importName }) =>
-                `"${namespaceName}": typeof ${importName};`
-            )
-            .join("\n")}
-        }
-      }
-    }`;
-
-  return {
-    i18nextDts,
-    i18nextNamespaces: localesImports.map((e) => e.namespaceName),
-    i18nextResources: getResources(),
-  };
-};
+import {
+  addDts,
+  addVirtualImports,
+  watchIntegration,
+} from "astro-integration-kit/utilities";
 
 export const integration = defineIntegration({
   name: "astro-i18n",
-  plugins: [...corePlugins],
   optionsSchema,
-  setup({ options }) {
+  setup({ options, name }) {
     const { resolve } = createResolver(import.meta.url);
 
     return {
       "astro:config:setup": (params) => {
-        const {
-          config,
-          watchIntegration,
-          addMiddleware,
-          addVirtualImports,
-          addDts,
-          logger,
-        } = params;
+        const { addMiddleware, config, logger } = params;
 
-        watchIntegration(resolve());
-
-        const localesDirPath = normalizePath(
-          fileURLToPath(new URL(options.localesDir, config.root))
-        );
-        watchIntegration(localesDirPath);
+        watchIntegration({ ...params, dir: resolve() });
 
         const { routes } = handleRouting(params)(options);
-
-        const { i18nextDts, i18nextNamespaces, i18nextResources } =
-          handleI18next(options, config, logger, localesDirPath);
-
-        addDts({
-          name: "i18next",
-          content: i18nextDts,
-        });
+        const { namespaces, resources } = handleI18next(params)(options);
 
         const imports: Record<string, string> = {};
 
@@ -148,9 +30,9 @@ export const integration = defineIntegration({
             export const options = ${JSON.stringify(options)};
             export const routes = ${JSON.stringify(routes)};
             export const i18nextConfig = ${JSON.stringify({
-              namespaces: i18nextNamespaces,
+              namespaces,
               defaultNamespace: options.defaultNamespace,
-              resources: i18nextResources,
+              resources,
             })};
           `;
 
@@ -203,9 +85,11 @@ export const integration = defineIntegration({
           }`;
         }
 
-        addVirtualImports(imports);
+        addVirtualImports({ ...params, name, imports });
 
         addDts({
+          logger,
+          ...config,
           name: "astro-i18n",
           content: [serverDts, clientDts]
             .filter((dts) => dts !== undefined)
