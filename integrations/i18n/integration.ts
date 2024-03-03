@@ -17,7 +17,7 @@ export const integration = defineIntegration({
 
     return {
       "astro:config:setup": (params) => {
-        const { addMiddleware, config, logger } = params;
+        const { addMiddleware, config, logger, updateConfig } = params;
 
         watchIntegration({ ...params, dir: resolve() });
 
@@ -99,6 +99,14 @@ export const integration = defineIntegration({
         });
 
         logger.info("Types injected");
+
+        if (options.strategy === "prefix" && options.rootRedirect) {
+          updateConfig({
+            redirects: {
+              "/": options.rootRedirect,
+            },
+          });
+        }
       },
     };
   },

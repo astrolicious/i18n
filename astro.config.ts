@@ -5,29 +5,34 @@ import node from "@astrojs/node";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [i18n({
-    strategy: "prefixExceptDefault",
-    // strategy: "prefix",
-    defaultLocale: "en",
-    locales: ["en", "fr"],
-    pages: {
-      about: {
-        fr: "a-propos"
+  integrations: [
+    i18n({
+      strategy: "prefix",
+      defaultLocale: "en",
+      locales: ["en", "fr"],
+      pages: {
+        about: {
+          fr: "a-propos",
+        },
+        "blog/[slug]": {
+          fr: "le-blog/[slug]",
+        },
+        "blog/[category]/[slug]": {
+          fr: "le-blog/[category]/[slug]",
+        },
       },
-      "blog/[slug]": {
-        fr: "le-blog/[slug]"
+      localesDir: "./src/locales",
+      defaultNamespace: "test",
+      client: true,
+      rootRedirect: {
+        status: 301,
+        destination: "/en",
       },
-      "blog/[category]/[slug]": {
-        fr: "le-blog/[category]/[slug]"
-      }
-    },
-    localesDir: "./src/locales",
-    defaultNamespace: "test",
-    client: true,
-    rootRedirect: undefined
-  }), react()],
+    }),
+    react(),
+  ],
   output: "static",
   // adapter: node({
-    // mode: "standalone"
+  // mode: "standalone"
   // })
 });
