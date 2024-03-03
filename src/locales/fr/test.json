@@ -1,3 +1,5 @@
 {
-    "foo": "bar fr"
+  "home": "Accueil",
+  "about": "A propos",
+  "blog": "Le blog"
 }

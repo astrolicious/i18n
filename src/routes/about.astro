@@ -14,7 +14,7 @@ console.log({
   fr: switchLocalePath("fr"),
 });
 
-console.log(t("test:foo"));
+const title = t("about");
 
 // export const prerender = false;
 ---
@@ -25,12 +25,12 @@ console.log(t("test:foo"));
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>About</title>
+    <title>{title}</title>
     <I18nHead />
     <I18nClient />
   </head>
   <body>
-    <h1>About</h1>
+    <h1>{title}</h1>
     <Counter count={0} client:load>
       <p>Test</p>
     </Counter>

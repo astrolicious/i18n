@@ -52,7 +52,8 @@ console.log({
   en: switchLocalePath("en"),
   fr: switchLocalePath("fr"),
 });
-console.log(t('test:foo'))
+
+const title = t("blog");
 ---
 
 <html>
@@ -61,10 +62,10 @@ console.log(t('test:foo'))
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Blog</title>
+    <title>{title}</title>
     <I18nHead />
   </head>
   <body>
-    <h1>Blog {slug}</h1>
+    <h1>{title} {slug}</h1>
   </body>
 </html>

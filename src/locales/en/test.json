@@ -1,3 +1,5 @@
 {
-    "foo": "bar"
+    "home": "Home",
+    "about": "About",
+    "blog": "The blog"
 }
