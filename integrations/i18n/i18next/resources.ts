@@ -1,11 +1,11 @@
-import type { HookParameters } from "astro";
+import type { AstroIntegrationLogger, HookParameters } from "astro";
 import type { Options } from "../options.js";
 import { normalizePath } from "vite";
 import { basename, extname, join } from "node:path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 
 export const getResources = (
-  { logger }: HookParameters<"astro:config:setup">,
+  logger: AstroIntegrationLogger,
   { locales }: Options,
   localesDir: string
 ) => {
@@ -33,5 +33,9 @@ export const getResources = (
       }
     }
   }
+
+  logger.info(
+    `${Object.keys(Object.values(resources)).length} resources registered`
+  );
   return resources;
 };

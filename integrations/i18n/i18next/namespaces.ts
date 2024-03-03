@@ -1,7 +1,12 @@
+import type { AstroIntegrationLogger } from "astro";
 import { existsSync, readdirSync } from "node:fs";
 import { basename, extname } from "node:path";
 
-export const getNamespaces = (defaultLocalesDir: string) => {
+export const getNamespaces = (
+  defaultLocalesDir: string,
+  defaultNamespace: string,
+  logger: AstroIntegrationLogger
+) => {
   const importsData: Array<{
     namespaceName: string;
     fileName: string;
@@ -20,6 +25,12 @@ export const getNamespaces = (defaultLocalesDir: string) => {
   }
 
   const namespaces = importsData.map((e) => e.namespaceName);
+  logger.info(
+    `Detected namespaces: ${namespaces.map((ns) => `"${ns}"`).join(",")}`
+  );
+  if (!namespaces.includes(defaultNamespace)) {
+    logger.warn(`Default namespace "${defaultNamespace}" is not detected`)
+  }
 
   return {
     importsData,

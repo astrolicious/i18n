@@ -1,4 +1,8 @@
-import type { HookParameters, InjectedRoute } from "astro";
+import type {
+  AstroIntegrationLogger,
+  HookParameters,
+  InjectedRoute,
+} from "astro";
 import type { Options } from "../options.js";
 import { addPageDir } from "astro-pages";
 import { ROUTES_DIR, type Route } from "./index.js";
@@ -41,7 +45,8 @@ const generateRoute = (
   { strategy, defaultLocale, pages }: Options,
   locale: string,
   page: InjectedRoute,
-  paths: ReturnType<typeof getPaths>
+  paths: ReturnType<typeof getPaths>,
+  logger: AstroIntegrationLogger
 ): Route => {
   const getPattern = () => {
     const isDefaultLocale = locale === defaultLocale;
@@ -71,7 +76,7 @@ const generateRoute = (
 
     mkdirSync(dirname(entrypoint), { recursive: true });
 
-    let content = readFileSync(entrypoint, "utf-8");
+    let content = readFileSync(page.entrypoint, "utf-8");
 
     content = content.replaceAll("getLocalePlaceholder()", `"${locale}"`);
 
@@ -80,7 +85,6 @@ const generateRoute = (
     frontmatter = frontmatter.replace(
       /import\s+([\s\S]*?)\s+from\s+['"](.+?)['"]/g,
       (_match, p1: string, p2: string) => {
-        console.log(p1);
         const updatedPath =
           p2.startsWith("./") || p2.startsWith("../")
             ? updateRelativeImports(p2, page.entrypoint, entrypoint)
@@ -116,6 +120,7 @@ const generateRoute = (
   );
   const { prerender } = transformContent(entrypoint);
 
+  logger.info(`Injecting "${pattern}" route`);
   return {
     locale,
     originalPattern: page.pattern,
@@ -129,26 +134,36 @@ const generateRoute = (
   };
 };
 
-export const registerRoutes =
-  (params: HookParameters<"astro:config:setup">) => (options: Options) => {
-    const { injectRoute } = params;
-    const { locales } = options;
+export const registerRoutes = (
+  params: HookParameters<"astro:config:setup">,
+  options: Options,
+  logger: AstroIntegrationLogger
+) => {
+  const { config, injectRoute } = params;
+  const { locales } = options;
+  logger.info("Starting routes injection...");
 
-    const paths = getPaths(params);
-    rmSync(paths.entrypointsDir, { recursive: true, force: true });
+  const paths = getPaths(params);
+  rmSync(paths.entrypointsDir, { recursive: true, force: true });
+  logger.info(
+    `Cleaned "${normalizePath(
+      relative(fileURLToPath(config.root), paths.entrypointsDir)
+    )}" directory`
+  );
 
-    const routes: Array<Route> = [];
-    const pages = getPages(params);
+  const routes: Array<Route> = [];
+  const pages = getPages(params);
 
-    for (const locale of locales) {
-      for (const page of pages) {
-        routes.push(generateRoute(options, locale, page, paths));
-      }
+  for (const locale of locales) {
+    for (const page of pages) {
+      routes.push(generateRoute(options, locale, page, paths, logger));
     }
+  }
 
-    for (const { injectedRoute } of routes) {
-      injectRoute(injectedRoute);
-    }
+  for (const { injectedRoute } of routes) {
+    injectRoute(injectedRoute);
+  }
 
-    return { routes };
-  };
+  logger.info("Routes injection done");
+  return { routes };
+};

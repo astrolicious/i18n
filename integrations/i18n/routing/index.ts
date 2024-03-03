@@ -13,13 +13,16 @@ export type Route = {
 };
 
 export const ROUTES_DIR = "routes";
+const LOGGER_LABEL = "astro-i18n/routing";
 
 export const handleRouting =
   (params: HookParameters<"astro:config:setup">) => (options: Options) => {
-    const {} = params;
+    const logger = params.logger.fork(LOGGER_LABEL);
+    logger.info("Starting...");
 
-    handleRoutesHMR(params);
-    const { routes } = registerRoutes(params)(options);
+    handleRoutesHMR(params, logger);
+    const { routes } = registerRoutes(params, options, logger);
 
+    logger.info("Done");
     return { routes };
   };
