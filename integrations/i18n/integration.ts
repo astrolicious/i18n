@@ -1,145 +1,12 @@
-import type { HookParameters, InjectedRoute } from "astro";
+import type { HookParameters } from "astro";
 import { createResolver, defineIntegration } from "astro-integration-kit";
 import { corePlugins } from "astro-integration-kit/plugins";
-import { addPageDir } from "astro-pages";
-import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  readdirSync,
-  rmSync,
-  writeFileSync,
-} from "node:fs";
-import { basename, dirname, extname, join, relative, resolve } from "node:path";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { basename, extname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { withLeadingSlash } from "ufo";
 import { normalizePath } from "vite";
 import { optionsSchema, type Options } from "./options.js";
-
-export type Route = {
-  locale: string;
-  originalPattern: string;
-  staticPattern: string;
-  originalEntrypoint: string;
-  injectedRoute: InjectedRoute;
-};
-
-const computeRoutes = (
-  {
-    config,
-    logger,
-  }: Pick<HookParameters<"astro:config:setup">, "config" | "logger">,
-  { strategy, locales, defaultLocale, pages: customPages }: Options
-) => {
-  const routes: Array<Route> = [];
-
-  const isPrerendered = (str: string) => {
-    const match = str.match(/export const prerender = (\w+)/);
-    if (match) {
-      return match[1] === "true";
-    }
-    return undefined;
-  };
-
-  const dir = "routes";
-  let { pages } = addPageDir({
-    config,
-    logger,
-    dir,
-    glob: ["**.{astro,ts,js}", "!**/_*"],
-  });
-
-  const dirPath = fileURLToPath(new URL(dir, config.srcDir));
-  const entrypointsDirPath = resolve(
-    fileURLToPath(config.root),
-    "./.astro/astro-i18n/entrypoints"
-  );
-  rmSync(entrypointsDirPath, { recursive: true, force: true });
-
-  for (const locale of locales) {
-    for (const [originalPattern, entrypoint] of Object.entries(pages)) {
-      // Handle pattern
-      const isDefaultLocale = locale === defaultLocale;
-      const prefix =
-        isDefaultLocale && strategy === "prefixExceptDefault"
-          ? ""
-          : `/${locale}`;
-      const staticPattern = withLeadingSlash(
-        isDefaultLocale
-          ? originalPattern
-          : customPages?.[originalPattern]?.[locale] ?? originalPattern
-      );
-      const pattern = prefix + staticPattern;
-
-      // Handle entrypoint
-      const newEntrypoint = join(
-        entrypointsDirPath,
-        locale,
-        normalizePath(relative(dirPath, entrypoint))
-      );
-      mkdirSync(dirname(newEntrypoint), { recursive: true });
-      let content = readFileSync(entrypoint, "utf-8").replaceAll(
-        "getLocalePlaceholder()",
-        `"${locale}"`
-      );
-
-      let [, frontmatter, ...remainingParts] = content.split("---");
-
-      function updateRelativeImports(
-        originalPath: string,
-        currentFilePath: string,
-        newFilePath: string
-      ) {
-        const absolutePath = resolve(dirname(currentFilePath), originalPath);
-        const relativePath = relative(dirname(newFilePath), absolutePath);
-        return normalizePath(relativePath);
-      }
-
-      // Handle static imports
-      frontmatter = frontmatter.replace(
-        /import\s+([\s\S]*?)\s+from\s+['"](.+?)['"]/g,
-        (_match, p1: string, p2: string) => {
-          console.log(p1);
-          const updatedPath =
-            p2.startsWith("./") || p2.startsWith("../")
-              ? updateRelativeImports(p2, entrypoint, newEntrypoint)
-              : p2;
-          return `import ${p1} from '${updatedPath}'`;
-        }
-      );
-      // Handle dynamic imports
-      frontmatter = frontmatter.replace(
-        /import\s*\(\s*['"](.+?)['"]\s*\)/g,
-        (_match, p1: string) => {
-          const updatedPath =
-            p1.startsWith("./") || p1.startsWith("../")
-              ? updateRelativeImports(p1, entrypoint, newEntrypoint)
-              : p1;
-          return `import('${updatedPath}')`;
-        }
-      );
-
-      content = `---${frontmatter}---${remainingParts.join("---")}`;
-      writeFileSync(newEntrypoint, content, "utf-8");
-      const prerender = isPrerendered(content);
-
-      routes.push({
-        locale,
-        originalPattern,
-        staticPattern,
-        originalEntrypoint: entrypoint,
-        injectedRoute: {
-          pattern,
-          // TODO: https://github.com/withastro/astro/issues/10294
-          entrypoint: newEntrypoint,
-          prerender,
-        },
-      });
-    }
-  }
-
-  return routes;
-};
+import { handleRouting } from "./routing/index.js";
 
 const handleI18next = (
   { defaultLocale, locales, defaultNamespace }: Options,
@@ -248,29 +115,24 @@ export const integration = defineIntegration({
     const { resolve } = createResolver(import.meta.url);
 
     return {
-      "astro:config:setup": ({
-        config,
-        watchIntegration,
-        injectRoute,
-        addMiddleware,
-        addVirtualImports,
-        addDts,
-        logger,
-      }) => {
+      "astro:config:setup": (params) => {
+        const {
+          config,
+          watchIntegration,
+          addMiddleware,
+          addVirtualImports,
+          addDts,
+          logger,
+        } = params;
+
         watchIntegration(resolve());
-        watchIntegration(
-          createResolver(fileURLToPath(config.srcDir)).resolve("routes")
-        );
 
         const localesDirPath = normalizePath(
           fileURLToPath(new URL(options.localesDir, config.root))
         );
         watchIntegration(localesDirPath);
 
-        const routes = computeRoutes({ config, logger }, options);
-        for (const { injectedRoute } of routes) {
-          injectRoute(injectedRoute);
-        }
+        const { routes } = handleRouting(params)(options);
 
         const { i18nextDts, i18nextNamespaces, i18nextResources } =
           handleI18next(options, config, logger, localesDirPath);

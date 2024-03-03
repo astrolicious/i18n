@@ -18,7 +18,7 @@ type I18nextConfig = {
 
 declare module "virtual:astro-i18n/internal" {
   export const options: import("./options.js").Options;
-  export const routes: Array<import("./integration.js").Route>;
+  export const routes: Array<import("./routing/index.js").Route>;
   export const i18nextConfig: I18nextConfig;
 }
 
