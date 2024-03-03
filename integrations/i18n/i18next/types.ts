@@ -3,8 +3,8 @@ import { addDts } from "astro-integration-kit/utilities";
 import type { Options } from "../options.js";
 import type { getNamespaces } from "./namespaces.js";
 import { normalizePath } from "vite";
-import { join, relative } from "path";
-import { fileURLToPath } from "url";
+import { join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 
 export const injectTypes = (
   { logger, config: { root, srcDir } }: HookParameters<"astro:config:setup">,

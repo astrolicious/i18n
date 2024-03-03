@@ -1,5 +1,5 @@
-import { existsSync, readdirSync } from "fs";
-import { basename, extname } from "path";
+import { existsSync, readdirSync } from "node:fs";
+import { basename, extname } from "node:path";
 
 export const getNamespaces = (defaultLocalesDir: string) => {
   const importsData: Array<{

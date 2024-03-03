@@ -1,8 +1,8 @@
 import type { HookParameters } from "astro";
 import type { Options } from "../options.js";
 import { normalizePath } from "vite";
-import { basename, extname, join } from "path";
-import { existsSync, readFileSync, readdirSync } from "fs";
+import { basename, extname, join } from "node:path";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 
 export const getResources = (
   { logger }: HookParameters<"astro:config:setup">,

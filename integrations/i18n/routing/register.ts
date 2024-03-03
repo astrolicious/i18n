@@ -2,9 +2,9 @@ import type { HookParameters, InjectedRoute } from "astro";
 import type { Options } from "../options.js";
 import { addPageDir } from "astro-pages";
 import { ROUTES_DIR, type Route } from "./index.js";
-import { fileURLToPath } from "url";
-import { dirname, join, relative, resolve } from "path";
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join, relative, resolve } from "node:path";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { withLeadingSlash } from "ufo";
 import { normalizePath } from "vite";
 

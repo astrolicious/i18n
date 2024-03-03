@@ -1,7 +1,7 @@
 import type { HookParameters } from "astro";
 import { watchIntegration } from "astro-integration-kit/utilities";
-import { join } from "path";
-import { fileURLToPath } from "url";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { ROUTES_DIR } from "./index.js";
 
 export const handleRoutesHMR = (

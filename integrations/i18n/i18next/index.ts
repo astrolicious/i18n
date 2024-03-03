@@ -1,11 +1,11 @@
 import type { HookParameters } from "astro";
 import type { Options } from "../options.js";
 import { normalizePath } from "vite";
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 import { watchIntegration } from "astro-integration-kit/utilities";
 import { getNamespaces } from "./namespaces.js";
 import { getResources } from "./resources.js";
-import { join } from "path";
+import { join } from "node:path";
 import { injectTypes } from "./types.js";
 
 const getPaths = (
