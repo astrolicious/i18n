@@ -1,18 +1,10 @@
 ---
 import { t } from "i18n:astro/server";
+import Layout from "~/layouts/Layout.astro";
 
 const title = t("home");
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
-  </head>
-  <body>
-    <h1>{title}</h1>
-  </body>
-</html>
+<Layout {title}>
+  <h1>{title}</h1>
+</Layout>

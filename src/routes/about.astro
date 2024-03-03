@@ -1,12 +1,9 @@
 ---
 import { useI18n, t } from "i18n:astro/server";
-import I18nHead from "#i18n/components/I18nHead.astro";
-import I18nClient from "#i18n/components/I18nClient.astro";
 import Counter from "../components/Counter";
+import Layout from "~/layouts/Layout.astro";
 
-const { locale, getHtmlAttrs, getLocalePath, switchLocalePath } =
-  useI18n(Astro);
-console.log(`Locale from page: ${locale}`);
+const { getLocalePath, switchLocalePath } = useI18n(Astro);
 
 console.log(getLocalePath("/blog/[slug]", { slug: "abc" }));
 console.log({
@@ -19,20 +16,9 @@ const title = t("about");
 // export const prerender = false;
 ---
 
-<html {...getHtmlAttrs()}>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
-    <I18nHead />
-    <I18nClient />
-  </head>
-  <body>
-    <h1>{title}</h1>
-    <Counter count={0} client:load>
-      <p>Test</p>
-    </Counter>
-  </body>
-</html>
+<Layout {title}>
+  <h1>{title}</h1>
+  <Counter count={0} client:load>
+    <p>Test</p>
+  </Counter>
+</Layout>

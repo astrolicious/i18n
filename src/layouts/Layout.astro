@@ -1,0 +1,28 @@
+---
+import I18NClient from "#i18n/components/I18nClient.astro";
+import I18NHead from "#i18n/components/I18nHead.astro";
+import { useI18n } from "i18n:astro/server";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+
+const { getHtmlAttrs } = useI18n(Astro);
+---
+
+<html {...getHtmlAttrs()}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <I18NHead />
+    <I18NClient />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

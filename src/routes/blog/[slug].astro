@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from "astro";
 import { useI18n, getLocalePlaceholder, t } from "i18n:astro/server";
-import I18nHead from "#i18n/components/I18nHead.astro";
+import Layout from "~/layouts/Layout.astro";
 
 export const getStaticPaths = (() => {
   const locale = getLocalePlaceholder();
@@ -56,16 +56,6 @@ console.log({
 const title = t("blog");
 ---
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
-    <I18nHead />
-  </head>
-  <body>
-    <h1>{title} {slug}</h1>
-  </body>
-</html>
+<Layout {title}>
+  <h1>{title} {slug}</h1>
+</Layout>
