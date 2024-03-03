@@ -18,11 +18,9 @@ const LOGGER_LABEL = "astro-i18n/routing";
 export const handleRouting =
   (params: HookParameters<"astro:config:setup">) => (options: Options) => {
     const logger = params.logger.fork(LOGGER_LABEL);
-    logger.info("Starting...");
 
     handleRoutesHMR(params, logger);
     const { routes } = registerRoutes(params, options, logger);
 
-    logger.info("Done");
     return { routes };
   };

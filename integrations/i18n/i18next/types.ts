@@ -7,14 +7,17 @@ import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const injectTypes = (
-  { logger, config: { root, srcDir } }: HookParameters<"astro:config:setup">,
+  { logger, config }: HookParameters<"astro:config:setup">,
   { defaultNamespace }: Options,
   importsData: ReturnType<typeof getNamespaces>["importsData"],
   defaultLocalesDir: string
 ) => {
   const relativeLocalesPrefix =
     normalizePath(
-      relative(fileURLToPath(new URL("./.astro/", root)), defaultLocalesDir)
+      relative(
+        fileURLToPath(new URL("./.astro/", config.root)),
+        defaultLocalesDir
+      )
     ) + "/";
 
   const content = `
@@ -36,5 +39,5 @@ export const injectTypes = (
     export {}
     `;
 
-  addDts({ logger, root, srcDir, name: "i18next", content });
+  addDts({ logger, ...config, name: "i18next", content });
 };

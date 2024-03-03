@@ -72,6 +72,8 @@ export const integration = defineIntegration({
 
         let clientDts: string | undefined = undefined;
         if (options.client) {
+          logger.info("Client features enabled");
+
           imports["i18n:astro/client"] = readFileSync(
             resolve("./stubs/client-import.mjs"),
             "utf-8"
@@ -95,6 +97,8 @@ export const integration = defineIntegration({
             .filter((dts) => dts !== undefined)
             .join("\n\n"),
         });
+
+        logger.info("Types injected");
       },
     };
   },

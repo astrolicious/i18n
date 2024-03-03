@@ -7,7 +7,6 @@ import { getNamespaces } from "./namespaces.js";
 import { getResources } from "./resources.js";
 import { join, relative } from "node:path";
 import { injectTypes } from "./types.js";
-import { createLogger } from "./utils.js";
 
 const getPaths = (
   { config }: HookParameters<"astro:config:setup">,
@@ -24,10 +23,11 @@ const getPaths = (
   };
 };
 
+const LOGGER_LABEL = "astro-i18n/i18next";
+
 export const handleI18next =
   (params: HookParameters<"astro:config:setup">) => (options: Options) => {
-    const logger = createLogger(params.logger);
-    logger.info("Starting...");
+    const logger = params.logger.fork(LOGGER_LABEL);
 
     const paths = getPaths(params, options);
     watchIntegration({ ...params, dir: paths.localesDir });

@@ -164,6 +164,5 @@ export const registerRoutes = (
     injectRoute(injectedRoute);
   }
 
-  logger.info("Routes injection done");
   return { routes };
 };
