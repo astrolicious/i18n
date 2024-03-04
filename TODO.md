@@ -2,7 +2,7 @@
 - [x] All client utilities
 - [x] Test ssg + ssr
 - [x] Handle relative paths
-- [ ] Handle trailingSlash
+- [x] Handle trailingSlash
 - [ ] `localePath`: type Params
 - [ ] Check namings
 - [ ] List limitations

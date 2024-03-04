@@ -104,7 +104,7 @@ export const useI18n = (context) => {
 
   /**
    *
-   * @param {string} path
+   * @param {string} _path
    * @param {Record<string, string | undefined>} params
    */
   const getLocalePath = (path, params = {}, _locale = locale) => {
@@ -128,7 +128,7 @@ export const useI18n = (context) => {
       }
     }
 
-    return newPath;
+    return newPath
   };
 
   /**

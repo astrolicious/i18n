@@ -4,7 +4,7 @@ import { locale, getLocalePath, switchLocalePath, t } from "i18n:astro/client";
 console.log("A");
 console.log({
   locale,
-  path: getLocalePath("/about"),
+  path: getLocalePath("/about/"),
   switch: {
     en: switchLocalePath("en"),
     fr: switchLocalePath("fr"),

@@ -8,6 +8,7 @@ import {
   addVirtualImports,
   watchIntegration,
 } from "astro-integration-kit/utilities";
+import { withTrailingSlash } from "ufo";
 
 export const integration = defineIntegration({
   name: "astro-i18n",
@@ -51,7 +52,14 @@ export const integration = defineIntegration({
           .join(" | ")};
         type LocalePath = ${routes
           .filter((route) => route.locale === options.defaultLocale)
-          .map((route) => `"${route.originalPattern}"`)
+          .map(
+            (route) =>
+              `"${
+                config.trailingSlash === "always"
+                  ? withTrailingSlash(route.originalPattern)
+                  : route.originalPattern
+              }"`
+          )
           .join(" | ")};
 
           declare module "i18n:astro/server" {

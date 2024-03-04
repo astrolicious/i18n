@@ -9,7 +9,7 @@ import { ROUTES_DIR, type Route } from "./index.js";
 import { fileURLToPath } from "node:url";
 import { dirname, join, relative, resolve } from "node:path";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { withLeadingSlash } from "ufo";
+import { withLeadingSlash, withTrailingSlash } from "ufo";
 import { normalizePath } from "vite";
 
 const isPrerendered = (str: string) => {
@@ -46,7 +46,8 @@ const generateRoute = (
   locale: string,
   page: InjectedRoute,
   paths: ReturnType<typeof getPaths>,
-  logger: AstroIntegrationLogger
+  logger: AstroIntegrationLogger,
+  trailingSlash: boolean
 ): Route => {
   const getPattern = () => {
     const isDefaultLocale = locale === defaultLocale;
@@ -123,11 +124,13 @@ const generateRoute = (
   logger.info(`Injecting "${pattern}" route`);
   return {
     locale,
-    originalPattern: page.pattern,
-    staticPattern: suffix,
+    originalPattern: trailingSlash
+      ? withTrailingSlash(page.pattern)
+      : page.pattern,
+    staticPattern: trailingSlash ? withTrailingSlash(suffix) : suffix,
     originalEntrypoint: page.entrypoint,
     injectedRoute: {
-      pattern,
+      pattern: trailingSlash ? withTrailingSlash(pattern) : pattern,
       entrypoint,
       prerender,
     },
@@ -156,7 +159,16 @@ export const registerRoutes = (
 
   for (const locale of locales) {
     for (const page of pages) {
-      routes.push(generateRoute(options, locale, page, paths, logger));
+      routes.push(
+        generateRoute(
+          options,
+          locale,
+          page,
+          paths,
+          logger,
+          config.trailingSlash === "always"
+        )
+      );
     }
   }
 
