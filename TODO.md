@@ -1,6 +1,6 @@
 - [x] All server utilities
 - [x] All client utilities
-- [ ] Test ssg + ssr
+- [x] Test ssg + ssr
 - [x] Handle relative paths
 - [ ] Handle trailingSlash
 - [ ] `localePath`: type Params

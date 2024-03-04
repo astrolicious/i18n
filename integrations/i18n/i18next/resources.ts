@@ -1,4 +1,4 @@
-import type { AstroIntegrationLogger, HookParameters } from "astro";
+import type { AstroIntegrationLogger } from "astro";
 import type { Options } from "../options.js";
 import { normalizePath } from "vite";
 import { basename, extname, join } from "node:path";

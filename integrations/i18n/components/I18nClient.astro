@@ -8,7 +8,7 @@ if (!options.client) {
 const { locale, pathname, dynamicParams } = Astro.locals.__i18n;
 ---
 
-<script define:vars={{ locale, pathname, dynamicParams, i18nextConfig }}>
+<script is:inline define:vars={{ locale, pathname, dynamicParams, i18nextConfig }}>
   window.__i18n = {
     locale,
     pathname,

@@ -11,7 +11,7 @@ console.log({
   },
 });
 console.log("B");
-console.log(t("test:foo"));
+console.log(t("home"));
 export default function Counter({
   children,
   count: initialCount,

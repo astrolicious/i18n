@@ -7,7 +7,7 @@ import node from "@astrojs/node";
 export default defineConfig({
   integrations: [
     i18n({
-      strategy: "prefix",
+      strategy: "prefixExceptDefault",
       defaultLocale: "en",
       locales: ["en", "fr"],
       pages: {
@@ -24,15 +24,15 @@ export default defineConfig({
       localesDir: "./src/locales",
       defaultNamespace: "test",
       client: true,
-      rootRedirect: {
-        status: 301,
-        destination: "/en",
-      },
+      // rootRedirect: {
+      //   status: 301,
+      //   destination: "/en",
+      // },
     }),
     react(),
   ],
-  output: "static",
-  // adapter: node({
-  // mode: "standalone"
-  // })
+  output: "hybrid",
+  adapter: node({
+    mode: "standalone",
+  }),
 });
