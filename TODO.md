@@ -3,6 +3,7 @@
 - [x] Test ssg + ssr
 - [x] Handle relative paths
 - [x] Handle trailingSlash
+- [ ] use `astro-global` instead of `globalThis`
 - [ ] `localePath`: type Params
 - [ ] Check namings
 - [ ] List limitations

@@ -1,5 +1,15 @@
 import { useState } from "react";
-import { locale, getLocalePath, switchLocalePath, t } from "i18n:astro/client";
+import { t, useI18n } from "i18n:astro/client";
+// import Astro from "astro:global"
+
+// TODO: not working, use AsyncLocalStorage myself
+let Astro!: any;
+
+if (import.meta.env.SSR) {
+  Astro = await import("astro:global").then(mod => mod.default)
+}
+
+const { locale, getLocalePath, switchLocalePath } = useI18n(Astro);
 
 console.log("A");
 console.log({

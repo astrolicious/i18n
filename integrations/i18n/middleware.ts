@@ -31,8 +31,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
     dynamicParams: {},
   };
 
-  (globalThis as any).__i18n = { ...context.locals.__i18n };
-
   initI18next({
     lng: locale,
     defaultNS: i18nextConfig.defaultNamespace,

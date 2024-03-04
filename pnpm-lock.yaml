@@ -23,6 +23,9 @@ dependencies:
   astro:
     specifier: ^4.4.11
     version: 4.4.11(@types/node@20.11.22)(typescript@5.3.3)
+  astro-global:
+    specifier: ^1.2.1
+    version: 1.2.1(astro@4.4.11)
   astro-integration-kit:
     specifier: ^0.5.1
     version: 0.5.1(astro@4.4.11)(react@18.2.0)
@@ -1066,6 +1069,14 @@ packages:
     engines: {node: '>=4'}
     dependencies:
       tslib: 2.6.2
+    dev: false
+
+  /astro-global@1.2.1(astro@4.4.11):
+    resolution: {integrity: sha512-3xv8f6GzqSERcCaRvm+1di7MYesDzc1ChIJztijHQf3WOpcgKt3IuOyTxSHEXhe7ddBX8/RUDI2de/A07o6YLQ==}
+    peerDependencies:
+      astro: ^3.5.2 || 4
+    dependencies:
+      astro: 4.4.11(@types/node@20.11.22)(typescript@5.3.3)
     dev: false
 
   /astro-integration-kit@0.5.1(astro@4.4.11)(react@18.2.0):

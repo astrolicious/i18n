@@ -28,7 +28,6 @@ type InternalGlobalI18n = {
   dynamicParams: Record<string, Record<string, string>>;
 };
 
-declare const __i18n: InternalGlobalI18n;
 interface Window {
   __i18n: InternalGlobalI18n & {
     i18nextConfig: I18nextConfig;

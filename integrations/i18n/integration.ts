@@ -5,10 +5,12 @@ import { optionsSchema } from "./options.js";
 import { handleRouting } from "./routing/index.js";
 import {
   addDts,
+  addIntegration,
   addVirtualImports,
   watchIntegration,
 } from "astro-integration-kit/utilities";
 import { withTrailingSlash } from "ufo";
+import global from "astro-global";
 
 export const integration = defineIntegration({
   name: "astro-i18n",
@@ -21,6 +23,8 @@ export const integration = defineIntegration({
         const { addMiddleware, config, logger, updateConfig } = params;
 
         watchIntegration({ ...params, dir: resolve() });
+
+        addIntegration({ ...params, integration: global() });
 
         const { routes } = handleRouting(params)(options);
         const { namespaces, resources } = handleI18next(params)(options);
@@ -88,9 +92,11 @@ export const integration = defineIntegration({
           );
 
           clientDts = `declare module "i18n:astro/client" {
-            export const locale: Locale;
-            export const getLocalePath: (path: LocalePath, params?: Record<string, string | undefined>) => string;
-            export const switchLocalePath: (locale: Locale) => string;
+            export const useI18n: (context: import("astro").AstroGlobal | import("astro").APIContext) => {
+              locale: Locale;
+              getLocalePath: (path: LocalePath, params?: Record<string, string | undefined>) => string;
+              switchLocalePath: (locale: Locale) => string;
+            }
             export const t: typeof import("i18next").t;
           }`;
         }
