@@ -1,0 +1,4 @@
+{
+    "title": "Accueil",
+    "description": "Voici l'accueil, voir {{ value }}"
+}

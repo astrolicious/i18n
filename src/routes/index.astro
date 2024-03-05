@@ -2,15 +2,16 @@
 import { t } from "i18n:astro";
 import Layout from "~/layouts/Layout.astro";
 
-const title = t("home");
+const title = t("home:title");
 ---
 
 <Layout {title}>
   <h1>{title}</h1>
+  <p>{t("home:description", { value: "9" })}</p>
   <span id="span"></span>
   <script>
     import { t } from "i18n:astro";
 
-    document.getElementById("span")!.innerHTML = t("test:about");
+    document.getElementById("span")!.innerHTML = t("about");
   </script>
 </Layout>

@@ -1,0 +1,32 @@
+---
+import { getLocale, t, getLocalePath } from "i18n:astro";
+import Layout from "~/layouts/Layout.astro";
+
+const title = t("blog");
+
+const slugs = [
+  {
+    en: "a",
+    fr: "d",
+  },
+  {
+    en: "b",
+    fr: "e",
+  },
+  {
+    en: "c",
+    fr: "f",
+  },
+];
+
+const currentLocaleSlugs = slugs.map((e) => e[getLocale()]);
+---
+
+<Layout {title}>
+  <h1>{title}</h1>
+  {
+    currentLocaleSlugs.map((slug) => (
+      <a href={getLocalePath("/blog/[slug]", { slug })} class="block p-1 underline">{slug}</a>
+    ))
+  }
+</Layout>
