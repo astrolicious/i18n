@@ -7,19 +7,10 @@ const title = t("home");
 
 <Layout {title}>
   <h1>{title}</h1>
+  <span id="span"></span>
   <script>
-    import { t, getLocale, getLocalePath, switchLocalePath } from "i18n:astro";
+    import { t } from "i18n:astro";
 
-    console.log("A");
-    console.log({
-      locale: getLocale(),
-      path: getLocalePath("/about"),
-      switch: {
-        en: switchLocalePath("en"),
-        fr: switchLocalePath("fr"),
-      },
-    });
-    console.log("B");
-    console.log(t("home"));
+    document.getElementById("span")!.innerHTML = t("test:about");
   </script>
 </Layout>

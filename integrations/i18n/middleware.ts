@@ -30,6 +30,7 @@ export const onRequest = defineMiddleware((context, next) => {
       locale,
       pathname,
       dynamicParams: {},
+      i18nextInitialized: false,
     },
     next
   );

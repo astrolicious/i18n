@@ -108,13 +108,14 @@ const _dir = (locale) => {
 export const locales = options.locales;
 
 export const t = (...args) => {
-  if (!i18next.isInitialized) {
+  if (!getI18n().i18nextInitialized) {
     i18next.init({
       lng: getLocale(),
       defaultNS: i18nextConfig.defaultNamespace,
       ns: i18nextConfig.namespaces,
       resources: i18nextConfig.resources,
     });
+    getI18n().i18nextInitialized = true;
   }
   return i18next.t(...args);
 };
