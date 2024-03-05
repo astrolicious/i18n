@@ -1,7 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 import { options } from "virtual:astro-i18n/internal";
 import { als } from "virtual:astro-i18n/als";
-import { withTrailingSlash } from "ufo";
 
 const extractLocaleFromUrl = (pathname: string) => {
   for (const locale of options.locales) {
@@ -22,7 +21,7 @@ const extractLocaleFromUrl = (pathname: string) => {
 };
 
 export const onRequest = defineMiddleware((context, next) => {
-  const pathname = withTrailingSlash(context.url.pathname);
+  const pathname = context.url.pathname;
   const locale = extractLocaleFromUrl(pathname);
 
   return als.run(

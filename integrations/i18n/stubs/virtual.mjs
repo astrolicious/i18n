@@ -161,7 +161,7 @@ export const getLocalePath = (path, params = {}, _locale = getLocale()) => {
     if (!value) {
       throw new Error(`Must provide "${param}" param`);
     }
-    newPath = newPath.replace(param, value);
+    newPath = newPath.replace(`[${param}]`, value);
   }
 
   return newPath;
@@ -174,16 +174,15 @@ export const getLocalePath = (path, params = {}, _locale = getLocale()) => {
 export const switchLocalePath = (locale) => {
   _envCheck("switchLocalePath", { clientEnabled: true });
 
-  const currentLocaleRoute = routes
-    .filter((route) => route.locale === getLocale())
-    .find((route) => {
-      if (
-        Object.keys(getI18n().dynamicParams).length === 0 &&
-        route.injectedRoute.pattern === getI18n().pathname
-      ) {
-        return true;
-      }
+  const currentLocaleRoutes = routes.filter(
+    (route) => route.locale === getLocale()
+  );
 
+  let currentLocaleRoute = currentLocaleRoutes.find(
+    (route) => route.injectedRoute.pattern === getI18n().pathname
+  );
+  if (!currentLocaleRoute) {
+    currentLocaleRoute = currentLocaleRoutes.find((route) => {
       for (const param of Object.keys(
         getI18n().dynamicParams?.[locale] ?? {}
       )) {
@@ -194,6 +193,7 @@ export const switchLocalePath = (locale) => {
 
       return true;
     });
+  }
 
   if (!currentLocaleRoute) {
     throw new Error("Couldn't find a currentLocaleRoute. Open an issue");
