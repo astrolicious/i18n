@@ -16,7 +16,6 @@
     "@types/react": "^18.2.61",
     "@types/react-dom": "^18.2.19",
     "astro": "^4.4.11",
-    "astro-global": "^1.2.1",
     "astro-integration-kit": "^0.5.1",
     "astro-pages": "^0.2.0",
     "i18next": "^23.10.0",

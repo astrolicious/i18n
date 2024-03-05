@@ -5,12 +5,10 @@ import { optionsSchema } from "./options.js";
 import { handleRouting } from "./routing/index.js";
 import {
   addDts,
-  addIntegration,
   addVirtualImports,
   watchIntegration,
 } from "astro-integration-kit/utilities";
 import { withTrailingSlash } from "ufo";
-import global from "astro-global";
 
 export const integration = defineIntegration({
   name: "astro-i18n",
@@ -24,14 +22,14 @@ export const integration = defineIntegration({
 
         watchIntegration({ ...params, dir: resolve() });
 
-        addIntegration({ ...params, integration: global() });
-
         const { routes } = handleRouting(params)(options);
         const { namespaces, resources } = handleI18next(params)(options);
 
         const imports: Record<string, string> = {};
 
         imports["virtual:astro-i18n/internal"] = `
+        import { AsyncLocalStorage } from "node:async_hooks"
+
             export const options = ${JSON.stringify(options)};
             export const routes = ${JSON.stringify(routes)};
             export const i18nextConfig = ${JSON.stringify({
@@ -39,6 +37,7 @@ export const integration = defineIntegration({
               defaultNamespace: options.defaultNamespace,
               resources,
             })};
+            export const als = new AsyncLocalStorage
           `;
 
         addMiddleware({
@@ -86,13 +85,70 @@ export const integration = defineIntegration({
         if (options.client) {
           logger.info("Client features enabled");
 
-          imports["i18n:astro/client"] = readFileSync(
+          const clientStub = readFileSync(
             resolve("./stubs/client-import.mjs"),
             "utf-8"
           );
+          const placeholder = '"@@CONTEXT@@"';
+
+          const _imports = [
+            {
+              name: "i18n:astro/client",
+              content: `import { als } from "virtual:astro-i18n/internal";${clientStub.replace(
+                placeholder,
+                "als.getStore().locals.__i18n"
+              )}`,
+              ssr: true,
+            },
+            {
+              name: "i18n:astro/client",
+              content: clientStub.replace(placeholder, "window.__i18n"),
+              ssr: false,
+            },
+          ];
+
+          const resolveVirtualModuleId = <T extends string>(
+            id: T
+          ): `\0${T}` => {
+            return `\0${id}`;
+          };
+
+          const resolutionMap = Object.fromEntries(
+            Object.keys(_imports).map((name) => [
+              resolveVirtualModuleId(name),
+              name,
+            ])
+          );
+
+          updateConfig({
+            vite: {
+              plugins: [
+                {
+                  name: "vite-plugin-astro-i18n-client",
+                  resolveId(id) {
+                    if (_imports.find((e) => e.name === id))
+                      return resolveVirtualModuleId(id);
+                  },
+                  load(id, options) {
+                    const resolution = resolutionMap[id];
+                    if (resolution) {
+                      const data = _imports.find(
+                        (e) =>
+                          e.name === resolution &&
+                          e.ssr === (options?.ssr ?? false)
+                      );
+                      if (data) {
+                        return data.content;
+                      }
+                    }
+                  },
+                },
+              ],
+            },
+          });
 
           clientDts = `declare module "i18n:astro/client" {
-            export const useI18n: (context: import("astro").AstroGlobal | import("astro").APIContext) => {
+            export const useI18n: () => {
               locale: Locale;
               getLocalePath: (path: LocalePath, params?: Record<string, string | undefined>) => string;
               switchLocalePath: (locale: Locale) => string;

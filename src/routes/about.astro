@@ -5,7 +5,7 @@ import Layout from "~/layouts/Layout.astro";
 
 const { getLocalePath, switchLocalePath } = useI18n(Astro);
 
-console.log(getLocalePath("/blog/[slug]/", { slug: "abc" }));
+console.log(getLocalePath("/blog/[slug]", { slug: "abc" }));
 console.log({
   en: switchLocalePath("en"),
   fr: switchLocalePath("fr"),

@@ -1,5 +1,5 @@
 import { defineMiddleware } from "astro:middleware";
-import { options, i18nextConfig } from "virtual:astro-i18n/internal";
+import { options, i18nextConfig, als } from "virtual:astro-i18n/internal";
 import { withTrailingSlash } from "ufo";
 import { init as initI18next } from "i18next";
 
@@ -30,6 +30,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
     pathname,
     dynamicParams: {},
   };
+
+  als.run(context, next);
 
   initI18next({
     lng: locale,
