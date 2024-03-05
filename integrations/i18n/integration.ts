@@ -56,7 +56,6 @@ export const integration = defineIntegration({
           (route) => route.locale === options.defaultLocale
         );
 
-        // TODO: better params
         addDts({
           logger,
           ...config,
@@ -96,7 +95,12 @@ export const integration = defineIntegration({
               dir: "rtl" | "ltr";
             };
             export const setDynamicParams: (params: Record<string, Record<string, string>>) => void;
-            export const getLocalePath: <TPath extends LocalePath>(path: TPath, params?: LocalePathParams[TPath]) => string;
+            export const getLocalePath: <TPath extends LocalePath>(
+              path: TPath,
+              ...params: LocalePathParams[TPath] extends never
+                ? []
+                : [LocalePathParams[TPath]]
+            ) => string;
             export const switchLocalePath: (locale: Locale) => string;
             export const getSwitcherData: () => Array<{ locale: string; href: string }>;
 

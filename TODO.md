@@ -4,7 +4,7 @@
 - [x] Handle relative paths
 - [x] Handle trailingSlash
 - [x] use `als` instead of `globalThis`
-- [ ] `localePath`: type Params
+- [x] `localePath`: type Params
 - [ ] Check namings
 - [ ] List limitations
 - [ ] Create a proper new integration + repo

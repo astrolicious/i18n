@@ -4,6 +4,7 @@ import Counter from "../components/Counter";
 import Layout from "~/layouts/Layout.astro";
 
 console.log(getLocalePath("/blog/[slug]", { slug: "abc" }));
+getLocalePath("/about")
 console.log({
   en: switchLocalePath("en"),
   fr: switchLocalePath("fr"),
