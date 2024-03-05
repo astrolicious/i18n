@@ -155,16 +155,12 @@ export const getLocalePath = (path, params = {}, _locale = getLocale()) => {
   }
 
   let newPath = route.injectedRoute.pattern;
-  const matches = newPath.match(/\[([^\]]+)]/g);
-  if (matches) {
-    for (const match of matches) {
-      const key = match.slice(1, -1);
-      const value = params[key];
-      if (!value) {
-        throw new Error(`Must provide "${key}" param`);
-      }
-      newPath = newPath.replace(match, value);
+  for (const param of route.params) {
+    const value = params[param];
+    if (!value) {
+      throw new Error(`Must provide "${param}" param`);
     }
+    newPath = newPath.replace(param, value);
   }
 
   return newPath;

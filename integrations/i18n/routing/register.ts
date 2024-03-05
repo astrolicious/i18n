@@ -113,6 +113,19 @@ const generateRoute = (
     };
   };
 
+  const getParams = (pattern: string) => {
+    const params: Array<string> = [];
+
+    const matches = pattern.match(/\[([^\]]+)]/g);
+    if (matches) {
+      for (const match of matches) {
+        params.push(match.slice(1, -1));
+      }
+    }
+
+    return params;
+  };
+
   const { pattern, suffix } = getPattern();
   const entrypoint = join(
     paths.entrypointsDir,
@@ -124,6 +137,7 @@ const generateRoute = (
   logger.info(`Injecting "${pattern}" route`);
   return {
     locale,
+    params: getParams(pattern),
     originalPattern: trailingSlash
       ? withTrailingSlash(page.pattern)
       : page.pattern,

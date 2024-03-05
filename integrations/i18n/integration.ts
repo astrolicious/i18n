@@ -52,6 +52,11 @@ export const integration = defineIntegration({
           order: "pre",
         });
 
+        const defaultLocaleRoutes = routes.filter(
+          (route) => route.locale === options.defaultLocale
+        );
+
+        // TODO: better params
         addDts({
           logger,
           ...config,
@@ -61,17 +66,27 @@ export const integration = defineIntegration({
             export type Locale = ${options.locales
               .map((locale) => `"${locale}"`)
               .join(" | ")};
-            export type LocalePath = ${routes
-              .filter((route) => route.locale === options.defaultLocale)
-              .map(
-                (route) =>
-                  `"${
-                    config.trailingSlash === "always"
-                      ? withTrailingSlash(route.originalPattern)
-                      : route.originalPattern
-                  }"`
-              )
-              .join(" | ")};
+            export type LocalePathParams = {
+              ${defaultLocaleRoutes
+                .map(
+                  (route) =>
+                    `"${
+                      config.trailingSlash === "always"
+                        ? withTrailingSlash(route.originalPattern)
+                        : route.originalPattern
+                    }": ${
+                      route.params.length === 0
+                        ? "never"
+                        : `{
+                              ${route.params
+                                .map((param) => `"${param}": string;`)
+                                .join("\n")}
+                            }`
+                    }`
+                )
+                .join(";\n")}
+            };
+            export type LocalePath = keyof LocalePathParams;
 
             export const locales: ${JSON.stringify(options.locales)};
             export const t: typeof import("i18next").t;
@@ -81,7 +96,7 @@ export const integration = defineIntegration({
               dir: "rtl" | "ltr";
             };
             export const setDynamicParams: (params: Record<string, Record<string, string>>) => void;
-            export const getLocalePath: (path: LocalePath, params?: Record<string, string | undefined>) => string;
+            export const getLocalePath: <TPath extends LocalePath>(path: TPath, params?: LocalePathParams[TPath]) => string;
             export const switchLocalePath: (locale: Locale) => string;
             export const getSwitcherData: () => Array<{ locale: string; href: string }>;
 

@@ -6,6 +6,7 @@ import { registerRoutes } from "./register.js";
 // TODO: update properties names
 export type Route = {
   locale: string;
+  params: Array<string>;
   originalPattern: string;
   staticPattern: string;
   originalEntrypoint: string;
