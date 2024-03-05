@@ -1,8 +1,7 @@
 import { defineMiddleware } from "astro:middleware";
-import { options, i18nextConfig } from "virtual:astro-i18n/internal";
-import {  als } from "virtual:astro-i18n/als";
+import { options } from "virtual:astro-i18n/internal";
+import { als } from "virtual:astro-i18n/als";
 import { withTrailingSlash } from "ufo";
-import { init as initI18next } from "i18next";
 
 const extractLocaleFromUrl = (pathname: string) => {
   for (const locale of options.locales) {
@@ -22,24 +21,16 @@ const extractLocaleFromUrl = (pathname: string) => {
   return options.defaultLocale;
 };
 
-export const onRequest = defineMiddleware(async (context, next) => {
+export const onRequest = defineMiddleware((context, next) => {
   const pathname = withTrailingSlash(context.url.pathname);
   const locale = extractLocaleFromUrl(pathname);
 
-  context.locals.__i18n = {
-    locale,
-    pathname,
-    dynamicParams: {},
-  };
-
-  als.run(context, next);
-
-  initI18next({
-    lng: locale,
-    defaultNS: i18nextConfig.defaultNamespace,
-    ns: i18nextConfig.namespaces,
-    resources: i18nextConfig.resources,
-  });
-
-  next();
+  return als.run(
+    {
+      locale,
+      pathname,
+      dynamicParams: {},
+    },
+    next
+  );
 });

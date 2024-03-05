@@ -1,19 +1,6 @@
 import { useState } from "react";
-// import { t, useI18n } from "i18n:astro/client";
+import { getLocale, getLocalePath, switchLocalePath, t } from "i18n:astro";
 
-// const { locale, getLocalePath, switchLocalePath } = useI18n();
-
-console.log("A");
-console.log({
-  locale,
-  path: getLocalePath("/about"),
-  switch: {
-    en: switchLocalePath("en"),
-    fr: switchLocalePath("fr"),
-  },
-});
-console.log("B");
-console.log(t("home"));
 export default function Counter({
   children,
   count: initialCount,
@@ -21,6 +8,17 @@ export default function Counter({
   children: JSX.Element;
   count: number;
 }) {
+  console.log("A");
+  console.log({
+    locale: getLocale(),
+    path: getLocalePath("/about"),
+    switch: {
+      en: switchLocalePath("en"),
+      fr: switchLocalePath("fr"),
+    },
+  });
+  console.log("B");
+  console.log(t("home"));
   const [count, setCount] = useState(initialCount);
   const add = () => setCount((i) => i + 1);
   const subtract = () => setCount((i) => i - 1);

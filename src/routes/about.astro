@@ -1,9 +1,7 @@
 ---
-import { useI18n, t } from "i18n:astro/server";
+import { getLocalePath, switchLocalePath, t } from "i18n:astro";
 import Counter from "../components/Counter";
 import Layout from "~/layouts/Layout.astro";
-
-const { getLocalePath, switchLocalePath } = useI18n(Astro);
 
 console.log(getLocalePath("/blog/[slug]", { slug: "abc" }));
 console.log({

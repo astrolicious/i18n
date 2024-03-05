@@ -1,65 +1,46 @@
 /// <reference types="astro/client" />
 
-declare namespace App {
-  interface Locals {
-    __i18n: {
-      locale: string;
-      pathname: string;
-      dynamicParams: Record<string, Record<string, string>>;
-    };
-  }
-}
-
-type I18nextConfig = {
-  namespaces: Array<string>;
-  defaultNamespace: string;
-  resources: Record<string, Record<string, any>>;
-};
-
 declare module "virtual:astro-i18n/internal" {
   export const options: import("./options.js").Options;
   export const routes: Array<import("./routing/index.js").Route>;
-  export const i18nextConfig: I18nextConfig;
+  export const i18nextConfig: {
+    namespaces: Array<string>;
+    defaultNamespace: string;
+    resources: Record<string, Record<string, any>>;
+  };
 }
 
 declare module "virtual:astro-i18n/als" {
   export const als: import("node:async_hooks").AsyncLocalStorage<
-    import("astro").AstroGlobal | import("astro").APIContext
+    import("./types.js").InternalI18n
   >;
 }
 
-type InternalGlobalI18n = {
-  locale: string;
-  pathname: string;
-  dynamicParams: Record<string, Record<string, string>>;
-};
-
 interface Window {
-  __i18n: InternalGlobalI18n & {
-    i18nextConfig: I18nextConfig;
-  };
+  __i18n: import("./types.js").InternalI18n;
 }
 
-// TODO: reenable when proper monorepo
-// declare module "i18n:astro/server" {
-//   type Locale = string;
-//   type LocalePath = string;
+// TODO: uncomment once we have a proper monorepo structure
+// declare module "i18n:astro" {
+//   export type Locale = string;
+//   export type LocalePath = string;
 
-//   export const useI18n: (
-//     context: import("astro").AstroGlobal | import("astro").APIContext
-//   ) => {
-//     locale: Locale;
-//     getHtmlAttrs: () => {
-//       lang: string;
-//       dir: "rtl" | "ltr";
-//     };
-//     setDynamicParams: (params: Record<string, Record<string, string>>) => void;
-//     getLocalePath: (
-//       path: LocalePath,
-//       params?: Record<string, string | undefined>
-//     ) => string;
-//     switchLocalePath: (locale: Locale) => string;
+//   export const locales: Array<string>;
+//   export const t: typeof import("i18next").t;
+//   export const getLocale: () => Locale;
+//   export const getHtmlAttrs: () => {
+//     lang: string;
+//     dir: "rtl" | "ltr";
 //   };
-//   export const locales: ["en", "fr"];
+//   export const setDynamicParams: (
+//     params: Record<string, Record<string, string>>
+//   ) => void;
+//   export const getLocalePath: (
+//     path: LocalePath,
+//     params?: Record<string, string | undefined>
+//   ) => string;
+//   export const switchLocalePath: (locale: Locale) => string;
+//   export const getSwitcherData: () => Array<{ locale: string; href: string }>;
+
 //   export const getLocalePlaceholder: () => Locale;
 // }

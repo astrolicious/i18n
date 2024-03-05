@@ -1,5 +1,5 @@
 ---
-import { t } from "i18n:astro/server";
+import { t } from "i18n:astro";
 import Layout from "~/layouts/Layout.astro";
 
 const title = t("home");
@@ -8,13 +8,11 @@ const title = t("home");
 <Layout {title}>
   <h1>{title}</h1>
   <script>
-    import { t, useI18n } from "i18n:astro/client";
-
-    const { locale, getLocalePath, switchLocalePath } = useI18n();
+    import { t, getLocale, getLocalePath, switchLocalePath } from "i18n:astro";
 
     console.log("A");
     console.log({
-      locale,
+      locale: getLocale(),
       path: getLocalePath("/about"),
       switch: {
         en: switchLocalePath("en"),

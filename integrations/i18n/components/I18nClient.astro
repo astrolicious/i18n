@@ -1,18 +1,20 @@
 ---
-import { options, i18nextConfig } from "virtual:astro-i18n/internal";
+import { options } from "virtual:astro-i18n/internal";
+import { als } from "virtual:astro-i18n/als";
 
 if (!options.client) {
-  throw new Error(`You need to set "client: true" in the integration config in order to use this component.`)
+  throw new Error(
+    `You need to set "client: true" in the integration config in order to use this component.`
+  );
 }
 
-const { locale, pathname, dynamicParams } = Astro.locals.__i18n;
+const { locale, pathname, dynamicParams } = als.getStore()!;
 ---
 
-<script is:inline define:vars={{ locale, pathname, dynamicParams, i18nextConfig }}>
+<script is:inline define:vars={{ locale, pathname, dynamicParams }}>
   window.__i18n = {
     locale,
     pathname,
     dynamicParams,
-    i18nextConfig,
   };
 </script>

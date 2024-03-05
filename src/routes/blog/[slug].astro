@@ -1,6 +1,6 @@
 ---
 import type { GetStaticPaths } from "astro";
-import { useI18n, getLocalePlaceholder, t } from "i18n:astro/server";
+import { setDynamicParams, switchLocalePath, getLocalePlaceholder, t } from "i18n:astro";
 import Layout from "~/layouts/Layout.astro";
 
 export const getStaticPaths = (() => {
@@ -33,8 +33,6 @@ export const getStaticPaths = (() => {
 
 const { slug } = Astro.params;
 const { slugs } = Astro.props;
-
-const { setDynamicParams, switchLocalePath } = useI18n(Astro);
 
 setDynamicParams(
   Object.entries(slugs)
