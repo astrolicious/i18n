@@ -1,16 +1,26 @@
 import { routes } from "virtual:astro-i18n/internal";
-export { t } from "i18next";
+import i18next, { t as _t } from "i18next";
+
+/**
+ *
+ * @type {(import("astro").AstroGlobal | import("astro").APIContext)["locals"]["__i18n"]} context
+ */
+const polymorphicContext = "@@CONTEXT@@";
+
+export const t = (() => {
+  if (!i18next.isInitialized) {
+    const { locale, i18nextConfig } = polymorphicContext;
+    i18next.init({
+      lng: locale,
+      defaultNS: i18nextConfig.defaultNamespace,
+      ns: i18nextConfig.namespaces,
+      resources: i18nextConfig.resources,
+    });
+  }
+  return _t;
+})();
 
 export const useI18n = () => {
-  /**
-   *
-   * @param {(import("astro").AstroGlobal | import("astro").APIContext)["locals"]["__i18n"]} context
-   */
-  const polymorphicContext = "@@CONTEXT@@"
-  // const polymorphicContext = import.meta.env.SSR
-  //   ? als.getStore().locals.__i18n
-  //   : window.__i18n;
-
   const locale = polymorphicContext.locale;
 
   /**

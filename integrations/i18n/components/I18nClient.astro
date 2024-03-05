@@ -16,16 +16,3 @@ const { locale, pathname, dynamicParams } = Astro.locals.__i18n;
     i18nextConfig,
   };
 </script>
-
-<script>
-  import { init as initI18next } from "i18next";
-
-  const { locale, i18nextConfig } = window.__i18n;
-
-  initI18next({
-    lng: locale,
-    defaultNS: i18nextConfig.defaultNamespace,
-    ns: i18nextConfig.namespaces,
-    resources: i18nextConfig.resources,
-  });
-</script>

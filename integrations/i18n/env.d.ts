@@ -20,6 +20,9 @@ declare module "virtual:astro-i18n/internal" {
   export const options: import("./options.js").Options;
   export const routes: Array<import("./routing/index.js").Route>;
   export const i18nextConfig: I18nextConfig;
+}
+
+declare module "virtual:astro-i18n/als" {
   export const als: import("node:async_hooks").AsyncLocalStorage<
     import("astro").AstroGlobal | import("astro").APIContext
   >;

@@ -28,8 +28,6 @@ export const integration = defineIntegration({
         const imports: Record<string, string> = {};
 
         imports["virtual:astro-i18n/internal"] = `
-        import { AsyncLocalStorage } from "node:async_hooks"
-
             export const options = ${JSON.stringify(options)};
             export const routes = ${JSON.stringify(routes)};
             export const i18nextConfig = ${JSON.stringify({
@@ -37,8 +35,11 @@ export const integration = defineIntegration({
               defaultNamespace: options.defaultNamespace,
               resources,
             })};
-            export const als = new AsyncLocalStorage
           `;
+        imports[
+          "virtual:astro-i18n/als"
+        ] = `import { AsyncLocalStorage } from "node:async_hooks";
+          export const als = new AsyncLocalStorage;`;
 
         addMiddleware({
           entrypoint: resolve("./middleware.ts"),
@@ -94,7 +95,7 @@ export const integration = defineIntegration({
           const _imports = [
             {
               name: "i18n:astro/client",
-              content: `import { als } from "virtual:astro-i18n/internal";${clientStub.replace(
+              content: `import { als } from "virtual:astro-i18n/als";${clientStub.replace(
                 placeholder,
                 "als.getStore().locals.__i18n"
               )}`,
@@ -114,10 +115,7 @@ export const integration = defineIntegration({
           };
 
           const resolutionMap = Object.fromEntries(
-            Object.keys(_imports).map((name) => [
-              resolveVirtualModuleId(name),
-              name,
-            ])
+            _imports.map(({ name }) => [resolveVirtualModuleId(name), name])
           );
 
           updateConfig({
