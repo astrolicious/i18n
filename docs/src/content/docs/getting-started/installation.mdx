@@ -1,0 +1,42 @@
+---
+title: Installation
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Automatic installation
+
+Run the following command in your terminal using your favorite package manager.
+
+<Tabs>
+    <TabItem label="pnpm" icon="pnpm">
+    ```bash
+    pnpm astro add @astrolicious/astro-i18n
+    ```
+    </TabItem>
+    <TabItem label="npm" icon="seti:npm">
+    ```bash
+    npm run astro add @astrolicious/astro-i18n
+    ```
+    </TabItem>
+    <TabItem label="yarn" icon="seti:yarn">
+    ```bash
+    yarn astro add @astrolicious/astro-i18n
+    ```
+    </TabItem>
+</Tabs>
+
+This will update your `astro.config.mjs` with the following content:
+
+```js title="astro.config.mjs" ins={2,6}
+import { definConfig } from "astro/config"
+import i18n from "@astrolicious/astro-i18n"
+
+export default defineConfig({
+    integrations: [
+        i18n()
+    ]
+})
+```
+
+## Manual installation

@@ -1,7 +1,7 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
-
 import tailwind from "@astrojs/tailwind";
+import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 
 // https://astro.build/config
 export default defineConfig({
@@ -35,6 +35,14 @@ export default defineConfig({
 			],
 			expressiveCode: {
 				themes: ["one-dark-pro", "starlight-light"],
+				plugins: [pluginLineNumbers()],
+				defaultProps: {
+					overridesByLang: {
+						bash: {
+							showLineNumbers: false,
+						},
+					},
+				},
 			},
 			sidebar: [
 				{
@@ -42,13 +50,19 @@ export default defineConfig({
 					link: "/",
 				},
 				{
-					label: "Guides",
+					label: "Getting started",
 					items: [
-						// Each item here is one entry in the navigation menu.
-						{
-							label: "Example Guide",
-							link: "/guides/example/",
-						},
+						{ label: "Installation", link: "/getting-started/installation/" },
+						{ label: "Usage", link: "/getting-started/usage/" },
+						{ label: "Limitations", link: "/getting-started/limitations/" },
+						{ label: "Showcase", link: "/getting-started/showcase/" },
+					],
+				},
+				{
+					label: "Usage",
+					items: [
+						{ label: "Configuration", link: "/usage/configuration/" },
+						{ label: "Client usage", link: "/usage/client/" },
 					],
 				},
 				{
