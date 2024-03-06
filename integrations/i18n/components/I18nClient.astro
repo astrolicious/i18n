@@ -1,21 +1,30 @@
 ---
-import { options } from "virtual:astro-i18n/internal";
 import { als } from "virtual:astro-i18n/als";
 
-if (!options.client) {
+const config = als.getStore()!;
+const { clientOptions } = config;
+
+const enabledClientFeatures = Object.entries(clientOptions)
+  .map(([name, enabled]) => ({ name, enabled }))
+  .filter((e) => e.enabled);
+if (enabledClientFeatures.length === 0) {
   throw new Error(
-    `You need to set "client: true" in the integration config in order to use this component.`
+    "You need to enabled at least one client feature (`client: {...}`) in the integration config to use `<I18nClient />`."
   );
 }
 
-const { locale, pathname, dynamicParams } = als.getStore()!;
+const data = clientOptions.data ? config.data : undefined;
+const translations = clientOptions.translations
+  ? { ...config.translations, initialized: false }
+  : undefined;
+const paths = clientOptions.paths ? config.paths : undefined;
 ---
 
-<script is:inline define:vars={{ locale, pathname, dynamicParams }}>
+<script is:inline define:vars={{ clientOptions, data, translations, paths }}>
   window.__INTERNAL_ASTRO_I18N_CONFIG__ = {
-    locale,
-    pathname,
-    dynamicParams,
-    i18nextInitialized: false,
+    clientOptions,
+    data,
+    translations,
+    paths,
   };
 </script>

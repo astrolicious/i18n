@@ -26,7 +26,11 @@ export default defineConfig({
       },
       localesDir: "./src/locales",
       defaultNamespace: "common",
-      client: true,
+      client: {
+        data: true,
+        translations: true,
+        paths: true
+      },
       // rootRedirect: {
       //   status: 301,
       //   destination: "/en",

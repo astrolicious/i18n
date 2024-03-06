@@ -1,33 +1,35 @@
-import { options, routes, i18nextConfig } from "virtual:astro-i18n/internal";
-import i18next from "i18next";
-
 /**
- * @returns {import("../types.js").InternalI18n}
+ * @returns {import("../types.js").I18nConfig}
  */
-const getI18n = () => "@@CONTEXT@@";
+const _getConfig = () => "@@_CONFIG_@@";
+/**
+ * @returns {import("i18next").i18n}
+ */
+const _getI18next = () => "@@_I18NEXT_@@";
 
 /**
  *
  * @param {string} name
- * @param {{ serverOnly: boolean; clientEnabled: boolean }} param0
+ * @param {{ serverOnly: boolean; clientFeatures: Array<"data" | "translations" | "paths"> }} param0
  */
-const _envCheck = (
-  name,
-  { serverOnly = false, clientEnabled = false } = {}
-) => {
+const _envCheck = (name, { serverOnly = false, clientFeatures = [] } = {}) => {
   if (serverOnly && !import.meta.env.SSR) {
     throw new Error(`\`${name}\` is only available on the server`);
   }
-  if (clientEnabled && !import.meta.env.SSR) {
-    if (!options.client) {
-      throw new Error(
-        `\`${name}\` on the client requires \`client: true\` in the integration config`
-      );
-    }
-    if (!getI18n()) {
+  if (clientFeatures.length > 0 && !import.meta.env.SSR) {
+    const config = _getConfig();
+    if (!config) {
       throw new Error(
         `\`${name}\` on the client requires using the \`<I18nClient />\` component`
       );
+    }
+
+    for (const feature of Object.keys(config.clientOptions)) {
+      if (clientFeatures.includes(feature) && !config[feature]) {
+        throw new Error(
+          `\`${name}\` on the client requires setting \`client: { ${feature}: true }\` in the integration config`
+        );
+      }
     }
   }
 };
@@ -105,28 +107,40 @@ const _dir = (locale) => {
   return rtlLocales.includes(locale) ? "rtl" : "ltr";
 };
 
-export const locales = options.locales;
-
 export const t = (...args) => {
-  _envCheck("t", { clientEnabled: true });
-  if (!getI18n().i18nextInitialized) {
+  _envCheck("t", { clientFeatures: ["data", "translations"] });
+  const config = _getConfig();
+  const i18next = _getI18next();
+
+  if (!config.translations.initialized) {
     i18next.init({
-      lng: getLocale(),
-      defaultNS: i18nextConfig.defaultNamespace,
-      ns: i18nextConfig.namespaces,
-      resources: i18nextConfig.resources,
+      lng: config.data.locale,
+      defaultNS: config.translations.i18nextConfig.defaultNamespace,
+      ns: config.translations.i18nextConfig.namespaces,
+      resources: config.translations.i18nextConfig.resources,
     });
-    getI18n().i18nextInitialized = true;
+    config.translations.initialized = true;
   }
   return i18next.t(...args);
 };
 
-export const getLocale = () => getI18n().locale;
+export const getLocale = () => {
+  _envCheck("getLocale", { clientFeatures: ["data"] });
+  return _getConfig().data.locale;
+};
 
-export const getHtmlAttrs = () => ({
-  lang: getLocale(),
-  dir: _dir(getLocale()),
-});
+export const getLocales = () => {
+  _envCheck("getLocales", { clientFeatures: ["data"] });
+  return _getConfig().data.locales;
+};
+
+export const getHtmlAttrs = () => {
+  _envCheck("getHtmlAttrs", { clientFeatures: ["data"] });
+  return {
+    lang: getLocale(),
+    dir: _dir(getLocale()),
+  };
+};
 
 /**
  *
@@ -134,9 +148,10 @@ export const getHtmlAttrs = () => ({
  */
 export const setDynamicParams = (params) => {
   _envCheck("setDynamicParams", { serverOnly: true });
+  const config = _getConfig();
 
-  getI18n().dynamicParams = {
-    ...getI18n().dynamicParams,
+  config.paths.dynamicParams = {
+    ...config.paths.dynamicParams,
     ...params,
   };
 };
@@ -147,9 +162,10 @@ export const setDynamicParams = (params) => {
  * @param {Record<string, string | undefined>} params
  */
 export const getLocalePath = (path, params = {}, _locale = getLocale()) => {
-  _envCheck("getLocalePath", { clientEnabled: true });
+  _envCheck("getLocalePath", { clientFeatures: ["data", "paths"] });
+  const config = _getConfig();
 
-  const route = routes.find(
+  const route = config.paths.routes.find(
     (route) => route.locale === _locale && route.originalPattern === path
   );
   if (!route) {
@@ -173,19 +189,20 @@ export const getLocalePath = (path, params = {}, _locale = getLocale()) => {
  * @param {string} locale
  */
 export const switchLocalePath = (locale) => {
-  _envCheck("switchLocalePath", { clientEnabled: true });
+  _envCheck("switchLocalePath", { clientFeatures: ["paths"] });
+  const config = _getConfig();
 
-  const currentLocaleRoutes = routes.filter(
+  const currentLocaleRoutes = config.paths.routes.filter(
     (route) => route.locale === getLocale()
   );
 
   let currentLocaleRoute = currentLocaleRoutes.find(
-    (route) => route.injectedRoute.pattern === getI18n().pathname
+    (route) => route.injectedRoute.pattern === config.paths.pathname
   );
   if (!currentLocaleRoute) {
     currentLocaleRoute = currentLocaleRoutes.find((route) => {
       for (const param of Object.keys(
-        getI18n().dynamicParams?.[locale] ?? {}
+        config.paths.dynamicParams?.[locale] ?? {}
       )) {
         if (!route.injectedRoute.pattern.includes(param)) {
           return false;
@@ -200,7 +217,7 @@ export const switchLocalePath = (locale) => {
     throw new Error("Couldn't find a currentLocaleRoute. Open an issue");
   }
 
-  const route = routes.find(
+  const route = config.paths.routes.find(
     (route) =>
       route.locale === locale &&
       currentLocaleRoute.originalPattern === route.originalPattern
@@ -211,13 +228,14 @@ export const switchLocalePath = (locale) => {
 
   return getLocalePath(
     route.originalPattern,
-    getI18n().dynamicParams?.[locale] ?? undefined,
+    config.paths.dynamicParams?.[locale] ?? undefined,
     locale
   );
 };
 
 export const getSwitcherData = () => {
-  return locales.map((locale) => ({
+  _envCheck("getSwitcherData", { clientFeatures: ["data", "paths"] });
+  return getLocales().map((locale) => ({
     locale,
     href: switchLocalePath(locale),
   }));

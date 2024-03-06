@@ -36,7 +36,26 @@ export const optionsSchema = z
       ),
     localesDir: z.string().optional().default("./src/locales"),
     defaultNamespace: z.string().optional().default("common"),
-    client: z.boolean().optional().default(false),
+    client: z
+      .literal(false)
+      .or(
+        z.object({
+          translations: z.boolean().optional().default(false),
+          data: z.boolean().optional().default(false),
+          paths: z.boolean().optional().default(false),
+        })
+      )
+      .optional()
+      .default(false)
+      .transform((val) =>
+        typeof val === "boolean"
+          ? {
+              data: val,
+              translations: val,
+              paths: val,
+            }
+          : val
+      ),
     rootRedirect: z
       .object({
         status: redirectStatusSchema,

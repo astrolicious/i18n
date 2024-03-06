@@ -1,5 +1,5 @@
 import { defineMiddleware } from "astro:middleware";
-import { options } from "virtual:astro-i18n/internal";
+import { options, i18nextConfig, routes } from "virtual:astro-i18n/internal";
 import { als } from "virtual:astro-i18n/als";
 
 const extractLocaleFromUrl = (pathname: string) => {
@@ -26,10 +26,20 @@ export const onRequest = defineMiddleware((context, next) => {
 
   return als.run(
     {
-      locale,
-      pathname,
-      dynamicParams: {},
-      i18nextInitialized: false,
+      clientOptions: options.client,
+      translations: {
+        initialized: false,
+        i18nextConfig,
+      },
+      data: {
+        locale,
+        locales: options.locales,
+      },
+      paths: {
+        pathname,
+        routes,
+        dynamicParams: {},
+      },
     },
     next
   );

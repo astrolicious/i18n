@@ -2,22 +2,18 @@
 
 declare module "virtual:astro-i18n/internal" {
   export const options: import("./options.js").Options;
-  export const routes: Array<import("./routing/index.js").Route>;
-  export const i18nextConfig: {
-    namespaces: Array<string>;
-    defaultNamespace: string;
-    resources: Record<string, Record<string, any>>;
-  };
+  export const routes: Array<import("./types.js").Route>;
+  export const i18nextConfig: import("./types.js").I18nextConfig;
 }
 
 declare module "virtual:astro-i18n/als" {
   export const als: import("node:async_hooks").AsyncLocalStorage<
-    import("./types.js").InternalI18n
+    import("./types.js").I18nConfig
   >;
 }
 
 interface Window {
-  __INTERNAL_ASTRO_I18N_CONFIG__: import("./types.js").InternalI18n;
+  __INTERNAL_ASTRO_I18N_CONFIG__: import("./types.js").I18nConfig;
 }
 
 // TODO: uncomment once we have a proper monorepo structure

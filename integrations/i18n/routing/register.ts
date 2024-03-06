@@ -5,7 +5,8 @@ import type {
 } from "astro";
 import type { Options } from "../options.js";
 import { addPageDir } from "astro-pages";
-import { ROUTES_DIR, type Route } from "./index.js";
+import { type Route } from "../types.js";
+import { ROUTES_DIR } from "./index.js";
 import { fileURLToPath } from "node:url";
 import { dirname, join, relative, resolve } from "node:path";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";

@@ -87,9 +87,9 @@ export const integration = defineIntegration({
             };
             export type LocalePath = keyof LocalePathParams;
 
-            export const locales: ${JSON.stringify(options.locales)};
             export const t: typeof import("i18next").t;
             export const getLocale: () => Locale;
+            export const getLocales: () => ${JSON.stringify(options.locales)};
             export const getHtmlAttrs: () => {
               lang: string;
               dir: "rtl" | "ltr";
@@ -108,9 +108,14 @@ export const integration = defineIntegration({
           }`,
         });
 
-        if (options.client) {
+        const enabledClientFeatures = Object.entries(options.client)
+          .map(([name, enabled]) => ({ name, enabled }))
+          .filter((e) => e.enabled);
+        if (enabledClientFeatures.length > 0) {
           logger.info(
-            "Client features enabled, make sure to use the `<I18nClient />` component"
+            `Client features enabled: ${enabledClientFeatures
+              .map((e) => `"${e.name}"`)
+              .join(", ")}. Make sure to use the \`<I18nClient />\` component`
           );
         }
 
@@ -118,20 +123,39 @@ export const integration = defineIntegration({
           resolve("./stubs/virtual.mjs"),
           "utf-8"
         );
-        const placeholder = '"@@CONTEXT@@"';
+        const placeholders = {
+          config: '"@@_CONFIG_@@"',
+          i18next: '"@@_I18NEXT_@@"',
+        };
 
+        // TODO: update based on client enabled features
         const _imports = [
           {
             name: VIRTUAL_MODULE_ID,
-            content: `import { als } from "virtual:astro-i18n/als";${virtualModuleStub.replaceAll(
-              placeholder,
-              "als.getStore()"
-            )}`,
+            content: `import { als } from "virtual:astro-i18n/als"; import _i18next from "i18next"; ${virtualModuleStub
+              .replaceAll(placeholders.config, "als.getStore()")
+              .replaceAll(placeholders.i18next, "_i18next")}`,
             ssr: true,
           },
           {
             name: VIRTUAL_MODULE_ID,
-            content: virtualModuleStub.replaceAll(placeholder, "window.__INTERNAL_ASTRO_I18N_CONFIG__"),
+            content: (() => {
+              let content = "";
+              if (options.client.translations) {
+                content += `import _i18next from "i18next"; `;
+              }
+
+              content += virtualModuleStub.replaceAll(
+                placeholders.config,
+                "window.__INTERNAL_ASTRO_I18N_CONFIG__"
+              );
+
+              if (options.client.translations) {
+                content = content.replaceAll(placeholders.i18next, "_i18next");
+              }
+
+              return content;
+            })(),
             ssr: false,
           },
         ];

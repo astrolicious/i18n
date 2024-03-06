@@ -6,7 +6,7 @@
 - [x] use `als` instead of `globalThis`
 - [x] `localePath`: type Params
 - [x] make internal ids more robust
-- [ ] better control over client features
+- [x] better control over client features
 - [ ] improve trailing slash handling
 - [ ] always return a fallback for locales path
 - [ ] Check namings
