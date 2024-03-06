@@ -1,34 +1,36 @@
 {
-  "name": "package-name",
-  "version": "0.0.0",
-  "description": "TODO:",
-  "author": {
-    "email": "TODO:",
-    "name": "TODO:",
-    "url": "TODO:"
-  },
-  "license": "MIT",
-  "keywords": [
-    "astro-integration",
-    "astro-component",
-    "withastro",
-    "astro",
-    "TODO:"
-  ],
-  "homepage": "TODO:",
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false,
-  "exports": {
-    ".": "./src/index.ts"
-  },
-  "scripts": {},
-  "type": "module",
-  "peerDependencies": {
-    "astro": "^4.0.0"
-  },
-  "dependencies": {
-    "astro-integration-kit": "^0.5.0"
-  }
+	"name": "package-name",
+	"version": "0.0.0",
+	"description": "Yet another i18n integration for Astro with server and client utilities, type safety and translations built-in.",
+	"author": {
+		"email": "contact@florian-lefebvre.dev",
+		"name": "Florian Lefebvre",
+		"url": "https://florian-lefebvre.dev"
+	},
+	"license": "MIT",
+	"keywords": [
+		"astro-integration",
+		"astro-component",
+		"withastro",
+		"astro",
+		"i18n",
+    "i18next",
+    "seo"
+	],
+	"homepage": "https://github.com/astrolicious/astro-i18n",
+	"publishConfig": {
+		"access": "public"
+	},
+	"sideEffects": false,
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"scripts": {},
+	"type": "module",
+	"peerDependencies": {
+		"astro": "^4.0.0"
+	},
+	"dependencies": {
+		"astro-integration-kit": "^0.5.0"
+	}
 }

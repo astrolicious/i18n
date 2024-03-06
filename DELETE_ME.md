@@ -1,6 +1,6 @@
 ## Checklist
 
-- [ ] Update all `TODO:`
+- [x] Update all `TODO:`
 - [ ] Update all `package-name` occurences
 - [ ] Add a LICENSE.md at the root
 - [ ] Have gh cli installed
@@ -8,6 +8,14 @@
 - [ ] Work on docs
   - [ ] JSDoc
   - [ ] Package README
+  - [ ] docs
+    - [ ] limitations
+      - [ ] VT not tested
+      - [ ] experimental
+      - [ ] rest parameters not tested although should work
+      - [ ] sitemap not working yet
+      - [ ] 404
+- [ ] TODOs in code
 - [ ] Format/lint (`pnpm lint:fix`)
 - [ ] Setup GitHub repository
 - [ ] Release (see below)

@@ -128,7 +128,6 @@ export const integration = defineIntegration({
           i18next: '"@@_I18NEXT_@@"',
         };
 
-        // TODO: update based on client enabled features
         const _imports = [
           {
             name: VIRTUAL_MODULE_ID,
