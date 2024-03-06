@@ -7,9 +7,9 @@
 - [x] `localePath`: type Params
 - [x] make internal ids more robust
 - [x] better control over client features
-- [ ] improve trailing slash handling
 - [x] always return a fallback for locales path
 - [x] `setDynamicParams`: accept an array
+- [ ] improve trailing slash handling
 - [ ] Check namings
 - [ ] List limitations
   - [ ] VT not tested
