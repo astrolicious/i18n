@@ -18,11 +18,30 @@ importers:
   package:
     dependencies:
       astro:
-        specifier: ^4.0.0
+        specifier: ^4.4.11
         version: 4.4.11(@types/node@20.11.22)(typescript@5.3.3)
       astro-integration-kit:
-        specifier: ^0.5.0
-        version: 0.5.1(astro@4.4.11)(react@18.2.0)
+        specifier: ^0.5.1
+        version: 0.5.1(astro@4.4.11)
+      astro-pages:
+        specifier: ^0.2.0
+        version: 0.2.0(astro-integration-kit@0.5.1)(astro@4.4.11)
+      i18next:
+        specifier: ^23.10.0
+        version: 23.10.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+      ufo:
+        specifier: ^1.4.0
+        version: 1.4.0
+    devDependencies:
+      '@types/node':
+        specifier: ^20.11.22
+        version: 20.11.22
+      vite:
+        specifier: ^5.1.4
+        version: 5.1.4(@types/node@20.11.22)
 
   playground:
     dependencies:
@@ -50,15 +69,6 @@ importers:
       astro:
         specifier: ^4.4.11
         version: 4.4.11(@types/node@20.11.22)(typescript@5.3.3)
-      astro-integration-kit:
-        specifier: ^0.5.1
-        version: 0.5.1(astro@4.4.11)(react@18.2.0)
-      astro-pages:
-        specifier: ^0.2.0
-        version: 0.2.0(astro-integration-kit@0.5.1)(astro@4.4.11)
-      i18next:
-        specifier: ^23.10.0
-        version: 23.10.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -71,19 +81,10 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
-      ufo:
-        specifier: ^1.4.0
-        version: 1.4.0
     devDependencies:
       '@tailwindcss/forms':
         specifier: ^0.5.7
         version: 0.5.7(tailwindcss@3.4.1)
-      '@types/node':
-        specifier: ^20.11.22
-        version: 20.11.22
-      vite:
-        specifier: ^5.1.4
-        version: 5.1.4(@types/node@20.11.22)
 
 packages:
 
@@ -1486,7 +1487,7 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /astro-integration-kit@0.5.1(astro@4.4.11)(react@18.2.0):
+  /astro-integration-kit@0.5.1(astro@4.4.11):
     resolution: {integrity: sha512-ef309UUNOjxUe0jjsDP5O3p+jkt53HAcrKOsWJ2NIgdUTOp5P/YKnAjbatfyu3bAuLFDfj5xhXm/rrwSe9d/hw==}
     peerDependencies:
       '@vitejs/plugin-react': ^4.2.1
@@ -1512,7 +1513,6 @@ packages:
     dependencies:
       astro: 4.4.11(@types/node@20.11.22)(typescript@5.3.3)
       pathe: 1.1.2
-      react: 18.2.0
       recast: 0.23.5
     dev: false
 
@@ -1523,7 +1523,7 @@ packages:
       astro-integration-kit: ^0.3.0
     dependencies:
       astro: 4.4.11(@types/node@20.11.22)(typescript@5.3.3)
-      astro-integration-kit: 0.5.1(astro@4.4.11)(react@18.2.0)
+      astro-integration-kit: 0.5.1(astro@4.4.11)
       fast-glob: 3.3.2
     dev: false
 

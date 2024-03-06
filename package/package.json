@@ -14,8 +14,8 @@
 		"withastro",
 		"astro",
 		"i18n",
-    "i18next",
-    "seo"
+		"i18next",
+		"seo"
 	],
 	"homepage": "https://github.com/astrolicious/astro-i18n",
 	"publishConfig": {
@@ -23,14 +23,25 @@
 	},
 	"sideEffects": false,
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./components/I18nClient.astro": "./src/components/I18nClient.astro",
+		"./components/I18nHead.astro": "./src/components/I18nHead.astro"
 	},
 	"scripts": {},
 	"type": "module",
 	"peerDependencies": {
-		"astro": "^4.0.0"
+		"astro": "^4.4.11"
 	},
 	"dependencies": {
-		"astro-integration-kit": "^0.5.0"
+		"astro": "^4.4.11",
+		"astro-integration-kit": "^0.5.1",
+		"astro-pages": "^0.2.0",
+		"i18next": "^23.10.0",
+		"typescript": "^5.3.3",
+		"ufo": "^1.4.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.11.22",
+		"vite": "^5.1.4"
 	}
 }

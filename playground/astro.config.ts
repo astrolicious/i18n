@@ -1,8 +1,7 @@
 import { defineConfig } from "astro/config";
-import i18n from "./integrations/i18n";
+import i18n from "@astrolicious/astro-i18n";
 import react from "@astrojs/react";
 import node from "@astrojs/node";
-
 import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
