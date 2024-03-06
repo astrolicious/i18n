@@ -1,7 +1,7 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "baseUrl": "C:/Users/Admin/Documents/github/florian-lefebvre/astro-i18n-test",
+    "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
       "#i18n/*": [
