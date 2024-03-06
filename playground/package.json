@@ -1,35 +1,36 @@
 {
-  "name": "playground",
-  "type": "module",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro check && astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "@astrojs/check": "^0.5.6",
-    "@astrojs/node": "^8.2.3",
-    "@astrojs/react": "^3.0.10",
-    "@astrojs/tailwind": "^5.1.0",
-    "@types/react": "^18.2.61",
-    "@types/react-dom": "^18.2.19",
-    "astro": "^4.4.11",
-    "astro-integration-kit": "^0.5.1",
-    "astro-pages": "^0.2.0",
-    "i18next": "^23.10.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5.3.3",
-    "ufo": "^1.4.0"
-  },
-  "devDependencies": {
-    "@tailwindcss/forms": "^0.5.7",
-    "@types/node": "^20.11.22",
-    "vite": "^5.1.4"
-  }
+	"name": "playground",
+	"type": "module",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "astro dev",
+		"start": "astro dev",
+		"build": "astro check && astro build",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"dependencies": {
+		"@astrojs/check": "^0.5.6",
+		"@astrojs/node": "^8.2.3",
+		"@astrojs/react": "^3.0.10",
+		"@astrojs/tailwind": "^5.1.0",
+		"@astrolicious/astro-i18n": "workspace:*",
+		"@types/react": "^18.2.61",
+		"@types/react-dom": "^18.2.19",
+		"astro": "^4.4.11",
+		"astro-integration-kit": "^0.5.1",
+		"astro-pages": "^0.2.0",
+		"i18next": "^23.10.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"tailwindcss": "^3.4.1",
+		"typescript": "^5.3.3",
+		"ufo": "^1.4.0"
+	},
+	"devDependencies": {
+		"@tailwindcss/forms": "^0.5.7",
+		"@types/node": "^20.11.22",
+		"vite": "^5.1.4"
+	}
 }
