@@ -144,11 +144,26 @@ export const getHtmlAttrs = () => {
 
 /**
  *
- * @param {Record<string, string>} params
+ * @param {Record<string, Record<string, string>> | Array<{ locale: string; params: Record<string | string> }>} _params
  */
-export const setDynamicParams = (params) => {
+export const setDynamicParams = (_params) => {
   _envCheck("setDynamicParams", { serverOnly: true });
   const config = _getConfig();
+
+  const params = Array.isArray(_params)
+    ? _params.reduce(
+        (obj, e) => ({
+          ...obj,
+          [e.locale]: {
+            ...(obj[e.locale] ?? {}),
+            ...e.params,
+          },
+        }),
+        {}
+      )
+    : _params;
+
+  console.log(params)
 
   config.paths.dynamicParams = {
     ...config.paths.dynamicParams,

@@ -35,15 +35,7 @@ const { slug } = Astro.params;
 const { slugs } = Astro.props;
 
 setDynamicParams(
-  Object.entries(slugs)
-    .map(([locale, slug]) => ({ [locale]: { slug } }))
-    .reduce(
-      (e, obj) => ({
-        ...obj,
-        ...e,
-      }),
-      {}
-    )
+  Object.entries(slugs).map(([locale, slug]) => ({ locale, params: { slug } }))
 );
 
 const title = t("blog");

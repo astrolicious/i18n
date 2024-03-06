@@ -9,7 +9,7 @@
 - [x] better control over client features
 - [ ] improve trailing slash handling
 - [x] always return a fallback for locales path
-- [ ] `setDynamicParams`: accept an array
+- [x] `setDynamicParams`: accept an array
 - [ ] Check namings
 - [ ] List limitations
   - [ ] VT not tested

@@ -94,7 +94,12 @@ export const integration = defineIntegration({
               lang: string;
               dir: "rtl" | "ltr";
             };
-            export const setDynamicParams: (params: Record<string, Record<string, string>>) => void;
+            export const setDynamicParams: (
+                params: Partial<Record<Locale | (string & {}), Record<string, string>>> | Array<{
+                    locale: Locale | (string & {});
+                    params: Record<string, string>;
+                }>
+            ) => void;
             export const getLocalePath: <TPath extends LocalePath>(
               path: TPath,
               ...params: LocalePathParams[TPath] extends never
