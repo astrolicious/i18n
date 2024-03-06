@@ -17,7 +17,7 @@ declare module "virtual:astro-i18n/als" {
 }
 
 interface Window {
-  __i18n: import("./types.js").InternalI18n;
+  __INTERNAL_ASTRO_I18N_CONFIG__: import("./types.js").InternalI18n;
 }
 
 // TODO: uncomment once we have a proper monorepo structure

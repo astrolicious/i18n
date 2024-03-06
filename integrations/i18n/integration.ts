@@ -131,7 +131,7 @@ export const integration = defineIntegration({
           },
           {
             name: VIRTUAL_MODULE_ID,
-            content: virtualModuleStub.replaceAll(placeholder, "window.__i18n"),
+            content: virtualModuleStub.replaceAll(placeholder, "window.__INTERNAL_ASTRO_I18N_CONFIG__"),
             ssr: false,
           },
         ];
