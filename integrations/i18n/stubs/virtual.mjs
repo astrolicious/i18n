@@ -24,7 +24,7 @@ const _envCheck = (
         `\`${name}\` on the client requires \`client: true\` in the integration config`
       );
     }
-    if (!("__i18n" in window)) {
+    if (!getI18n()) {
       throw new Error(
         `\`${name}\` on the client requires using the \`<I18nClient />\` component`
       );
@@ -108,6 +108,7 @@ const _dir = (locale) => {
 export const locales = options.locales;
 
 export const t = (...args) => {
+  _envCheck("t", { clientEnabled: true });
   if (!getI18n().i18nextInitialized) {
     i18next.init({
       lng: getLocale(),
