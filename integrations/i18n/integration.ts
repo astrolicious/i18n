@@ -8,7 +8,6 @@ import {
   addVirtualImports,
   watchIntegration,
 } from "astro-integration-kit/utilities";
-import { withTrailingSlash } from "ufo";
 
 const VIRTUAL_MODULE_ID = "i18n:astro";
 
@@ -69,11 +68,7 @@ export const integration = defineIntegration({
               ${defaultLocaleRoutes
                 .map(
                   (route) =>
-                    `"${
-                      config.trailingSlash === "always"
-                        ? withTrailingSlash(route.originalPattern)
-                        : route.originalPattern
-                    }": ${
+                    `"${route.originalPattern}": ${
                       route.params.length === 0
                         ? "never"
                         : `{
