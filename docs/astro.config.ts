@@ -33,6 +33,10 @@ export default defineConfig({
 					},
 				},
 			],
+			editLink: {
+				baseUrl: "https://github.com/astrolicious/astro-i18n/edit/main/docs/",
+			},
+			lastUpdated: true,
 			expressiveCode: {
 				themes: ["one-dark-pro"],
 				plugins: [pluginLineNumbers()],
@@ -62,6 +66,7 @@ export default defineConfig({
 					label: "Usage",
 					items: [
 						{ label: "Configuration", link: "/usage/configuration/" },
+						{ label: "Translations", link: "/usage/translations/" },
 						{ label: "Client usage", link: "/usage/client/" },
 					],
 				},
@@ -73,7 +78,7 @@ export default defineConfig({
 				},
 				{
 					label: "Types",
-					link: "/reference/types/"
+					link: "/reference/types/",
 				},
 				{
 					label: "Components",

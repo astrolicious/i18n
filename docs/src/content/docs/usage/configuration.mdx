@@ -1,3 +1,188 @@
 ---
 title: Configuration
 ---
+
+import { FileTree } from '@astrojs/starlight/components';
+
+## Configure the `astro-i18n` integration
+
+You can pass the following options to the integration.
+
+:::note
+The examples below assume the following configuration:
+
+```ts showLineNumbers=false
+i18n({
+    defaultLocale: "en",
+    locales: ["en", "fr"]
+})
+```
+:::
+
+### `defaultLocale` (required)
+
+**Type:** `string`
+
+Sets the default locale for your website.
+
+### `locales` (required)
+
+**Type:** `Array<string>`
+
+Sets the available locales for your website. Must include the default locale.
+
+### `strategy`
+
+**Type:** `"prefixWithoutDefault" | "prefix"`
+
+**Default:** `"prefixWithoutDefault"`
+
+Defines how your routes are generated:
+- `"prefixWithoutDefault"` will not add a prefix for your default locale:
+
+    <FileTree>
+
+    - src/routes/
+        - index.astro / and /fr
+        - about.astro /about and /fr/about
+
+    </FileTree>
+
+- `"prefix"` will add a prefix for your default locale:
+
+    <FileTree>
+
+    - src/routes/
+        - index.astro /en and /fr
+        - about.astro /en/about and /fr/about
+
+    </FileTree>
+
+### `pages`
+
+**Type:** `Record<string, Record<string, string>>`
+
+Allows you to define translated paths for your locales. For example:
+
+**Integration configuration:**
+
+```ts
+i18n({
+    // ...
+    strategy: "prefixWithoutDefault",
+    pages: {
+        '/about': {
+            fr: '/a-propos'
+        },
+        '/blog/[slug]': {
+            fr: '/le-blog/[slug]'
+        }
+    }
+})
+```
+
+**Project structure**
+
+<FileTree>
+
+- src/routes/
+    - index.astro
+    - about.astro
+    - contact.astro
+    - blog/
+        - [slug].astro
+
+</FileTree>
+
+**URL structure**
+
+<FileTree>
+
+- /
+- about
+- contact
+- blog/
+    - a
+    - b
+- fr/
+    - a-propos
+    - contact
+    - le-blog/
+        - a
+        - b
+
+</FileTree>
+
+### `localesDir`
+
+**Type:** `string`
+
+**Default:** `"./src/locales"`
+
+A path relative to the root where locales files are located for translations features.
+
+### `defaultNamespace`
+
+**Type:** `string`
+
+**Default:** `"common"`
+
+Sets the default namespace for locales. Since `astro-i18n` uses `i18next` under the hood, it allows to split
+translations data in multiple json files under `src/locales/[locale]/`. If you're not using a file called `common.json`,
+you need to update this property to have proper types completions when using `t`.
+
+<FileTree>
+
+- src/locales/
+    - en/
+        - shared.json Update this option to `"shared"` if you're not using the default `"common"`
+        - test.json
+    - fr/
+        - shared.json
+
+</FileTree>
+
+### `client`
+
+**Type:** `false | ClientConfig`
+
+**Default:** `false`
+
+Client usage is disabled by default because it sends some JavaScript to the browser.
+Enabling any of the following features requires importing the `<I18nClient/>` component.
+
+#### `ClientConfig`
+
+| Utility                | Required features          |
+|------------------------|----------------------------|
+| `t`                    | `data`, `translations`     |
+| `getLocale`            | `data`                     |
+| `getLocales`           | `data`                     |
+| `getHtmlAttrs`         | `data`                     |
+| `setDynamicParams`     | N/A, server only           |
+| `getLocalePath`        | `data`, `paths`            |
+| `switchLocalePath`     | `data`, `paths`            |
+| `getSwitcherData`      | `data`, `paths`            |
+| `getLocalePlaceholder` | N/A, `getStaticPaths` only |
+
+- `data`: `boolean`, defaults to `false`
+- `paths`: `boolean`, defaults to `false`
+- `translations`: `boolean`, defaults to `false`
+
+### `rootRedirect`
+
+**Type:** `{ status: number; destination: string }`
+
+When using `strategy: "prefix"`, you may want to redirect your users from the root
+to a specific page (likely the default locale root). This option allows you to do so:
+
+```ts
+i18n({
+    // ...
+    strategy: "prefix",
+    rootRedirect: {
+        status: 301,
+        destination: "/en"
+    }
+})
+```
