@@ -54,7 +54,7 @@ export default defineConfig({
 					items: [
 						{ label: "Installation", link: "/getting-started/installation/" },
 						{ label: "Usage", link: "/getting-started/usage/" },
-						{ label: "Limitations", link: "/getting-started/limitations/" },
+						{ label: "Known issues", link: "/getting-started/known-issues/" },
 						{ label: "Showcase", link: "/getting-started/showcase/" },
 					],
 				},
