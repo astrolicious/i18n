@@ -2,11 +2,9 @@
 
 This is yet another i18n integration for [Astro](https://astro.build/) with server and client utilities, type safety and translations built-in.
 
-## Usage
+## Documentation
 
-### Prerequisites
-
-TODO: docs
+Read the [Astro I18n docs](https://astro-i18n.netlify.app/).
 
 ## Contributing
 
