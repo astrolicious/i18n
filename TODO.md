@@ -8,7 +8,8 @@
 - [x] make internal ids more robust
 - [x] better control over client features
 - [ ] improve trailing slash handling
-- [ ] always return a fallback for locales path
+- [x] always return a fallback for locales path
+- [ ] `setDynamicParams`: accept an array
 - [ ] Check namings
 - [ ] List limitations
   - [ ] VT not tested

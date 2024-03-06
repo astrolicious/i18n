@@ -1,6 +1,6 @@
 ---
 import type { GetStaticPaths } from "astro";
-import { setDynamicParams, switchLocalePath, getLocalePlaceholder, t } from "i18n:astro";
+import { setDynamicParams, getLocalePlaceholder, t } from "i18n:astro";
 import Layout from "~/layouts/Layout.astro";
 
 export const getStaticPaths = (() => {
@@ -45,11 +45,6 @@ setDynamicParams(
       {}
     )
 );
-
-console.log({
-  en: switchLocalePath("en"),
-  fr: switchLocalePath("fr"),
-});
 
 const title = t("blog");
 ---

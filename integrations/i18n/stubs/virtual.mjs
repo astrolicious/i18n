@@ -196,25 +196,29 @@ export const switchLocalePath = (locale) => {
     (route) => route.locale === getLocale()
   );
 
-  let currentLocaleRoute = currentLocaleRoutes.find(
-    (route) => route.injectedRoute.pattern === config.paths.pathname
-  );
-  if (!currentLocaleRoute) {
-    currentLocaleRoute = currentLocaleRoutes.find((route) => {
-      for (const param of Object.keys(
-        config.paths.dynamicParams?.[locale] ?? {}
-      )) {
-        if (!route.injectedRoute.pattern.includes(param)) {
-          return false;
-        }
-      }
+  // Static
+  let currentLocaleRoute = currentLocaleRoutes
+    .filter((route) => route.params.length === 0)
+    .find((route) => route.injectedRoute.pattern === config.paths.pathname);
 
-      return true;
-    });
+  // Dynamic
+  if (!currentLocaleRoute) {
+    currentLocaleRoute = currentLocaleRoutes
+      .filter((route) => route.params.length > 0)
+      .find(
+        (route) =>
+          JSON.stringify(route.params.sort()) ===
+          JSON.stringify(
+            Object.keys(config.paths.dynamicParams?.[locale] ?? {}).sort()
+          )
+      );
   }
 
+  // Fallback
   if (!currentLocaleRoute) {
-    throw new Error("Couldn't find a currentLocaleRoute. Open an issue");
+    currentLocaleRoute = currentLocaleRoutes.sort(
+      (a, b) => a.originalPattern.length - b.originalPattern.length
+    )[0];
   }
 
   const route = config.paths.routes.find(
