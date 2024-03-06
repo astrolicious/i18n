@@ -34,7 +34,7 @@ export default defineConfig({
 				},
 			],
 			expressiveCode: {
-				themes: ["one-dark-pro", "starlight-light"],
+				themes: ["one-dark-pro"],
 				plugins: [pluginLineNumbers()],
 				defaultProps: {
 					overridesByLang: {
@@ -66,9 +66,25 @@ export default defineConfig({
 					],
 				},
 				{
-					label: "Reference",
+					label: "Recipes",
 					autogenerate: {
-						directory: "reference",
+						directory: "recipes",
+					},
+				},
+				{
+					label: "Types",
+					link: "/reference/types/"
+				},
+				{
+					label: "Components",
+					autogenerate: {
+						directory: "reference/components",
+					},
+				},
+				{
+					label: "Utilities",
+					autogenerate: {
+						directory: "reference/utilities",
 					},
 				},
 			],

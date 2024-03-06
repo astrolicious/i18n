@@ -1,3 +1,125 @@
 ---
 title: Usage
 ---
+
+import { LinkCard, FileTree, Steps } from '@astrojs/starlight/components';
+
+:::danger[Disclaimer]
+This integration is incompatible with the [native Astro internationalization features](https://docs.astro.build/en/guides/internationalization/).
+:::
+
+## Update the integration configuration
+
+`astro-i18n` has a few required options:
+
+```js title="astro.config.mjs" {7,8}
+import { definConfig } from "astro/config"
+import i18n from "@astrolicious/astro-i18n"
+
+export default defineConfig({
+    integrations: [
+        i18n({
+            defaultLocale: "en",
+            locales: ["en", "fr"] // must include the default locale
+        })
+    ]
+})
+```
+
+There are many convenient options, check out the reference below to learn more.
+
+<LinkCard
+  title="Configuration"
+  href="/usage/configuration/"
+/>
+
+## Structure
+
+<FileTree>
+
+- src/
+    - locales/ Data used for translations
+        - en/
+            - common.json
+        - fr/
+            - common.json
+    - pages/ Not managed by `astro-i18n`
+        - custom.astro Accessible at /custom
+        - api/
+            - hello.ts Accessible at /api/hello
+    - routes/ Managed by `astro-i18n`
+        - index.astro Accessible at `/` and `/fr` by default
+        - blog.astro Accessible at `/blog` and `/fr/blog` by default
+
+</FileTree>
+
+## Import the utilities
+
+Utilities can be imported from `i18n:astro` inside `routes`, `pages` and middlewares:
+
+```astro
+---
+import { getLocale } from "i18n:astro"
+
+const locale = getLocale()
+---
+```
+
+Have a look at the reference to see what you can do!
+
+## Client usage
+
+Using utilities from `i18n:astro` on the client is opt-in. You need 2 things:
+
+<Steps>
+
+1. Import the `<I18nClient />` component, likely in your layout:
+
+    ```astro title="src/layouts/Layout.astro" ins={2,10}
+    ---
+    import I18nClient from "@astrolicious/astro-i18n/components/I18nClient.astro"
+    ---
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <I18NClient />
+        <slot name="head" />
+    </head>
+    <body>
+        <slot />
+    </body>
+    </html>
+    ```
+
+2. Enable client features in the integration configuration:
+
+    ```js title="astro.config.mjs" ins={9-13}
+    import { definConfig } from "astro/config"
+    import i18n from "@astrolicious/astro-i18n"
+
+    export default defineConfig({
+        integrations: [
+            i18n({
+                defaultLocale: "en",
+                locales: ["en", "fr"],
+                client: {
+                    data: true,
+                    // paths: true,
+                    // translations
+                }
+            })
+        ]
+    })
+    ```
+
+</Steps>
+
+Learn more about it works below!
+
+<LinkCard
+  title="Client usage"
+  href="/usage/client/"
+/>

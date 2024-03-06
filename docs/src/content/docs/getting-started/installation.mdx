@@ -40,3 +40,36 @@ export default defineConfig({
 ```
 
 ## Manual installation
+
+Install the necessary dependencies:
+
+<Tabs>
+    <TabItem label="pnpm" icon="pnpm">
+    ```bash
+    pnpm add @astrolicious/astro-i18n
+    ```
+    </TabItem>
+    <TabItem label="npm" icon="seti:npm">
+    ```bash
+    npm install @astrolicious/astro-i18n
+    ```
+    </TabItem>
+    <TabItem label="yarn" icon="seti:yarn">
+    ```bash
+    yarn add @astrolicious/astro-i18n
+    ```
+    </TabItem>
+</Tabs>
+
+Update your `astro.config.mjs` with the following content:
+
+```js title="astro.config.mjs" ins={2,6}
+import { definConfig } from "astro/config"
+import i18n from "@astrolicious/astro-i18n"
+
+export default defineConfig({
+    integrations: [
+        i18n()
+    ]
+})
+```
