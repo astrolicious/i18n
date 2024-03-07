@@ -8,6 +8,7 @@ import {
 	addVirtualImports,
 	watchIntegration,
 } from "astro-integration-kit/utilities";
+import "./virtual.d.js";
 
 const VIRTUAL_MODULE_ID = "i18n:astro";
 
@@ -60,52 +61,28 @@ export const integration = defineIntegration({
 					...config,
 					name: "astro-i18n",
 					content: `
-          declare module "${VIRTUAL_MODULE_ID}" {
-            export type Locale = ${options.locales
-							.map((locale) => `"${locale}"`)
-							.join(" | ")};
-            export type LocalePathParams = {
-              ${defaultLocaleRoutes
-								.map(
-									(route) =>
-										`"${route.originalPattern}": ${
-											route.params.length === 0
-												? "never"
-												: `{
-                              ${route.params
-																.map((param) => `"${param}": string;`)
-																.join("\n")}
-                            }`
-										}`,
-								)
-								.join(";\n")}
-            };
-            export type LocalePath = keyof LocalePathParams;
-
-            export const t: typeof import("i18next").t;
-            export const getLocale: () => Locale;
-            export const getLocales: () => ${JSON.stringify(options.locales)};
-            export const getHtmlAttrs: () => {
-              lang: string;
-              dir: "rtl" | "ltr";
-            };
-            export const setDynamicParams: (
-                params: Partial<Record<Locale | (string & {}), Record<string, string>>> | Array<{
-                    locale: Locale | (string & {});
-                    params: Record<string, string>;
-                }>
-            ) => void;
-            export const getLocalePath: <TPath extends LocalePath>(
-              path: TPath,
-              ...params: LocalePathParams[TPath] extends never
-                ? []
-                : [LocalePathParams[TPath]]
-            ) => string;
-            export const switchLocalePath: (locale: Locale) => string;
-            export const getSwitcherData: () => Array<{ locale: string; href: string }>;
-
-            export const getLocalePlaceholder: () => Locale;
-          }`,
+						declare module "${VIRTUAL_MODULE_ID}" {
+							export type Locale = ${options.locales
+								.map((locale) => `"${locale}"`)
+								.join(" | ")};
+							export type LocalePathParams = {
+								${defaultLocaleRoutes
+									.map(
+										(route) =>
+											`"${route.originalPattern}": ${
+												route.params.length === 0
+													? "never"
+													: `{
+											${route.params
+												.map((param) => `"${param}": string;`)
+												.join("\n")}
+											}`
+											}`,
+									)
+									.join(";\n")}
+							};
+							export const getLocales: () => ${JSON.stringify(options.locales)};
+						}`,
 				});
 
 				const enabledClientFeatures = Object.entries(options.client)
