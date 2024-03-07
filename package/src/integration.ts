@@ -69,7 +69,7 @@ export const integration = defineIntegration({
 								${defaultLocaleRoutes
 									.map(
 										(route) =>
-											`"${route.originalPattern}": ${
+											`"${route.pattern}": ${
 												route.params.length === 0
 													? "never"
 													: `{

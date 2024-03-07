@@ -178,7 +178,7 @@ export const getLocalePath = (path, params = {}, _locale = getLocale()) => {
 	const config = _getConfig();
 
 	const route = config.paths.routes.find(
-		(route) => route.locale === _locale && route.originalPattern === path,
+		(route) => route.locale === _locale && route.pattern === path,
 	);
 	if (!route) {
 		throw new Error("Invalid path");
@@ -229,21 +229,21 @@ export const switchLocalePath = (locale) => {
 	// Fallback
 	if (!currentLocaleRoute) {
 		currentLocaleRoute = currentLocaleRoutes.sort(
-			(a, b) => a.originalPattern.length - b.originalPattern.length,
+			(a, b) => a.pattern.length - b.pattern.length,
 		)[0];
 	}
 
 	const route = config.paths.routes.find(
 		(route) =>
 			route.locale === locale &&
-			currentLocaleRoute.originalPattern === route.originalPattern,
+			currentLocaleRoute.pattern === route.pattern,
 	);
 	if (!route) {
 		throw new Error("Couldn't find a route. Open an issue");
 	}
 
 	return getLocalePath(
-		route.originalPattern,
+		route.pattern,
 		config.paths.dynamicParams?.[locale] ?? undefined,
 		locale,
 	);

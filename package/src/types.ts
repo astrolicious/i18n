@@ -4,13 +4,10 @@ export type I18nextConfig = {
   resources: Record<string, Record<string, any>>;
 };
 
-// TODO: update properties names
 export type Route = {
   locale: string;
   params: Array<string>;
-  originalPattern: string;
-  staticPattern: string;
-  originalEntrypoint: string;
+  pattern: string;
   injectedRoute: import("astro").InjectedRoute;
 };
 

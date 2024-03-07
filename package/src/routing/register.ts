@@ -58,10 +58,7 @@ const generateRoute = (
         ? page.pattern
         : pages?.[page.pattern]?.[locale] ?? page.pattern
     );
-    return {
-      pattern: prefix + suffix,
-      suffix,
-    };
+    return prefix + suffix;
   };
 
   const transformContent = (entrypoint: string) => {
@@ -126,7 +123,7 @@ const generateRoute = (
     return params;
   };
 
-  const { pattern, suffix } = getPattern();
+  const pattern = getPattern();
   const entrypoint = join(
     paths.entrypointsDir,
     locale,
@@ -138,9 +135,7 @@ const generateRoute = (
   return {
     locale,
     params: getParams(pattern),
-    originalPattern: page.pattern,
-    staticPattern: suffix,
-    originalEntrypoint: page.entrypoint,
+    pattern: page.pattern,
     injectedRoute: {
       pattern,
       entrypoint,
