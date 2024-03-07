@@ -1,7 +1,7 @@
 export type I18nextConfig = {
 	namespaces: Array<string>;
 	defaultNamespace: string;
-	resources: Record<string, Record<string, any>>;
+	resources: Record<string, Record<string, unknown>>;
 };
 
 export type Route = {

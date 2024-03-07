@@ -1,6 +1,7 @@
 {
-  "extends": "astro/tsconfigs/strictest",
-  "compilerOptions": {
-    "jsx": "preserve"
-  }
+	"extends": "astro/tsconfigs/strictest",
+	"compilerOptions": {
+		"jsx": "preserve"
+	},
+	"exclude": ["src/stubs/virtual.d.ts"]
 }

@@ -1,12 +1,12 @@
-declare module "i18n:astro" {
-	export type Locale = string;
+declare module "@@_ID_@@" {
+	export type Locale = "@@_LOCALE_@@";
 
-	export type LocalePathParams = {};
+	export type LocalePathParams = "@@_LOCALE_PATH_PARAMS_@@";
 
 	export type LocalePath = keyof LocalePathParams;
 	export const t: typeof import("i18next").t;
 	export const getLocale: () => Locale;
-	export const getLocales: () => Array<string>;
+	export const getLocales: () => "@@_LOCALES_@@";
 
 	export const getHtmlAttrs: () => {
 		lang: string;

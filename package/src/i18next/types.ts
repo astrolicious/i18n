@@ -12,13 +12,12 @@ export const injectTypes = (
 	importsData: ReturnType<typeof getNamespaces>["importsData"],
 	defaultLocalesDir: string,
 ) => {
-	const relativeLocalesPrefix =
-		normalizePath(
-			relative(
-				fileURLToPath(new URL("./.astro/", config.root)),
-				defaultLocalesDir,
-			),
-		) + "/";
+	const relativeLocalesPrefix = `${normalizePath(
+		relative(
+			fileURLToPath(new URL("./.astro/", config.root)),
+			defaultLocalesDir,
+		),
+	)}/`;
 
 	const content = `
     declare module "i18next" {

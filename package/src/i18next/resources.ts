@@ -3,13 +3,14 @@ import { basename, extname, join } from "node:path";
 import type { AstroIntegrationLogger } from "astro";
 import { normalizePath } from "vite";
 import type { Options } from "../options.js";
+import type { I18nextConfig } from "../types.js";
 
 export const getResources = (
 	logger: AstroIntegrationLogger,
 	{ locales }: Options,
 	localesDir: string,
 ) => {
-	const resources: Record<string, Record<string, any>> = {};
+	const resources: I18nextConfig["resources"] = {};
 
 	const localesDirs = locales
 		.map((locale) => ({

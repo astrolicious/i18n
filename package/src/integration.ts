@@ -8,7 +8,6 @@ import {
 import { handleI18next } from "./i18next/index.js";
 import { optionsSchema } from "./options.js";
 import { handleRouting } from "./routing/index.js";
-import "./virtual.d.js";
 
 const VIRTUAL_MODULE_ID = "i18n:astro";
 
@@ -56,33 +55,48 @@ export const integration = defineIntegration({
 					(route) => route.locale === options.defaultLocale,
 				);
 
+				const virtualTypesStub = readFileSync(
+					resolve("./stubs/virtual.d.ts"),
+					"utf-8",
+				);
+				const typesPlaceholders = {
+					id: "@@_ID_@@",
+					locale: '"@@_LOCALE_@@"',
+					localePathParams: '"@@_LOCALE_PATH_PARAMS_@@"',
+					locales: '"@@_LOCALES_@@"',
+				};
+
 				addDts({
 					logger,
 					...config,
 					name: "astro-i18n",
-					content: `
-						declare module "${VIRTUAL_MODULE_ID}" {
-							export type Locale = ${options.locales
-								.map((locale) => `"${locale}"`)
-								.join(" | ")};
-							export type LocalePathParams = {
-								${defaultLocaleRoutes
-									.map(
-										(route) =>
-											`"${route.pattern}": ${
-												route.params.length === 0
-													? "never"
-													: `{
+					content: virtualTypesStub
+						.replace(typesPlaceholders.id, VIRTUAL_MODULE_ID)
+						.replace(
+							typesPlaceholders.locale,
+							options.locales.map((locale) => `"${locale}"`).join(" | "),
+						)
+						.replace(
+							typesPlaceholders.localePathParams,
+							`{${defaultLocaleRoutes
+								.map(
+									(route) =>
+										`"${route.pattern}": ${
+											route.params.length === 0
+												? "never"
+												: `{
 											${route.params
 												.map((param) => `"${param}": string;`)
 												.join("\n")}
 											}`
-											}`,
-									)
-									.join(";\n")}
-							};
-							export const getLocales: () => ${JSON.stringify(options.locales)};
-						}`,
+										}`,
+								)
+								.join(";\n")}}`,
+						)
+						.replace(
+							typesPlaceholders.locales,
+							JSON.stringify(options.locales),
+						),
 				});
 
 				const enabledClientFeatures = Object.entries(options.client)
@@ -100,7 +114,7 @@ export const integration = defineIntegration({
 					resolve("./stubs/virtual.mjs"),
 					"utf-8",
 				);
-				const placeholders = {
+				const scriptPlaceholders = {
 					config: '"@@_CONFIG_@@"',
 					i18next: '"@@_I18NEXT_@@"',
 				};
@@ -109,8 +123,8 @@ export const integration = defineIntegration({
 					{
 						name: VIRTUAL_MODULE_ID,
 						content: `import { als } from "virtual:astro-i18n/als"; import { i18next as _i18next } from "@astrolicious/i18n/deps"; ${virtualModuleStub
-							.replaceAll(placeholders.config, "als.getStore()")
-							.replaceAll(placeholders.i18next, "_i18next")}`,
+							.replaceAll(scriptPlaceholders.config, "als.getStore()")
+							.replaceAll(scriptPlaceholders.i18next, "_i18next")}`,
 						ssr: true,
 					},
 					{
@@ -122,12 +136,15 @@ export const integration = defineIntegration({
 							}
 
 							content += virtualModuleStub.replaceAll(
-								placeholders.config,
+								scriptPlaceholders.config,
 								"window.__INTERNAL_ASTRO_I18N_CONFIG__",
 							);
 
 							if (options.client.translations) {
-								content = content.replaceAll(placeholders.i18next, "_i18next");
+								content = content.replaceAll(
+									scriptPlaceholders.i18next,
+									"_i18next",
+								);
 							}
 
 							return content;

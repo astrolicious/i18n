@@ -26,9 +26,13 @@ export default function Counter({
 	return (
 		<>
 			<div>
-				<button onClick={subtract}>-</button>
+				<button type="button" onClick={subtract}>
+					-
+				</button>
 				<pre>{count}</pre>
-				<button onClick={add}>+</button>
+				<button type="button" onClick={add}>
+					+
+				</button>
 			</div>
 			<div>{children}</div>
 		</>
