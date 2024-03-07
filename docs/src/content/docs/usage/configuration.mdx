@@ -4,7 +4,7 @@ title: Configuration
 
 import { FileTree } from '@astrojs/starlight/components';
 
-## Configure the `astro-i18n` integration
+## Configure the integration
 
 You can pass the following options to the integration.
 
@@ -127,7 +127,7 @@ A path relative to the root where locales files are located for translations fea
 
 **Default:** `"common"`
 
-Sets the default namespace for locales. Since `astro-i18n` uses `i18next` under the hood, it allows to split
+Sets the default namespace for locales. Since this package uses `i18next` under the hood, it allows to split
 translations data in multiple json files under `src/locales/[locale]/`. If you're not using a file called `common.json`,
 you need to update this property to have proper types completions when using `t`.
 

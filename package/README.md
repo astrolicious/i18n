@@ -29,8 +29,9 @@ You can now edit files in `package`. Please note that making changes to those fi
 
 ## Licensing
 
-[MIT Licensed](https://github.com/astrolicious/astro-i18n/blob/main/LICENSE). Made with ❤️ by [Florian Lefebvre](https://github.com/florian-lefebvre).
+[MIT Licensed](https://github.com/astrolicious/i18n/blob/main/LICENSE). Made with ❤️ by [Florian Lefebvre](https://github.com/florian-lefebvre).
 
 ## Acknowledgements
 
 - https://github.com/yassinedoghri/astro-i18next
+- https://i18n.nuxtjs.org/

@@ -10,7 +10,7 @@ This integration is incompatible with the [native Astro internationalization fea
 
 ## Update the integration configuration
 
-`astro-i18n` has a few required options:
+This package has a few required options:
 
 ```js title="astro.config.mjs" {7,8}
 import { definConfig } from "astro/config"
@@ -43,11 +43,11 @@ There are many convenient options, check out the reference below to learn more.
             - common.json
         - fr/
             - common.json
-    - pages/ Not managed by `astro-i18n`
+    - pages/ Not managed by the package
         - custom.astro Accessible at /custom
         - api/
             - hello.ts Accessible at /api/hello
-    - routes/ Managed by `astro-i18n`
+    - routes/ Managed by the package
         - index.astro Accessible at `/` and `/fr` by default
         - blog.astro Accessible at `/blog` and `/fr/blog` by default
 

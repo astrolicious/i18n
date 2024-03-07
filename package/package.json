@@ -17,7 +17,7 @@
 		"i18next",
 		"seo"
 	],
-	"homepage": "https://github.com/astrolicious/astro-i18n",
+	"homepage": "https://github.com/astrolicious/i18n",
 	"publishConfig": {
 		"access": "public"
 	},

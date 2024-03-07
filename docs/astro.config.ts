@@ -8,13 +8,13 @@ export default defineConfig({
 	site: "https://astro-i18n.netlify.app",
 	integrations: [
 		starlight({
-			title: "astro-i18n",
+			title: "I18n for Astro",
 			logo: {
 				src: "./src/assets/houston-omg.svg",
 			},
 			customCss: ["./src/style.css"],
 			social: {
-				github: "https://github.com/astrolicious/astro-i18n",
+				github: "https://github.com/astrolicious/i18n",
 				discord: "https://astro.build/chat",
 			},
 			head: [
@@ -34,7 +34,7 @@ export default defineConfig({
 				},
 			],
 			editLink: {
-				baseUrl: "https://github.com/astrolicious/astro-i18n/edit/main/docs/",
+				baseUrl: "https://github.com/astrolicious/i18n/edit/main/docs/",
 			},
 			lastUpdated: true,
 			expressiveCode: {
