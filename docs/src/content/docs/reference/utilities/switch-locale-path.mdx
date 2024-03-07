@@ -1,3 +1,15 @@
 ---
 title: switchLocalePath
 ---
+
+Allows you to get the equivalent path of the current route in any locale.
+
+
+```astro
+---
+import { switchLocalePath } from "i18n:astro"
+
+const enPath = switchLocalePath("en") // /about
+const frPath = switchLocalePath("fr") // /fr/a-propos
+---
+```

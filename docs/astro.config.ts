@@ -71,6 +71,14 @@ export default defineConfig({
 					],
 				},
 				{
+					label: "Demo",
+					link: "#",
+					badge: {
+						variant: "tip",
+						text: "SOON",
+					},
+				},
+				{
 					label: "Recipes",
 					autogenerate: {
 						directory: "recipes",
@@ -81,27 +89,17 @@ export default defineConfig({
 					autogenerate: {
 						directory: "reference/components",
 					},
-					collapsed: true,
 				},
 				{
 					label: "Utilities",
 					autogenerate: {
 						directory: "reference/utilities",
 					},
-					collapsed: true,
 				},
 				{
 					label: "Types",
 					link: "/reference/types/",
 				},
-				{
-					label: "Demo",
-					link: "#",
-					badge: {
-						variant: "tip",
-						text: "SOON"
-					}
-				}
 			],
 		}),
 		tailwind({ applyBaseStyles: false }),

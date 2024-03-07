@@ -1,3 +1,17 @@
 ---
 title: getLocale
 ---
+
+Allows you to retrieve the current locale.
+
+```astro
+---
+import { getLocale } from "i18n:astro"
+
+const locale = getLocale()
+---
+```
+
+:::caution
+If you want to access the current locale in `getStaticPaths`, have a look at `getLocalePlaceholder`.
+:::

@@ -1,3 +1,34 @@
 ---
 title: getLocalePlaceholder
 ---
+
+Allows you to get the current locale inside of `getStaticPaths`. It's a build time macro.
+That means it will be replaced by it's literal value. For instance:
+
+```astro
+---
+import { getLocalePlaceholder } from "i18n:astro"
+
+export const getStaticPaths = () => {
+    const locale = getLocalePlaceholder()
+
+    return []
+}
+---
+```
+
+Will be replaced by the following, no matter the context:
+
+```astro {5}
+---
+import { getLocalePlaceholder } from "i18n:astro"
+
+export const getStaticPaths = () => {
+    const locale = "en"
+
+    return []
+}
+---
+```
+
+Be careful not to use `getLocalePlaceholder` in interpolations or it could result in invalid code.

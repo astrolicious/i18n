@@ -1,3 +1,25 @@
 ---
 title: getSwitcherData
 ---
+
+Generates useful data for a locale switcher component. Here is a basic implementation:
+
+```astro "getSwitcherData"
+---
+import { getSwitcherData, getLocale } from "i18n:astro";
+
+const locale = getLocale();
+const data = getSwitcherData();
+---
+
+<select onchange="location = this.value;">
+  {
+    data.map((e) => (
+      <option value={e.href} selected={e.locale === locale}>
+        {e.locale}
+      </option>
+    ))
+  }
+</select>
+
+```

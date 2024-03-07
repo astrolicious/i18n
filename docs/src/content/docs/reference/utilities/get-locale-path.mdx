@@ -1,3 +1,21 @@
 ---
 title: getLocalePath
 ---
+
+Allows you get the right url for the current locale. It's strictly typed and even requires you to pass parameters as needed.
+
+:::note
+`getLocalePath` does not take your `trailingSlash` configuration into account and always returns without a trailing slash.
+:::
+
+```astro
+---
+import { getLocalePath } from "i18n:astro"
+
+getLocalePath("/")
+getLocalePath("/about")
+getLocalePath("/blog/[slug]", {
+    slug: "hello-world"
+})
+---
+```

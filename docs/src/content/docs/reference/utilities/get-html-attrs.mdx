@@ -1,3 +1,24 @@
 ---
 title: getHtmlAttrs
 ---
+
+Having a website in a given locale require a few attributes on the `html` element. You can get those
+automatically through the `getHtmlAttrs` utility!
+
+```astro title="src/layouts/Layout.astro" ins={2,4}
+---
+import { getHtmlAttrs } from "i18n:astro"
+---
+<html {...getHtmlAttrs()}>
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <slot name="head" />
+</head>
+<body>
+    <slot />
+</body>
+</html>
+```

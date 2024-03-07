@@ -1,3 +1,92 @@
 ---
 title: setDynamicParams
 ---
+
+import { FileTree } from '@astrojs/starlight/components';
+
+When having dynamic params in your routes (like `src/routes/blog/[slug]`), you need to manually specify the
+equivalent params in other locales. That will then be passed to `switchLocalePath` and `getSwitcherData`.
+This is particularly useful if you have different corresponding slugs per locale. For example if you want:
+
+<FileTree>
+
+- blog/
+    - hello-world
+- fr/
+    - le-blog/
+        - bonjour-le-monde
+
+</FileTree>
+
+```astro title="src/routes/blog/[slug].astro" ins={3,29-31}
+---
+import type { GetStaticPaths } from "astro";
+import { setDynamicParams, getLocalePlaceholder, t } from "i18n:astro";
+
+export const getStaticPaths = (() => {
+    const locale = getLocalePlaceholder();
+
+    const slugs = [
+        {
+            en: "hello-world",
+            fr: "bonjour-le-monde",
+        },
+        // ...
+    ];
+
+  return slugs.map((slug) => ({
+    params: {
+      slug: slug[locale],
+    },
+    props: {
+      slugs: slug,
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+const { slugs } = Astro.props;
+
+setDynamicParams(
+  Object.entries(slugs).map(([locale, slug]) => ({ locale, params: { slug } }))
+);
+---
+```
+
+## Data shapes
+
+It accepts a single parameter with 2 shapes: object or array.
+
+### Object
+
+```ts
+setDynamicParams({
+    en: {
+        slug: 'hello-world'
+    },
+    fr: {
+        slug: 'bonjour-le-monde'
+    }
+})
+```
+
+### Array
+
+More convenient when working with data programmatically
+
+```ts
+setDynamicParams([
+    {
+        locale: "en",
+        params: {
+            slug: "hello-world"
+        }
+    },
+    {
+        locale: "fr",
+        params: {
+            slug: "bonjour-le-monde"
+        }
+    }
+])
+```
