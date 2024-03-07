@@ -1,3 +1,52 @@
 ---
 title: Framework components
 ---
+
+Framework components are a bit tricky to work with. **Prefer using this package in Astro components**.
+It mainly depends on if you use a [client directive](https://docs.astro.build/en/reference/directives-reference/#client-directives)
+and which one.
+
+:::caution
+This has not been tested but _should_ be right! If you encounter weird cases, feel free to open
+an issue on GitHub or click on "Edit page" below"
+:::
+
+## Cases
+
+### No client directive
+
+You don't need to do anything! It will be rendered on the server so you can even call `setDynamicParams`.
+
+### `load`, `idle`, `visible` and `media` 
+
+If you're using `client:load`, `client:idle`, `client:visible` or `client:media`, you need to use the
+utilities within your component. This requires enabling client features.
+
+```tsx title="src/components/Test.tsx" del={3} ins={6}
+import { getLocale } from "i18n:astro"
+
+const locale = getLocale()
+
+export default function Test() {
+    const locale = getLocale()
+
+    return <div>{locale}</div>
+}
+```
+
+### `client:only`
+
+If you're using `client:only`, `client:idle`, `client:visible` or `client:media`, you can use the
+utilities anywhere in the file. This requires enabling client features.
+
+```tsx title="src/components/Test.tsx"
+import { getLocale } from "i18n:astro"
+
+const locale = getLocale() // valid
+
+export default function Test() {
+    const locale = getLocale() // valid
+
+    return <div>{locale}</div>
+}
+```

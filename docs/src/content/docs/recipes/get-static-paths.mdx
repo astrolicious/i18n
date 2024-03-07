@@ -1,3 +1,38 @@
 ---
 title: getStaticPaths
 ---
+
+`getStaticPaths` is a bit special in Astro. On one hand it's absolutely necessary for dynamic SSG
+routes but it runs before everything, even middlewares.
+
+Under the hood, the package uses a middleware so we can't access any of the standard utilities inside
+of `getStaticPaths`. Instead, we provide a `getLocalePlaceholder` function that is a build time macro.
+That means it will be replaced by it's literal value. For instance:
+
+```astro
+---
+import { getLocalePlaceholder } from "i18n:astro"
+
+export const getStaticPaths = () => {
+    const locale = getLocalePlaceholder()
+
+    return []
+}
+---
+```
+
+Will be replaced by the following, no matter the context:
+
+```astro {5}
+---
+import { getLocalePlaceholder } from "i18n:astro"
+
+export const getStaticPaths = () => {
+    const locale = "en"
+
+    return []
+}
+---
+```
+
+Be careful not to use `getLocalePlaceholder` in interpolations or it could result in invalid code.
