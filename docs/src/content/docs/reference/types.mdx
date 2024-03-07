@@ -1,3 +1,49 @@
 ---
 title: Types
 ---
+
+The `i18n:astro` module exports a few types:
+
+```ts
+export type Locale = "en" | "fr";
+
+export type LocalePathParams = {
+    "/about": never;
+    "/blog": never;
+    "/": never;
+    "/blog/[slug]": {
+        "slug": string;
+    };
+};
+
+export type LocalePath = keyof LocalePathParams;
+```
+
+## `Locale`
+
+Generated from your integration config `locales` Array. Example:
+
+```ts showLineNumbers=false
+export type Locale = "en" | "fr";
+```
+
+## `LocalePathParams`
+
+Generated from the files in `src/routes`. Example:
+
+```ts showLineNumbers=false
+export type LocalePathParams = {
+    "/about": never;
+    "/blog": never;
+    "/": never;
+    "/blog/[slug]": {
+        "slug": string;
+    };
+};
+```
+
+## `LocalePath`
+
+```ts showLineNumbers=false
+export type LocalePath = keyof LocalePathParams;
+```

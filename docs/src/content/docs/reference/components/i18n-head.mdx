@@ -1,3 +1,24 @@
 ---
 title: I18nHead
 ---
+
+This component automatically generates alternate links to improve SEO.
+
+```astro title="src/layouts/Layout.astro" ins={2,10}
+---
+import I18nHead from "@astrolicious/i18n/components/I18nHead.astro"
+---
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <I18NHead />
+    <slot name="head" />
+</head>
+<body>
+    <slot />
+</body>
+</html>
+```

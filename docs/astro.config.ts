@@ -77,21 +77,31 @@ export default defineConfig({
 					},
 				},
 				{
-					label: "Types",
-					link: "/reference/types/",
-				},
-				{
 					label: "Components",
 					autogenerate: {
 						directory: "reference/components",
 					},
+					collapsed: true,
 				},
 				{
 					label: "Utilities",
 					autogenerate: {
 						directory: "reference/utilities",
 					},
+					collapsed: true,
 				},
+				{
+					label: "Types",
+					link: "/reference/types/",
+				},
+				{
+					label: "Demo",
+					link: "#",
+					badge: {
+						variant: "tip",
+						text: "SOON"
+					}
+				}
 			],
 		}),
 		tailwind({ applyBaseStyles: false }),
