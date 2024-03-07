@@ -16,7 +16,7 @@
       - [ ] sitemap not working yet
       - [ ] 404
       - [ ] starlight
-- [ ] TODOs in code
+- [x] TODOs in code
 - [ ] Format/lint (`pnpm lint:fix`)
 - [ ] Setup GitHub repository
 - [ ] Release (see below)
