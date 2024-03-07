@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.0.3
+
+### Patch Changes
+
+- 5a7c47a: Fixes links and package names
+
 ## 0.0.2
 
 ### Patch Changes
