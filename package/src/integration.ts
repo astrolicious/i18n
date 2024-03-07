@@ -1,13 +1,13 @@
-import { createResolver, defineIntegration } from "astro-integration-kit";
 import { readFileSync } from "node:fs";
-import { handleI18next } from "./i18next/index.js";
-import { optionsSchema } from "./options.js";
-import { handleRouting } from "./routing/index.js";
+import { createResolver, defineIntegration } from "astro-integration-kit";
 import {
 	addDts,
 	addVirtualImports,
 	watchIntegration,
 } from "astro-integration-kit/utilities";
+import { handleI18next } from "./i18next/index.js";
+import { optionsSchema } from "./options.js";
+import { handleRouting } from "./routing/index.js";
 import "./virtual.d.js";
 
 const VIRTUAL_MODULE_ID = "i18n:astro";

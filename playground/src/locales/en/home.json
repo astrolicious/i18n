@@ -1,4 +1,4 @@
 {
-    "title": "Home",
-    "description": "This is the home, see {{ value }}"
+	"title": "Home",
+	"description": "This is the home, see {{ value }}"
 }

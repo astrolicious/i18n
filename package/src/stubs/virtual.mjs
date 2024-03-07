@@ -235,8 +235,7 @@ export const switchLocalePath = (locale) => {
 
 	const route = config.paths.routes.find(
 		(route) =>
-			route.locale === locale &&
-			currentLocaleRoute.pattern === route.pattern,
+			route.locale === locale && currentLocaleRoute.pattern === route.pattern,
 	);
 	if (!route) {
 		throw new Error("Couldn't find a route. Open an issue");
