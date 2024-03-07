@@ -1,3 +1,12 @@
 ---
 title: Translations
 ---
+
+Under the hood, [`i18next`](https://www.i18next.com/) is used to manage translations. We enforce the following conventions:
+
+1. Locales must live in the `src/locales/` directory (can be customized with `localesDir`)
+2. A folder for the default locale is required, eg. `src/locales/en/`
+3. Provide at least a `src/locales/en/common.json` file (can be customized with `defaultNamespace`)
+
+You can then use the `t` function (re-exported from `i18next`) and benefit from type-safety automatically. Have a look at
+[`i18next` docs](https://www.i18next.com/translation-function/essentials) to learn more.

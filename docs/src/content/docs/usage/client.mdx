@@ -1,3 +1,31 @@
 ---
 title: Client usage
 ---
+
+Client usage is disabled by default because it sends some JavaScript to the browser.
+Enabling any of the following features requires importing the `<I18nClient/>` component.
+
+| Utility                | Required features          |
+|------------------------|----------------------------|
+| `t`                    | `data`, `translations`     |
+| `getLocale`            | `data`                     |
+| `getLocales`           | `data`                     |
+| `getHtmlAttrs`         | `data`                     |
+| `setDynamicParams`     | N/A, server only           |
+| `getLocalePath`        | `data`, `paths`            |
+| `switchLocalePath`     | `data`, `paths`            |
+| `getSwitcherData`      | `data`, `paths`            |
+| `getLocalePlaceholder` | N/A, `getStaticPaths` only |
+
+You can enable them in your integration config:
+
+```ts title="astro.config.mjs"
+i18n({
+    // ...
+    client: {
+        data: false,
+        paths: false,
+        translations: false,
+    }
+})
+```
