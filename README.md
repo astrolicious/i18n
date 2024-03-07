@@ -1,4 +1,4 @@
-# @astrolicious/astro-i18n
+# @astrolicious/i18n
 
 Yet another i18n integration for [Astro](https://astro.build/) with server and client utilities, type safety and translations built-in.
 

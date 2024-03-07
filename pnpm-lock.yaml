@@ -90,7 +90,7 @@ importers:
       '@astrojs/tailwind':
         specifier: ^5.1.0
         version: 5.1.0(astro@4.4.11)(tailwindcss@3.4.1)
-      '@astrolicious/astro-i18n':
+      '@astrolicious/i18n':
         specifier: workspace:*
         version: link:../package
       '@types/react':

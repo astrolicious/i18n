@@ -131,7 +131,7 @@ export const integration = defineIntegration({
 				const _imports = [
 					{
 						name: VIRTUAL_MODULE_ID,
-						content: `import { als } from "virtual:astro-i18n/als"; import { i18next as _i18next } from "@astrolicious/astro-i18n/deps"; ${virtualModuleStub
+						content: `import { als } from "virtual:astro-i18n/als"; import { i18next as _i18next } from "@astrolicious/i18n/deps"; ${virtualModuleStub
 							.replaceAll(placeholders.config, "als.getStore()")
 							.replaceAll(placeholders.i18next, "_i18next")}`,
 						ssr: true,
@@ -141,7 +141,7 @@ export const integration = defineIntegration({
 						content: (() => {
 							let content = "";
 							if (options.client.translations) {
-								content += `import { i18next as _i18next } from "@astrolicious/astro-i18n/deps"; `;
+								content += `import { i18next as _i18next } from "@astrolicious/i18n/deps"; `;
 							}
 
 							content += virtualModuleStub.replaceAll(
