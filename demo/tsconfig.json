@@ -1,7 +1,7 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "baseUrl": "C:/Users/Admin/Documents/github/astrolicious/i18n/demo",
+    "baseUrl": ".",
     "paths": {
       "~/*": [
         "./src/*"
