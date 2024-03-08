@@ -10,7 +10,8 @@ export default defineConfig({
 		starlight({
 			title: "I18n for Astro",
 			logo: {
-				src: "./src/assets/houston-omg.svg",
+				light: "./src/assets/logo-dark.svg",
+				dark: "./src/assets/logo-light.svg",
 			},
 			customCss: ["./src/style.css"],
 			social: {
