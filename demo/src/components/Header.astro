@@ -1,0 +1,15 @@
+---
+import LocaleSwitcher from "./LocaleSwitcher.astro"
+import { getLocalePath, t } from "i18n:astro"
+---
+    <header
+      class="bg-gray-100 p-2 border-b border-gray-300 flex items-center justify-between"
+    >
+      <div class="font-bold text-xl">astro-i18n demo</div>
+      <div class="flex items-center justify-between space-x-6">
+        <a href={getLocalePath("/")}>{t("home")}</a>
+        <a href={getLocalePath("/about")}>{t("about")}</a>
+        <a href={getLocalePath("/blog")}>{t("blog")}</a>
+      </div>
+      <LocaleSwitcher />
+    </header>

@@ -160,8 +160,6 @@ export const setDynamicParams = (_params) => {
 		  }, {})
 		: _params;
 
-	console.log(params);
-
 	config.paths.dynamicParams = {
 		...config.paths.dynamicParams,
 		...params,

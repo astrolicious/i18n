@@ -15,6 +15,7 @@
     "@astrojs/react": "^3.0.10",
     "@astrojs/tailwind": "^5.1.0",
     "@astrolicious/i18n": "workspace:*",
+    "@tailwindcss/forms": "^0.5.7",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "astro": "^4.4.13",

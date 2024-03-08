@@ -11,6 +11,17 @@ export default defineConfig({
 		i18n({
 			defaultLocale: "en",
 			locales: ["en", "fr"],
+			pages: {
+				'/about': {
+					fr: '/a-propos'
+				},
+				'/blog': {
+					fr: '/le-blog'
+				},
+				'/blog/[slug]': {
+					fr: '/le-blog/[slug]'
+				}
+			},
 			client: {
 				data: true,
 			},

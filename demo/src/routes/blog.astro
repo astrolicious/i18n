@@ -1,0 +1,24 @@
+---
+import { t, getLocale, getLocalePath } from "i18n:astro";
+import Layout from "~/layouts/Layout.astro";
+import { getCollection } from "astro:content"
+
+const title = t("blog")
+const posts = await getCollection("posts", ({ slug }) => slug.split("/")[0] === getLocale())
+---
+
+<Layout {title}>
+  <h1>{title}</h1>
+  <ul>
+    {posts.map((post, i) => (
+      <li>
+        <a
+          href={getLocalePath("/blog/[slug]", { slug: post.slug.split('/')[1] })}
+          class="underline"
+        >
+        #{i} - {post.data.title}
+        </a>
+      </li>
+      ))}
+  </ul>
+</Layout>
