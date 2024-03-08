@@ -1,41 +1,41 @@
 ---
+import { getLocalePlaceholder, setDynamicParams, t } from "i18n:astro";
 import type { GetStaticPaths } from "astro";
-import { setDynamicParams, getLocalePlaceholder, t } from "i18n:astro";
 import Layout from "~/layouts/Layout.astro";
 
 export const getStaticPaths = (() => {
-  const locale = getLocalePlaceholder();
+	const locale = getLocalePlaceholder();
 
-  const slugs = [
-    {
-      en: "a",
-      fr: "d",
-    },
-    {
-      en: "b",
-      fr: "e",
-    },
-    {
-      en: "c",
-      fr: "f",
-    },
-  ];
+	const slugs = [
+		{
+			en: "a",
+			fr: "d",
+		},
+		{
+			en: "b",
+			fr: "e",
+		},
+		{
+			en: "c",
+			fr: "f",
+		},
+	];
 
-  return slugs.map((slug) => ({
-    params: {
-      slug: slug[locale],
-    },
-    props: {
-      slugs: slug,
-    },
-  }));
+	return slugs.map((slug) => ({
+		params: {
+			slug: slug[locale],
+		},
+		props: {
+			slugs: slug,
+		},
+	}));
 }) satisfies GetStaticPaths;
 
 const { slug } = Astro.params;
 const { slugs } = Astro.props;
 
 setDynamicParams(
-  Object.entries(slugs).map(([locale, slug]) => ({ locale, params: { slug } }))
+	Object.entries(slugs).map(([locale, slug]) => ({ locale, params: { slug } })),
 );
 
 const title = t("blog");

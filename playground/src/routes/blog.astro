@@ -1,22 +1,22 @@
 ---
-import { getLocale, t, getLocalePath } from "i18n:astro";
+import { getLocale, getLocalePath, t } from "i18n:astro";
 import Layout from "~/layouts/Layout.astro";
 
 const title = t("blog");
 
 const slugs = [
-  {
-    en: "a",
-    fr: "d",
-  },
-  {
-    en: "b",
-    fr: "e",
-  },
-  {
-    en: "c",
-    fr: "f",
-  },
+	{
+		en: "a",
+		fr: "d",
+	},
+	{
+		en: "b",
+		fr: "e",
+	},
+	{
+		en: "c",
+		fr: "f",
+	},
 ];
 
 const currentLocaleSlugs = slugs.map((e) => e[getLocale()]);

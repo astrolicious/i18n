@@ -1,7 +1,7 @@
+import react from "@astrojs/react";
+import tailwind from "@astrojs/tailwind";
 import i18n from "@astrolicious/i18n";
 import { defineConfig } from "astro/config";
-import tailwind from "@astrojs/tailwind";
-import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
@@ -12,15 +12,15 @@ export default defineConfig({
 			defaultLocale: "en",
 			locales: ["en", "fr"],
 			pages: {
-				'/about': {
-					fr: '/a-propos'
+				"/about": {
+					fr: "/a-propos",
 				},
-				'/blog': {
-					fr: '/le-blog'
+				"/blog": {
+					fr: "/le-blog",
 				},
-				'/blog/[slug]': {
-					fr: '/le-blog/[slug]'
-				}
+				"/blog/[slug]": {
+					fr: "/le-blog/[slug]",
+				},
 			},
 			client: {
 				data: true,

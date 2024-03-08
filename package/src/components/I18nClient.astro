@@ -5,18 +5,18 @@ const config = als.getStore()!;
 const { clientOptions } = config;
 
 const enabledClientFeatures = Object.entries(clientOptions)
-  .map(([name, enabled]) => ({ name, enabled }))
-  .filter((e) => e.enabled);
+	.map(([name, enabled]) => ({ name, enabled }))
+	.filter((e) => e.enabled);
 if (enabledClientFeatures.length === 0) {
-  throw new Error(
-    "You need to enabled at least one client feature (`client: {...}`) in the integration config to use `<I18nClient />`."
-  );
+	throw new Error(
+		"You need to enabled at least one client feature (`client: {...}`) in the integration config to use `<I18nClient />`.",
+	);
 }
 
 const data = clientOptions.data ? config.data : undefined;
 const translations = clientOptions.translations
-  ? { ...config.translations, initialized: false }
-  : undefined;
+	? { ...config.translations, initialized: false }
+	: undefined;
 const paths = clientOptions.paths ? config.paths : undefined;
 ---
 

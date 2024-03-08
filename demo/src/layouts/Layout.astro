@@ -1,11 +1,11 @@
 ---
+import { getHtmlAttrs } from "i18n:astro";
 import I18NClient from "@astrolicious/i18n/components/I18nClient.astro";
 import I18NHead from "@astrolicious/i18n/components/I18nHead.astro";
-import { getHtmlAttrs } from "i18n:astro";
-import Header from "../components/Header.astro"
+import Header from "../components/Header.astro";
 
 interface Props {
-  title: string;
+	title: string;
 }
 
 const { title } = Astro.props;

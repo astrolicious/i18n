@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { getLocale, getLocalePath, switchLocalePath, t } from "i18n:astro";
+import { useState } from "react";
 
 export default function Counter({
 	children,

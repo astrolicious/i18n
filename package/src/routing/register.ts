@@ -10,7 +10,7 @@ import { addPageDir } from "astro-pages";
 import { withLeadingSlash } from "ufo";
 import { normalizePath } from "vite";
 import type { Options } from "../options.js";
-import { type Route } from "../types.js";
+import type { Route } from "../types.js";
 import { ROUTES_DIR } from "./index.js";
 
 const isPrerendered = (str: string) => {

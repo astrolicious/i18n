@@ -1,51 +1,61 @@
 ---
-import type { GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
 import { setDynamicParams } from "i18n:astro";
 import { getLocales } from "i18n:astro";
 import { getLocale } from "i18n:astro";
 import { getLocalePlaceholder, t } from "i18n:astro";
+import type { GetStaticPaths } from "astro";
 import Layout from "~/layouts/Layout.astro";
 
 export const getStaticPaths = (async () => {
-  const locale = getLocalePlaceholder()
+	const locale = getLocalePlaceholder();
 
-  const posts = await getCollection("posts", ({ slug }) => slug.split("/")[0] === locale)
+	const posts = await getCollection(
+		"posts",
+		({ slug }) => slug.split("/")[0] === locale,
+	);
 
-  return posts.map(post => ({
-    params: {
-      slug: post.slug.split("/")[1]
-    },
-    props: {
-      post
-    }
-  }))
+	return posts.map((post) => ({
+		params: {
+			slug: post.slug.split("/")[1],
+		},
+		props: {
+			post,
+		},
+	}));
 }) satisfies GetStaticPaths;
 
-const locale = getLocale()
+const locale = getLocale();
 // TODO: add utility
-const defaultLocale = getLocales()[0]
-const { post } = Astro.props
+const defaultLocale = getLocales()[0];
+const { post } = Astro.props;
 
 const equivalentPosts = await getCollection("posts", (p) => {
-  if (locale === defaultLocale) {
-    return p.slug === post.slug || p.data.defaultLocaleVersion?.slug === post.slug
-  }
-  return p.slug === post.data.defaultLocaleVersion?.slug || p.data.defaultLocaleVersion?.slug === post.data.defaultLocaleVersion?.slug
-})
+	if (locale === defaultLocale) {
+		return (
+			p.slug === post.slug || p.data.defaultLocaleVersion?.slug === post.slug
+		);
+	}
+	return (
+		p.slug === post.data.defaultLocaleVersion?.slug ||
+		p.data.defaultLocaleVersion?.slug === post.data.defaultLocaleVersion?.slug
+	);
+});
 
-setDynamicParams(equivalentPosts.map((post) => {
-  const [locale, slug] = post.slug.split("/")
-  
-  return {
-    locale,
-    params: {
-      slug
-    }
-  }
-}))
+setDynamicParams(
+	equivalentPosts.map((post) => {
+		const [locale, slug] = post.slug.split("/");
 
-const title = `${t("blog")} - ${post.data.title}`
+		return {
+			locale,
+			params: {
+				slug,
+			},
+		};
+	}),
+);
+
+const title = `${t("blog")} - ${post.data.title}`;
 ---
 
 <Layout {title}>
