@@ -34,7 +34,6 @@
 		"astro": "^4.4.11"
 	},
 	"dependencies": {
-		"astro": "^4.4.11",
 		"astro-integration-kit": "^0.5.1",
 		"astro-pages": "^0.2.0",
 		"i18next": "^23.10.0",

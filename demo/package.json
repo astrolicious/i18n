@@ -13,6 +13,7 @@
   "dependencies": {
     "astro": "^4.4.13",
     "@astrojs/check": "^0.5.6",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.2",
+    "@astrolicious/i18n": "workspace:*"
   }
 }

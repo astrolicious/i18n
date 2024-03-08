@@ -20,6 +20,9 @@ importers:
       '@astrojs/check':
         specifier: ^0.5.6
         version: 0.5.6(typescript@5.4.2)
+      '@astrolicious/i18n':
+        specifier: workspace:*
+        version: link:../package
       astro:
         specifier: ^4.4.13
         version: 4.4.13(typescript@5.4.2)
