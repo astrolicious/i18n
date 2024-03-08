@@ -8,6 +8,7 @@
 	"scripts": {
 		"playground:dev": "pnpm --filter playground dev",
 		"docs:dev": "pnpm --filter docs dev",
+		"demo:dev": "pnpm --filter demo dev",
 		"changeset": "changeset",
 		"release": "node scripts/release.mjs",
 		"lint": "biome check .",

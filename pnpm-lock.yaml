@@ -20,12 +20,18 @@ importers:
       '@astrojs/check':
         specifier: ^0.5.6
         version: 0.5.6(typescript@5.4.2)
+      '@astrojs/tailwind':
+        specifier: ^5.1.0
+        version: 5.1.0(astro@4.4.13)(tailwindcss@3.4.1)
       '@astrolicious/i18n':
         specifier: workspace:*
         version: link:../package
       astro:
         specifier: ^4.4.13
         version: 4.4.13(typescript@5.4.2)
+      tailwindcss:
+        specifier: ^3.4.1
+        version: 3.4.1
       typescript:
         specifier: ^5.4.2
         version: 5.4.2
@@ -396,6 +402,21 @@ packages:
       tailwindcss: ^3.0.24
     dependencies:
       astro: 4.4.11(@types/node@20.11.22)(typescript@5.3.3)
+      autoprefixer: 10.4.18(postcss@8.4.35)
+      postcss: 8.4.35
+      postcss-load-config: 4.0.2(postcss@8.4.35)
+      tailwindcss: 3.4.1
+    transitivePeerDependencies:
+      - ts-node
+    dev: false
+
+  /@astrojs/tailwind@5.1.0(astro@4.4.13)(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-BJoCDKuWhU9FT2qYg+fr6Nfb3qP4ShtyjXGHKA/4mHN94z7BGcmauQK23iy+YH5qWvTnhqkd6mQPQ1yTZTe9Ig==}
+    peerDependencies:
+      astro: ^3.0.0 || ^4.0.0
+      tailwindcss: ^3.0.24
+    dependencies:
+      astro: 4.4.13(typescript@5.4.2)
       autoprefixer: 10.4.18(postcss@8.4.35)
       postcss: 8.4.35
       postcss-load-config: 4.0.2(postcss@8.4.35)

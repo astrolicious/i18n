@@ -11,9 +11,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^4.4.13",
     "@astrojs/check": "^0.5.6",
-    "typescript": "^5.4.2",
-    "@astrolicious/i18n": "workspace:*"
+    "@astrojs/tailwind": "^5.1.0",
+    "@astrolicious/i18n": "workspace:*",
+    "astro": "^4.4.13",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.4.2"
   }
 }
