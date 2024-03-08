@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.0.4
+
+### Patch Changes
+
+- 0aaff4a: Fixes types by making `i18next` a peer dependency and cleans a few things
+
 ## 0.0.3
 
 ### Patch Changes
