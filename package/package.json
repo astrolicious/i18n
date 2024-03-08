@@ -24,19 +24,18 @@
 	"sideEffects": false,
 	"exports": {
 		".": "./src/index.ts",
-		"./deps": "./src/deps.ts",
 		"./components/I18nClient.astro": "./src/components/I18nClient.astro",
 		"./components/I18nHead.astro": "./src/components/I18nHead.astro"
 	},
 	"scripts": {},
 	"type": "module",
 	"peerDependencies": {
-		"astro": "^4.4.11"
+		"astro": "^4.4.11",
+		"i18next": "^23.10.0"
 	},
 	"dependencies": {
 		"astro-integration-kit": "^0.5.1",
 		"astro-pages": "^0.2.0",
-		"i18next": "^23.10.0",
 		"typescript": "^5.3.3",
 		"ufo": "^1.4.0"
 	},

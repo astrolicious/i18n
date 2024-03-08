@@ -12,9 +12,15 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.5.6",
+    "@astrojs/react": "^3.0.10",
     "@astrojs/tailwind": "^5.1.0",
     "@astrolicious/i18n": "workspace:*",
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
     "astro": "^4.4.13",
+    "i18next": "^23.10.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.4.2"
   }
