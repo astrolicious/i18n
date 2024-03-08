@@ -3,11 +3,12 @@ import { t } from "i18n:astro";
 import Layout from "~/layouts/Layout.astro";
 
 const title = t("home")
-
-const endpointData = await fetch(new URL("/api/hello", Astro.url)).then(res => res.text())
 ---
 
 <Layout {title}>
   <h1>{title}</h1>
-  <pre>Data: {endpointData}</pre>
+  <script>
+    const data = await fetch("/api/hello").then(res => res.text())
+    console.log({ data })
+  </script>
 </Layout>
