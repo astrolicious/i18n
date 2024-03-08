@@ -71,14 +71,7 @@ export default defineConfig({
 						{ label: "Client usage", link: "/usage/client/" },
 					],
 				},
-				{
-					label: "Demo",
-					link: "#",
-					badge: {
-						variant: "tip",
-						text: "SOON",
-					},
-				},
+				{ label: "Demo", link: "/demo/" },
 				{
 					label: "Recipes",
 					autogenerate: {
