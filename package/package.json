@@ -37,10 +37,10 @@
 		"astro-integration-kit": "^0.5.1",
 		"astro-pages": "^0.2.0",
 		"typescript": "^5.3.3",
-		"ufo": "^1.4.0"
+		"ufo": "^1.4.0",
+		"vite": "^5.1.4"
 	},
 	"devDependencies": {
-		"@types/node": "^20.11.22",
-		"vite": "^5.1.4"
+		"@types/node": "^20.11.22"
 	}
 }
