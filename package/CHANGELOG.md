@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.1.0
+
+### Minor Changes
+
+- 868816f: Adds a new `getDefaultLocale` utility
+
 ## 0.0.4
 
 ### Patch Changes
