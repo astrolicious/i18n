@@ -26,6 +26,7 @@ declare module "i18n:astro" {
 	export const t: typeof import("i18next").t;
 	export const getLocale: () => Locale;
 	export const getLocales: () => Array<string>;
+	export const getDefaultLocale: () => Locale;
 
 	export const getHtmlAttrs: () => {
 		lang: string;

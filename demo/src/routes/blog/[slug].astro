@@ -1,9 +1,12 @@
 ---
 import { getCollection } from "astro:content";
-import { setDynamicParams } from "i18n:astro";
-import { getLocales } from "i18n:astro";
-import { getLocale } from "i18n:astro";
-import { getLocalePlaceholder, t } from "i18n:astro";
+import {
+	getDefaultLocale,
+	getLocale,
+	getLocalePlaceholder,
+	setDynamicParams,
+	t,
+} from "i18n:astro";
 import type { GetStaticPaths } from "astro";
 import Layout from "~/layouts/Layout.astro";
 
@@ -26,8 +29,7 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const locale = getLocale();
-// TODO: add utility
-const defaultLocale = getLocales()[0];
+const defaultLocale = getDefaultLocale();
 const { post } = Astro.props;
 
 const equivalentPosts = await getCollection("posts", (p) => {

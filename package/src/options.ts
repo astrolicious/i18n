@@ -84,6 +84,7 @@ export const optionsSchema = z
 		 * - `t`: `data`, `translations`
 		 * - `getLocale`: `data`
 		 * - `getLocales`: `data`
+		 * - `getDefaultLocale`: `data`
 		 * - `getHtmlAttrs`: `data`
 		 * - `setDynamicParams`: N/A, server only
 		 * - `getLocalePath`: `data`, `paths`

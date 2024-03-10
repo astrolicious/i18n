@@ -1,7 +1,13 @@
 ---
 import { als } from "virtual:astro-i18n/als";
 
-const config = als.getStore()!;
+const config = als.getStore();
+if (!config) {
+	throw new Error(
+		"Using `<I18nClient />` requires adding the `i18n` integration to your Astro config.",
+	);
+}
+
 const { clientOptions } = config;
 
 const enabledClientFeatures = Object.entries(clientOptions)

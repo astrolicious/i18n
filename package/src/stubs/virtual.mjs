@@ -134,6 +134,11 @@ export const getLocales = () => {
 	return _getConfig().data.locales;
 };
 
+export const getDefaultLocale = () => {
+	_envCheck("getDefaultLocale", { clientFeatures: ["data"] });
+	return _getConfig().data.defaultLocale;
+};
+
 export const getHtmlAttrs = () => {
 	_envCheck("getHtmlAttrs", { clientFeatures: ["data"] });
 	return {

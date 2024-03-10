@@ -39,6 +39,12 @@ declare module "@@_ID_@@" {
 	 * @description TODO:
 	 * @link TODO:
 	 */
+	export const getDefaultLocale: () => Locale;
+
+	/**
+	 * @description TODO:
+	 * @link TODO:
+	 */
 	export const getHtmlAttrs: () => {
 		lang: string;
 		dir: "rtl" | "ltr";

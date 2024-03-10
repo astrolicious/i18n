@@ -20,6 +20,7 @@ export type I18nConfig = {
 	data: {
 		locale: string;
 		locales: Array<string>;
+		defaultLocale: string;
 	};
 	paths: {
 		pathname: string;

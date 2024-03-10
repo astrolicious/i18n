@@ -34,6 +34,7 @@ export const onRequest = defineMiddleware((context, next) => {
 			data: {
 				locale,
 				locales: options.locales,
+				defaultLocale: options.defaultLocale,
 			},
 			paths: {
 				pathname,
