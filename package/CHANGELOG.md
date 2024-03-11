@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.1.1
+
+### Patch Changes
+
+- d697474: Adds support for View Transitions
+
 ## 0.1.0
 
 ### Minor Changes
