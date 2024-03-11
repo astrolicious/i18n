@@ -22,6 +22,7 @@ export default defineConfig({
 			},
 			client: {
 				data: true,
+				paths: true,
 			},
 		}),
 		tailwind(),

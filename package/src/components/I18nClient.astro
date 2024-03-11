@@ -1,5 +1,6 @@
 ---
 import { als } from "virtual:astro-i18n/als";
+import { clientId } from "virtual:astro-i18n/internal";
 
 const config = als.getStore();
 if (!config) {
@@ -25,12 +26,5 @@ const translations = clientOptions.translations
 	: undefined;
 const paths = clientOptions.paths ? config.paths : undefined;
 ---
+<script is:inline type="application/json" id={clientId} set:html={JSON.stringify({ clientOptions, data, translations, paths })}></script>
 
-<script is:inline define:vars={{ clientOptions, data, translations, paths }}>
-  window.__INTERNAL_ASTRO_I18N_CONFIG__ = {
-    clientOptions,
-    data,
-    translations,
-    paths,
-  };
-</script>

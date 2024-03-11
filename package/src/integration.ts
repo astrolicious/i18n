@@ -10,6 +10,7 @@ import { optionsSchema } from "./options.js";
 import { handleRouting } from "./routing/index.js";
 
 const VIRTUAL_MODULE_ID = "i18n:astro";
+const CLIENT_ID = "__INTERNAL_ASTRO_I18N_CONFIG__";
 
 export const integration = defineIntegration({
 	name: "astro-i18n",
@@ -38,6 +39,7 @@ export const integration = defineIntegration({
 								defaultNamespace: options.defaultNamespace,
 								resources,
 							})};
+			  export const clientId = ${JSON.stringify(CLIENT_ID)};
             `,
 						"virtual:astro-i18n/als": `
               import { AsyncLocalStorage } from "node:async_hooks";
@@ -137,7 +139,9 @@ export const integration = defineIntegration({
 
 							content += virtualModuleStub.replaceAll(
 								scriptPlaceholders.config,
-								"window.__INTERNAL_ASTRO_I18N_CONFIG__",
+								`JSON.parse(document.getElementById(${JSON.stringify(
+									CLIENT_ID,
+								)}).textContent)`,
 							);
 
 							if (options.client.translations) {
