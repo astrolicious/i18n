@@ -2,12 +2,15 @@ import { readFileSync } from "node:fs";
 import { createResolver, defineIntegration } from "astro-integration-kit";
 import {
 	addDts,
+	addIntegration,
 	addVirtualImports,
+	hasIntegration,
 	watchIntegration,
 } from "astro-integration-kit/utilities";
 import { handleI18next } from "./i18next/index.js";
 import { optionsSchema } from "./options.js";
 import { handleRouting } from "./routing/index.js";
+import { integration as sitemapIntegration } from "./sitemap/integration.js";
 
 const VIRTUAL_MODULE_ID = "i18n:astro";
 const CLIENT_ID = "__INTERNAL_ASTRO_I18N_CONFIG__";
@@ -170,6 +173,22 @@ export const integration = defineIntegration({
 						redirects: {
 							"/": options.rootRedirect,
 						},
+					});
+				}
+
+				if (options.sitemap) {
+					if (hasIntegration({ config, name: "@astrojs/sitemap" })) {
+						throw new Error("Can't use both at the same time.")
+					}
+					addIntegration({
+						...params,
+						integration: sitemapIntegration({
+							...options.sitemap,
+							i18n: {
+								defaultLocale: options.defaultLocale,
+								locales: options.locales,
+							},
+						}),
 					});
 				}
 			},
