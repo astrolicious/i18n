@@ -4,7 +4,6 @@ import {
 	addDts,
 	addIntegration,
 	addVirtualImports,
-	hasIntegration,
 	watchIntegration,
 } from "astro-integration-kit/utilities";
 import { handleI18next } from "./i18next/index.js";
@@ -49,6 +48,21 @@ export const integration = defineIntegration({
 					localePathParams: '"@@_LOCALE_PATH_PARAMS_@@"',
 					locales: '"@@_LOCALES_@@"',
 				};
+
+				if (options.sitemap) {
+					addIntegration({
+						...params,
+						integration: sitemapIntegration({
+							...options.sitemap,
+							i18n: {
+								defaultLocale: options.defaultLocale,
+								locales: options.locales,
+							},
+						}),
+					});
+				}
+
+				// TODO: add dts for i18n:astro/sitemap if needed
 
 				addDts({
 					logger,
@@ -173,22 +187,6 @@ export const integration = defineIntegration({
 						redirects: {
 							"/": options.rootRedirect,
 						},
-					});
-				}
-
-				if (options.sitemap) {
-					if (hasIntegration({ config, name: "@astrojs/sitemap" })) {
-						throw new Error("Can't use both at the same time.")
-					}
-					addIntegration({
-						...params,
-						integration: sitemapIntegration({
-							...options.sitemap,
-							i18n: {
-								defaultLocale: options.defaultLocale,
-								locales: options.locales,
-							},
-						}),
 					});
 				}
 			},

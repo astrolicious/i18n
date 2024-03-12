@@ -6,8 +6,9 @@ import { fileURLToPath } from "node:url";
 import { simpleSitemapAndIndex } from "sitemap";
 import { relative } from "node:path";
 import { ZodError } from "astro/zod";
-
-
+import { hasIntegration } from "astro-integration-kit/utilities";
+import { AstroError } from "astro/errors";
+import routeConfigPlugin from "@inox-tools/aik-route-config";
 
 const OUTFILE = "sitemap-index.xml";
 const STATUS_CODE_PAGES = new Set(["404", "500"]);
@@ -30,13 +31,28 @@ const formatConfigErrorMessage = (err: ZodError) => {
 
 export const integration = defineIntegration({
 	name: "astro-i18n/sitemap",
+	plugins: [routeConfigPlugin],
 	optionsSchema,
 	setup({ options }) {
 		let config: AstroConfig;
 
 		return {
-			"astro:config:setup": (params) => {
+			"astro:config:setup": ({ defineRouteConfig, ...params }) => {
+				if (hasIntegration({ ...params, name: "@astrojs/sitemap" })) {
+					throw new AstroError(
+						"Cannot use both `@astrolicious/i18n` sitemap and `@astrojs/sitemap` integrations at the same time.",
+						"Remove the `@astrojs/sitemap` integration from your project.",
+					);
+				}
+
 				config = params.config;
+
+				defineRouteConfig({
+					importName: "i18n:astro/sitemap",
+					callbackHandler: (context, callback) => {
+						console.log({ context, callback })
+					}
+				})
 			},
 			"astro:build:done": async (params) => {
 				const { dir, routes, pages, logger } = params;
