@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.1.2
+
+### Patch Changes
+
+- 7ba64a1: Refactors to use the latest version of `astro-integration-kit`
+
 ## 0.1.1
 
 ### Patch Changes
