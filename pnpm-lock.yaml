@@ -96,11 +96,11 @@ importers:
         specifier: ^4.4.11
         version: 4.4.13(@types/node@20.11.22)(typescript@5.3.3)
       astro-integration-kit:
-        specifier: ^0.5.1
-        version: 0.5.1(astro@4.4.13)
+        specifier: ^0.6.0
+        version: 0.6.0(astro@4.4.13)
       astro-pages:
         specifier: ^0.2.0
-        version: 0.2.0(astro-integration-kit@0.5.1)(astro@4.4.13)
+        version: 0.2.0(astro-integration-kit@0.6.0)(astro@4.4.13)
       i18next:
         specifier: ^23.10.0
         version: 23.10.0
@@ -2036,8 +2036,8 @@ packages:
       remark-expressive-code: 0.33.4
     dev: false
 
-  /astro-integration-kit@0.5.1(astro@4.4.13):
-    resolution: {integrity: sha512-ef309UUNOjxUe0jjsDP5O3p+jkt53HAcrKOsWJ2NIgdUTOp5P/YKnAjbatfyu3bAuLFDfj5xhXm/rrwSe9d/hw==}
+  /astro-integration-kit@0.6.0(astro@4.4.13):
+    resolution: {integrity: sha512-BCURops+Is7pRemMG2jo3f8WJRDUBS4mvIeReSDsgAlqep6Rknva9i5vpP5OSs6BLy3nx+nWlCzTQTB/c9hZyg==}
     peerDependencies:
       '@vitejs/plugin-react': ^4.2.1
       astro: ^4.4.1
@@ -2065,14 +2065,14 @@ packages:
       recast: 0.23.5
     dev: false
 
-  /astro-pages@0.2.0(astro-integration-kit@0.5.1)(astro@4.4.13):
+  /astro-pages@0.2.0(astro-integration-kit@0.6.0)(astro@4.4.13):
     resolution: {integrity: sha512-bC8UtAndDjn5ue7SacR/pC4n7/o+2nCvz79WXr1Lqpnw4t2h0eNkvnqtv9G0z+Oum/7bf4lipsLzjK6uXflXwg==}
     peerDependencies:
       astro: ^4.4.0
       astro-integration-kit: ^0.3.0
     dependencies:
       astro: 4.4.13(@types/node@20.11.22)(typescript@5.3.3)
-      astro-integration-kit: 0.5.1(astro@4.4.13)
+      astro-integration-kit: 0.6.0(astro@4.4.13)
       fast-glob: 3.3.2
     dev: false
 

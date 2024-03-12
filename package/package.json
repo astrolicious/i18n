@@ -34,7 +34,7 @@
 		"i18next": "^23.10.0"
 	},
 	"dependencies": {
-		"astro-integration-kit": "^0.5.1",
+		"astro-integration-kit": "^0.6.0",
 		"astro-pages": "^0.2.0",
 		"typescript": "^5.3.3",
 		"ufo": "^1.4.0",

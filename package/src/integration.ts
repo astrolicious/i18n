@@ -27,27 +27,6 @@ export const integration = defineIntegration({
 				const { routes } = handleRouting(params)(options);
 				const { namespaces, resources } = handleI18next(params)(options);
 
-				addVirtualImports({
-					...params,
-					name,
-					imports: {
-						"virtual:astro-i18n/internal": `
-              export const options = ${JSON.stringify(options)};
-              export const routes = ${JSON.stringify(routes)};
-              export const i18nextConfig = ${JSON.stringify({
-								namespaces,
-								defaultNamespace: options.defaultNamespace,
-								resources,
-							})};
-			  export const clientId = ${JSON.stringify(CLIENT_ID)};
-            `,
-						"virtual:astro-i18n/als": `
-              import { AsyncLocalStorage } from "node:async_hooks";
-              export const als = new AsyncLocalStorage;
-            `,
-					},
-				});
-
 				addMiddleware({
 					entrypoint: resolve("./middleware.ts"),
 					order: "pre",
@@ -121,77 +100,67 @@ export const integration = defineIntegration({
 					i18next: '"@@_I18NEXT_@@"',
 				};
 
-				const _imports = [
-					{
-						name: VIRTUAL_MODULE_ID,
-						content: `import { als } from "virtual:astro-i18n/als"; import _i18next from "i18next"; ${virtualModuleStub
-							.replaceAll(scriptPlaceholders.config, "als.getStore()")
-							.replaceAll(scriptPlaceholders.i18next, "_i18next")}`,
-						ssr: true,
-					},
-					{
-						name: VIRTUAL_MODULE_ID,
-						content: (() => {
-							let content = "";
-							if (options.client.translations) {
-								content += `import _i18next from "i18next"; `;
-							}
+				addVirtualImports({
+					...params,
+					name,
+					imports: [
+						{
+							id: "virtual:astro-i18n/internal",
+							content: `
+								export const options = ${JSON.stringify(options)};
+								export const routes = ${JSON.stringify(routes)};
+								export const i18nextConfig = ${JSON.stringify({
+									namespaces,
+									defaultNamespace: options.defaultNamespace,
+									resources,
+								})};
+								export const clientId = ${JSON.stringify(CLIENT_ID)};
+							`,
+						},
+						{
+							id: "virtual:astro-i18n/als",
+							content: `
+								import { AsyncLocalStorage } from "node:async_hooks";
+								export const als = new AsyncLocalStorage;
+							`,
+						},
+						{
+							id: VIRTUAL_MODULE_ID,
+							content: `
+								import { als } from "virtual:astro-i18n/als";
+								import _i18next from "i18next";
+								${virtualModuleStub
+									.replaceAll(scriptPlaceholders.config, "als.getStore()")
+									.replaceAll(scriptPlaceholders.i18next, "_i18next")}`,
+							context: "server",
+						},
+						{
+							id: VIRTUAL_MODULE_ID,
+							content: (() => {
+								let content = "";
+								if (options.client.translations) {
+									content += `import _i18next from "i18next"; `;
+								}
 
-							content += virtualModuleStub.replaceAll(
-								scriptPlaceholders.config,
-								`JSON.parse(document.getElementById(${JSON.stringify(
-									CLIENT_ID,
-								)}).textContent)`,
-							);
-
-							if (options.client.translations) {
-								content = content.replaceAll(
-									scriptPlaceholders.i18next,
-									"_i18next",
+								content += virtualModuleStub.replaceAll(
+									scriptPlaceholders.config,
+									`JSON.parse(document.getElementById(${JSON.stringify(
+										CLIENT_ID,
+									)}).textContent)`,
 								);
-							}
 
-							return content;
-						})(),
-						ssr: false,
-					},
-				];
+								if (options.client.translations) {
+									content = content.replaceAll(
+										scriptPlaceholders.i18next,
+										"_i18next",
+									);
+								}
 
-				const resolveVirtualModuleId = <T extends string>(id: T): `\0${T}` => {
-					return `\0${id}`;
-				};
-
-				const resolutionMap = Object.fromEntries(
-					_imports.map(({ name }) => [resolveVirtualModuleId(name), name]),
-				);
-
-				updateConfig({
-					vite: {
-						plugins: [
-							{
-								name: "vite-plugin-astro-i18n-virtual",
-								resolveId(id) {
-									if (_imports.find((e) => e.name === id))
-										return resolveVirtualModuleId(id);
-									return;
-								},
-								load(id, options) {
-									const resolution = resolutionMap[id];
-									if (resolution) {
-										const data = _imports.find(
-											(e) =>
-												e.name === resolution &&
-												e.ssr === (options?.ssr ?? false),
-										);
-										if (data) {
-											return data.content;
-										}
-									}
-									return;
-								},
-							},
-						],
-					},
+								return content;
+							})(),
+							context: "client",
+						},
+					],
 				});
 
 				logger.info("Types injected");
