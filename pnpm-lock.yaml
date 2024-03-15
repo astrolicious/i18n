@@ -93,8 +93,8 @@ importers:
   package:
     dependencies:
       '@inox-tools/aik-route-config':
-        specifier: ^0.1.0
-        version: 0.1.0(@types/node@20.11.26)(astro-integration-kit@0.6.0)(astro@4.5.2)
+        specifier: 0.0.0-import-after-astro-global-20240315010129
+        version: 0.0.0-import-after-astro-global-20240315010129(@types/node@20.11.26)(astro-integration-kit@0.6.0)(astro@4.5.2)
       astro:
         specifier: ^4.4.11
         version: 4.5.2(@types/node@20.11.26)(typescript@5.4.2)
@@ -1216,11 +1216,11 @@ packages:
       unist-util-visit-parents: 5.1.3
     dev: false
 
-  /@inox-tools/aik-route-config@0.1.0(@types/node@20.11.26)(astro-integration-kit@0.6.0)(astro@4.5.2):
-    resolution: {integrity: sha512-znme31H9Y2gBcVeMNzfXCFy3ptiikC8czDCFBK8A8LCdmVyBxRUaRAapmEDbRpSeNeHWClwkn7ofD80McIIsDw==}
+  /@inox-tools/aik-route-config@0.0.0-import-after-astro-global-20240315010129(@types/node@20.11.26)(astro-integration-kit@0.6.0)(astro@4.5.2):
+    resolution: {integrity: sha512-mdkvnw+YvmJxPUQK9N/gjhbLeak4yOekP6N0sYyD0XLuzDgQv8PwaH2/Zz08T9ADpFpmR0EnQQORLNZqzor3Ww==}
     peerDependencies:
       astro: ^4.3.5
-      astro-integration-kit: ^0.5
+      astro-integration-kit: ^0.5 || ^0.6
     dependencies:
       astro: 4.5.2(@types/node@20.11.26)(typescript@5.4.2)
       astro-integration-kit: 0.6.0(astro@4.5.2)
@@ -5675,6 +5675,7 @@ packages:
 
   /queue-tick@1.0.1:
     resolution: {integrity: sha512-kJt5qhMxoszgU/62PLP1CJytzd2NKetjSRnyuj31fDd3Rlcz3fzlFdFLD1SItunPwyqEOkca6GbV612BWfaBag==}
+    requiresBuild: true
     dev: false
 
   /quick-lru@4.0.1:

@@ -9,6 +9,7 @@ import { ZodError } from "astro/zod";
 import { hasIntegration } from "astro-integration-kit/utilities";
 import { AstroError } from "astro/errors";
 import routeConfigPlugin from "@inox-tools/aik-route-config";
+import "./virtual.d.ts";
 
 const OUTFILE = "sitemap-index.xml";
 const STATUS_CODE_PAGES = new Set(["404", "500"]);
