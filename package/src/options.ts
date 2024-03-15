@@ -1,5 +1,9 @@
 import { z } from "astro/zod";
 import { withLeadingSlash, withoutTrailingSlash } from "ufo";
+import {
+	optionsSchema as sitemapOptionsSchema,
+	type SitemapOptions,
+} from "./sitemap/options.js";
 
 const routeStringSchema = z.string().regex(/^[a-zA-Z0-9_/[\]-]+$/);
 const redirectStatusSchema = z
@@ -143,6 +147,16 @@ export const optionsSchema = z
 				destination: z.string(),
 			})
 			.optional(),
+		/**
+		 * TODO:
+		 */
+		sitemap: z
+			.union([z.boolean(), sitemapOptionsSchema.omit({ i18n: true })])
+			.optional()
+			.default(false)
+			.transform((val) =>
+				val === false ? undefined : val === true ? ({} as SitemapOptions) : val,
+			),
 	})
 	.refine(({ locales, defaultLocale }) => locales.includes(defaultLocale), {
 		message: "`locales` must include the `defaultLocale`",

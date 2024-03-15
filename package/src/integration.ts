@@ -2,12 +2,14 @@ import { readFileSync } from "node:fs";
 import { createResolver, defineIntegration } from "astro-integration-kit";
 import {
 	addDts,
+	addIntegration,
 	addVirtualImports,
 	watchIntegration,
 } from "astro-integration-kit/utilities";
 import { handleI18next } from "./i18next/index.js";
 import { optionsSchema } from "./options.js";
 import { handleRouting } from "./routing/index.js";
+import { integration as sitemapIntegration } from "./sitemap/integration.js";
 
 const VIRTUAL_MODULE_ID = "i18n:astro";
 const CLIENT_ID = "__INTERNAL_ASTRO_I18N_CONFIG__";
@@ -46,6 +48,21 @@ export const integration = defineIntegration({
 					localePathParams: '"@@_LOCALE_PATH_PARAMS_@@"',
 					locales: '"@@_LOCALES_@@"',
 				};
+
+				if (options.sitemap) {
+					addIntegration({
+						...params,
+						integration: sitemapIntegration({
+							...options.sitemap,
+							i18n: {
+								defaultLocale: options.defaultLocale,
+								locales: options.locales,
+							},
+						}),
+					});
+				}
+
+				// TODO: add dts for i18n:astro/sitemap if needed
 
 				addDts({
 					logger,
