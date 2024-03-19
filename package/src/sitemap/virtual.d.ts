@@ -1,5 +1,5 @@
 declare module "i18n:astro/sitemap" {
-	const fn: (...args: unknown[]) => void;
+	const sitemap: (args: import("./route-config.js").CallbackSchema) => void;
 
-	export default fn;
+	export default sitemap;
 }

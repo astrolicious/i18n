@@ -1,8 +1,8 @@
 import { z } from "astro/zod";
 import { withLeadingSlash, withoutTrailingSlash } from "ufo";
 import {
-	optionsSchema as sitemapOptionsSchema,
 	type SitemapOptions,
+	optionsSchema as sitemapOptionsSchema,
 } from "./sitemap/options.js";
 
 const routeStringSchema = z.string().regex(/^[a-zA-Z0-9_/[\]-]+$/);

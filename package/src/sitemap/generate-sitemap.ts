@@ -1,7 +1,6 @@
 import type { EnumChangefreq, LinkItem, SitemapItemLoose } from "sitemap";
-import { parseUrl } from "./parse-url.js";
 import type { SitemapOptions } from "./options.js";
-
+import { parseUrl } from "./parse-url.js";
 
 /** Construct sitemap.xml given a set of URLs */
 export function generateSitemap(
@@ -19,21 +18,11 @@ export function generateSitemap(
 	const { defaultLocale, locales } = i18n;
 
 	const getPath = (url: string) => {
-		const result = parseUrl(
-			url,
-			defaultLocale,
-			locales,
-			finalSiteUrl,
-		);
+		const result = parseUrl(url, defaultLocale, locales, finalSiteUrl);
 		return result?.path;
 	};
 	const getLocale = (url: string) => {
-		const result = parseUrl(
-			url,
-			defaultLocale,
-			locales,
-			finalSiteUrl,
-		);
+		const result = parseUrl(url, defaultLocale, locales, finalSiteUrl);
 		return result?.locale ?? defaultLocale;
 	};
 
@@ -56,14 +45,14 @@ export function generateSitemap(
 			changefreq: changefreq as EnumChangefreq,
 		};
 
-        if (lastmod) {
-            Object.assign(obj, { lastmod })
-        }
-        if (priority) {
-            Object.assign(obj, { priority })
-        }
+		if (lastmod) {
+			Object.assign(obj, { lastmod });
+		}
+		if (priority) {
+			Object.assign(obj, { priority });
+		}
 
-        return obj
+		return obj;
 	});
 
 	return urlData;

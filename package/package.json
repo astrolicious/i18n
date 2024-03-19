@@ -34,7 +34,7 @@
 		"i18next": "^23.10.0"
 	},
 	"dependencies": {
-		"@inox-tools/aik-route-config": "0.0.0-import-after-astro-global-20240315010129",
+		"@inox-tools/aik-route-config": "^0.1.1",
 		"astro-integration-kit": "^0.6.0",
 		"astro-pages": "^0.2.0",
 		"sitemap": "^7.1.1",

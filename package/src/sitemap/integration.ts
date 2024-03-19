@@ -1,14 +1,15 @@
-import { defineIntegration } from "astro-integration-kit";
-import { optionsSchema } from "./options.js";
-import type { AstroConfig } from "astro";
-import { generateSitemap } from "./generate-sitemap.js";
-import { fileURLToPath } from "node:url";
-import { simpleSitemapAndIndex } from "sitemap";
 import { relative } from "node:path";
-import { ZodError } from "astro/zod";
+import { fileURLToPath } from "node:url";
+import routeConfigPlugin from "@inox-tools/aik-route-config";
+import type { AstroConfig } from "astro";
+import { defineIntegration } from "astro-integration-kit";
 import { hasIntegration } from "astro-integration-kit/utilities";
 import { AstroError } from "astro/errors";
-import routeConfigPlugin from "@inox-tools/aik-route-config";
+import { ZodError } from "astro/zod";
+import { simpleSitemapAndIndex } from "sitemap";
+import { generateSitemap } from "./generate-sitemap.js";
+import { optionsSchema } from "./options.js";
+import { callbackSchema } from "./route-config.js";
 import "./virtual.d.ts";
 
 const OUTFILE = "sitemap-index.xml";
@@ -51,9 +52,15 @@ export const integration = defineIntegration({
 				defineRouteConfig({
 					importName: "i18n:astro/sitemap",
 					callbackHandler: (context, callback) => {
-						console.log({ context, callback })
-					}
-				})
+						const response = callbackSchema.safeParse(callback);
+						if (!response.success) {
+							// TODO: proper error message
+							throw new Error("Invalid callback");
+						}
+						// do something with the data
+						console.dir({ context, data: response.data }, { depth: null });
+					},
+				});
 			},
 			"astro:build:done": async (params) => {
 				const { dir, routes, pages, logger } = params;
