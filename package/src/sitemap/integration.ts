@@ -40,7 +40,7 @@ export const integration = defineIntegration({
 		let config: AstroConfig;
 		const configRoutes: Array<{
 			include: boolean;
-			routeData: Array<RouteData>;
+			routeData: RouteData;
 		}> &
 			Pick<SitemapOptions, "changefreq" | "lastmod" | "priority"> = [];
 
@@ -65,15 +65,10 @@ export const integration = defineIntegration({
 						}
 						// console.dir({ context, data: response.data }, { depth: null });
 						const { optOut, ...rest } = response.data;
-						if (optOut) {
+						for (const r of routeData) {
 							configRoutes.push({
-								include: false,
-								routeData,
-							});
-						} else {
-							configRoutes.push({
-								include: true,
-								routeData,
+								include: !optOut,
+								routeData: r,
 								...rest,
 							});
 						}
@@ -86,20 +81,13 @@ export const integration = defineIntegration({
 					...rawRoutes
 						.filter(
 							(e) =>
-								!configRoutes
-									// biome-ignore lint/style/noNonNullAssertion: i know what i'm doing
-									.map((e) => e.routeData[0]!.route)
-									.includes(e.route),
+								!configRoutes.map((e) => e.routeData.route).includes(e.route),
 						)
 						.map((routeData) => ({
 							include: true,
 							routeData,
 						})),
-					...configRoutes.map((e) => ({
-						...e,
-						// biome-ignore lint/style/noNonNullAssertion: i know what i'm doing
-						routeData: e.routeData[0]!,
-					})),
+					...configRoutes,
 				];
 
 				try {
