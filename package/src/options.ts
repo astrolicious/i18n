@@ -2,7 +2,7 @@ import { z } from "astro/zod";
 import { withLeadingSlash, withoutTrailingSlash } from "ufo";
 import {
 	type SitemapOptions,
-	optionsSchema as sitemapOptionsSchema,
+	publicOptionsSchema as sitemapOptionsSchema,
 } from "./sitemap/options.js";
 
 const routeStringSchema = z.string().regex(/^[a-zA-Z0-9_/[\]-]+$/);
@@ -151,7 +151,7 @@ export const optionsSchema = z
 		 * TODO:
 		 */
 		sitemap: z
-			.union([z.boolean(), sitemapOptionsSchema.omit({ i18n: true })])
+			.union([z.boolean(), sitemapOptionsSchema])
 			.optional()
 			.default(false)
 			.transform((val) =>

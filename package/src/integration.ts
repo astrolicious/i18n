@@ -54,9 +54,12 @@ export const integration = defineIntegration({
 						...params,
 						integration: sitemapIntegration({
 							...options.sitemap,
-							i18n: {
-								defaultLocale: options.defaultLocale,
-								locales: options.locales,
+							internal: {
+								i18n: {
+									defaultLocale: options.defaultLocale,
+									locales: options.locales,
+								},
+								routes,
 							},
 						}),
 					});

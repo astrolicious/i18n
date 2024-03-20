@@ -8,7 +8,7 @@ export function generateSitemap(
 	finalSiteUrl: string,
 	opts: SitemapOptions,
 ) {
-	const { changefreq, priority, lastmod: lastmodSrc, i18n } = opts;
+	const { changefreq, priority, lastmod: lastmodSrc, internal: { i18n } } = opts;
 	// TODO: find way to respect <link rel="canonical"> URLs here
 	const urls = [...pages];
 	urls.sort((a, b) => a.localeCompare(b, "en", { numeric: true })); // sort alphabetically so sitemap is same each time

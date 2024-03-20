@@ -4,9 +4,7 @@ import Layout from "~/layouts/Layout.astro";
 import Counter from "../components/Counter";
 import sitemap from "i18n:astro/sitemap";
 
-sitemap({ 
-  optOut: true,
-});
+sitemap(false);
 
 const title = t("about");
 

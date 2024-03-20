@@ -1,14 +1,11 @@
 import { z } from "astro/zod";
-import { optionsSchema } from "./options";
+import { publicOptionsSchema } from "./options";
 
 export const callbackSchema = z
 	.union([
-		z.object({
-			optOut: z.literal(true),
-		}),
+		z.literal(false),
 		z
 			.object({
-				optOut: z.literal(false).optional().default(false),
 				dynamicParams: z
 					.union([
 						z.record(z.record(z.string().optional())),
@@ -22,7 +19,7 @@ export const callbackSchema = z
 					.optional(),
 			})
 			.and(
-				optionsSchema
+				publicOptionsSchema
 					.pick({
 						lastmod: true,
 						priority: true,
@@ -32,8 +29,6 @@ export const callbackSchema = z
 			),
 	])
 	.optional()
-	.default({
-		optOut: false,
-	});
+	.default({});
 
 export type CallbackSchema = z.infer<typeof callbackSchema>;
