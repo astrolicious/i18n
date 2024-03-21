@@ -1,0 +1,8 @@
+---
+import { t } from "i18n:astro";
+
+const { message } = Astro.props;
+---
+<div class="grid p-8 mx-auto text-center self-center">
+  <h1 class="text-xl mb-2">{t(message)}</h1>
+</div>
