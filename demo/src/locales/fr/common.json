@@ -1,5 +1,10 @@
 {
 	"home": "Accueil",
+	"hero": "Bienvenue sur la démo d'I18n pour Astro, un site web qui présente I18n pour Astro",
+	"footer": "Créé avec ❤️ par astrolicious",
 	"about": "A propos",
+	"aboutMessage": "Ceci est une page simple",
+	"opensource": "Saviez-vous que cette page est disponible sur GitHub ? Non ? Eh bien, maintenant vous le savez !",
+	"opensourceCTA": "Allez y jeter un œil !",
 	"blog": "Le blog"
 }
