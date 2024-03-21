@@ -10,13 +10,15 @@ export default defineConfig({
 	integrations: [
 		i18n({
 			defaultLocale: "en",
-			locales: ["en", "fr"],
+			locales: ["en", "fr", "it"],
 			pages: {
 				"/about": {
 					fr: "/a-propos",
+					it: "/chi-siamo",
 				},
 				"/blog": {
 					fr: "/le-blog",
+					it: "/blog",
 				},
 				"/blog/[slug]": {
 					fr: "/le-blog/[slug]",
