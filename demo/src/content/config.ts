@@ -5,6 +5,8 @@ export const collections = {
 		type: "content",
 		schema: z.object({
 			title: z.string(),
+			description: z.string(),
+			author: z.string(),
 			defaultLocaleVersion: reference("posts").optional(),
 		}),
 	}),
