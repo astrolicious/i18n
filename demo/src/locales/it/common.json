@@ -1,6 +1,6 @@
 {
   "home": "Home",
-  "hero": "Benvenuti alla demo di I18n per Astro, un sito web che mostra le funzionalità di I18n per Astro",
+  "hero": "Benvenuti alla demo di I18n per Astro",
   "footer": "Fatto con il ❤️ da astrolicious",
   "about": "Chi siamo",
   "aboutMessage": "Questa è una pagina semplice",

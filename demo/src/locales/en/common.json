@@ -1,6 +1,6 @@
 {
 	"home": "Home",
-	"hero": "Welcome to I18n for Astro Demo, a website that showcases I18n for Astro",
+	"hero": "Welcome to I18n for Astro Demo",
 	"footer": "Made with ❤️ by astrolicious",
 	"about": "About",
 	"aboutMessage": "This is a simple page",

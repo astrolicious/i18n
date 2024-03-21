@@ -22,7 +22,6 @@ export default defineConfig({
 				},
 				"/blog/[slug]": {
 					fr: "/le-blog/[slug]",
-					it: "/blog/[slug]",
 				},
 			},
 			client: {
