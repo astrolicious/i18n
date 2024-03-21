@@ -1,15 +1,20 @@
 ---
 import { getLocalePath, t } from "i18n:astro";
 import LocaleSwitcher from "./LocaleSwitcher.astro";
+import { Image } from "astro:assets";
+import astrolicious from "src/content/astrolicious.png";
 ---
-    <header
-      class="bg-gray-100 p-2 border-b border-gray-300 flex items-center justify-between"
-    >
-      <div class="font-bold text-xl">astro-i18n demo</div>
-      <div class="flex items-center justify-between space-x-6">
-        <a href={getLocalePath("/")}>{t("home")}</a>
-        <a href={getLocalePath("/about")}>{t("about")}</a>
-        <a href={getLocalePath("/blog")}>{t("blog")}</a>
-      </div>
-      <LocaleSwitcher />
-    </header>
+<header class="bg-gray-300 p-2 sticky top-0 flex items-center justify-between flex-col sm:flex-row">
+  <div class="flex items-center p-3">
+    <div>
+      <Image src={astrolicious} alt="astrolicious" width="50" class="rounded-lg mr-3" >
+    </div>
+    <div class="font-bold text-xl ml-2">astro-i18n demo</div>
+  </div>
+  <div class="flex items-center justify-end space-x-2 sm:space-x-6 m-2">
+    <a href={getLocalePath("/")}>{t("home")}</a>
+    <a href={getLocalePath("/about")}>{t("about")}</a>
+    <a href={getLocalePath("/blog")}>{t("blog")}</a>
+  </div>
+  <LocaleSwitcher />
+</header>
