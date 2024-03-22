@@ -8,7 +8,7 @@ import { AstroError } from "astro/errors";
 import { ZodError } from "astro/zod";
 import { simpleSitemapAndIndex } from "sitemap";
 import { generateSitemap } from "./generate-sitemap.js";
-import { optionsSchema, type SitemapOptions } from "./options.js";
+import { optionsSchema } from "./options.js";
 import { callbackSchema, type CallbackSchema } from "./route-config.js";
 import "./virtual.d.ts";
 import { normalizePath } from "vite";
@@ -34,8 +34,8 @@ const formatConfigErrorMessage = (err: ZodError) => {
 	return errorList.join("\n");
 };
 
-type _Route = {
-	page: string | undefined;
+export type _Route = {
+	pages: Array<string>;
 	// strictest forces us to do weird things
 	route:
 		| (Omit<Route, "injectedRoute"> & {
@@ -55,7 +55,7 @@ export const integration = defineIntegration({
 	optionsSchema,
 	setup({ options }) {
 		const routes: Array<_Route> = options.internal.routes.map((route) => ({
-			page: undefined,
+			pages: [],
 			route,
 			routeData: undefined,
 			sitemapOptions: [],
@@ -132,19 +132,12 @@ export const integration = defineIntegration({
 								({
 									include: true,
 									routeData,
-									page: undefined,
+									pages: [],
 									route: undefined,
 									sitemapOptions: [],
 								}) satisfies _Route,
 						),
 				];
-				console.dir(
-					_routes.map((e) => ({
-						...e,
-						routeData: e.routeData?.route,
-					})),
-					{ depth: null },
-				);
 
 				try {
 					if (!config.site) {
@@ -234,8 +227,32 @@ export const integration = defineIntegration({
 						return;
 					}
 
-					// TODO: use dynamic params to generate mappings
-					const urlData = generateSitemap(pageUrls, finalSiteUrl.href, options);
+					for (const route of _routes.filter((e) => e.include)) {
+						for (const rawPage of pageUrls) {
+							const page = normalizePath(
+								`/${relative(config.base, new URL(rawPage).pathname)}`,
+							);
+							// biome-ignore lint/style/noNonNullAssertion: <explanation>
+							if (route.routeData!.pattern.test(page)) {
+								route.pages.push(rawPage);
+							}
+						}
+					}
+
+					// console.dir(
+					// 	_routes.map((e) => ({
+					// 		pages: e.pages,
+					// 		routeData: e.routeData?.pattern,
+					// 		route: e.route?.injectedRoute.pattern,
+					// 	})),
+					// 	{ depth: null },
+					// );
+
+					const urlData = generateSitemap(
+						_routes.filter((e) => e.include),
+						finalSiteUrl.href,
+						options,
+					);
 
 					const destDir = fileURLToPath(dir);
 					await simpleSitemapAndIndex({
