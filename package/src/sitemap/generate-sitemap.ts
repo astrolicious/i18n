@@ -1,6 +1,5 @@
 import type { LinkItem, SitemapItemLoose } from "sitemap";
 import type { SitemapOptions } from "./options.js";
-// import { parseUrl } from "./parse-url.js";
 import type { _Route } from "./integration.js";
 
 /** Construct sitemap.xml given a set of URLs */
@@ -16,27 +15,82 @@ export function generateSitemap(
 
 	const lastmod = lastmodSrc?.toISOString();
 
-	const { defaultLocale } = opts.internal.i18n;
+	const getLinksFromRoute = (route: _Route, page: string) => {
+		const links: Array<LinkItem> = [];
 
-	const getLinksFromRoute = ({ route }: _Route) => {
-		// TODO: make it work
-		const isDefaultLocale = route!.locale === defaultLocale;
-		const defaultRoutes = routes.filter(
-			(e) => e.route && e.route.locale === defaultLocale,
+		const equivalentRoutes = routes.filter(
+			(e) =>
+				e.route &&
+				e.route!.pattern === route.route!.pattern &&
+				e.route!.locale !== route.route!.locale,
 		);
-		const otherRoutes = routes.filter(
-			(e) => e.route && e.route.locale !== route!.locale,
-		);
-		const foundRoutes = (isDefaultLocale ? otherRoutes : defaultRoutes).filter(
-			(e) => e.route!.pattern === route!.pattern,
-		);
-		if (foundRoutes.length === 0) {
+
+		links.push({
+			lang: route.route!.locale,
+			url: page,
+		});
+
+		// Handle static links
+		if (route.routeData!.params.length === 0) {
+			// console.dir(
+			// 	{
+			// 		equivalent: equivalentRoutes.map(
+			// 			(route) => route.route!.injectedRoute.pattern,
+			// 		),
+			// 	},
+			// 	{ depth: null },
+			// );
+
+			for (const equivalentRoute of equivalentRoutes) {
+				links.push({
+					lang: equivalentRoute.route!.locale,
+					url: `${new URL(page).origin}${
+						equivalentRoute.route!.injectedRoute.pattern
+					}`,
+				});
+			}
+
+			return [...links].sort((a, b) =>
+				a.url.localeCompare(b.url, "en", { numeric: true }),
+			);
+		}
+
+		const index = route.pages.indexOf(page);
+		const sitemapOptions = route.sitemapOptions[index];
+		if (!sitemapOptions) {
 			return [];
 		}
-		// TODO: do whatever is needed
-		// TODO: update playground to test with another locale
-		// console.log(temp.route?.injectedRoute.pattern);
-		return [];
+		// console.dir(
+		// 	{
+		// 		current: route.route!.injectedRoute.pattern,
+		// 		equivalent: equivalentRoutes.map(
+		// 			(route) => route.route!.injectedRoute.pattern,
+		// 		),
+		// 		// equivalentRoutes,
+		// 		index,
+		// 		sitemapOptions,
+		// 		// route,
+		// 	},
+		// 	{ depth: null },
+		// );
+		for (const equivalentRoute of equivalentRoutes) {
+			// console.log(equivalentRoute.route!.injectedRoute.pattern);
+			const options = sitemapOptions?.dynamicParams?.find(
+				(e) => e.locale === equivalentRoute.route!.locale,
+			);
+			let newPage = equivalentRoute.route!.injectedRoute.pattern;
+			for (const [key, value] of Object.entries(options.params)) {
+				newPage = newPage.replace(`[${key}]`, value);
+			}
+			newPage = `${new URL(page).origin}${newPage}`;
+			links.push({
+				lang: equivalentRoute.route!.locale,
+				url: newPage,
+			});
+		}
+		return [...links].sort((a, b) =>
+			a.url.localeCompare(b.url, "en", { numeric: true }),
+		);
 	};
 
 	const urlData: Array<SitemapItemLoose> = [];
@@ -47,7 +101,7 @@ export function generateSitemap(
 			if (route.route) {
 				// console.dir(route, { depth: null });
 				// TODO: logic to get equivalent route in other locales
-				const _links = getLinksFromRoute(route);
+				const _links = getLinksFromRoute(route, page);
 				links.push(..._links);
 			}
 
@@ -68,6 +122,7 @@ export function generateSitemap(
 			}
 
 			urlData.push(obj);
+			console.log("---");
 		}
 	}
 
