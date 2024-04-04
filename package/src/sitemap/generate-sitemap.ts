@@ -1,51 +1,65 @@
 import type { LinkItem, SitemapItemLoose } from "sitemap";
 import type { SitemapOptions } from "./options.js";
-import type { _Route } from "./integration.js";
+import type { Route } from "./integration.js";
+
+const normalizeDynamicParams = (
+	_params: Route["sitemapOptions"][number]["dynamicParams"],
+) => {
+	if (!_params) {
+		return [];
+	}
+
+	if (Array.isArray(_params)) {
+		return _params;
+	}
+
+	return Object.entries(_params).map(([locale, params]) => ({
+		locale,
+		params,
+	}));
+};
+
+type NoUndefinedField<T> = {
+	[P in keyof T]-?: NonNullable<T[P]>;
+};
 
 /** Construct sitemap.xml given a set of URLs */
 export function generateSitemap(
-	routes: Array<_Route>,
+	routes: Array<Route>,
 	_finalSiteUrl: string,
 	opts: SitemapOptions,
 ) {
 	const { changefreq, priority, lastmod: lastmodSrc } = opts;
 	// TODO: find way to respect <link rel="canonical"> URLs here
-	// const urls = [...pages];
-	// urls.sort((a, b) => a.localeCompare(b, "en", { numeric: true })); // sort alphabetically so sitemap is same each time
 
 	const lastmod = lastmodSrc?.toISOString();
 
-	const getLinksFromRoute = (route: _Route, page: string) => {
+	const getLinksFromRoute = (route: NoUndefinedField<Route>, page: string) => {
+		if (!route.route) {
+			return [];
+		}
+
 		const links: Array<LinkItem> = [];
 
 		const equivalentRoutes = routes.filter(
 			(e) =>
 				e.route &&
-				e.route!.pattern === route.route!.pattern &&
-				e.route!.locale !== route.route!.locale,
-		);
+				e.route.pattern === route.route.pattern &&
+				e.route.locale !== route.route.locale,
+		) as Array<NoUndefinedField<Route>>;
 
 		links.push({
-			lang: route.route!.locale,
+			lang: route.route.locale,
 			url: page,
 		});
 
 		// Handle static links
-		if (route.routeData!.params.length === 0) {
-			// console.dir(
-			// 	{
-			// 		equivalent: equivalentRoutes.map(
-			// 			(route) => route.route!.injectedRoute.pattern,
-			// 		),
-			// 	},
-			// 	{ depth: null },
-			// );
-
+		if (route.routeData.params.length === 0) {
 			for (const equivalentRoute of equivalentRoutes) {
 				links.push({
-					lang: equivalentRoute.route!.locale,
+					lang: equivalentRoute.route.locale,
 					url: `${new URL(page).origin}${
-						equivalentRoute.route!.injectedRoute.pattern
+						equivalentRoute.route.injectedRoute.pattern
 					}`,
 				});
 			}
@@ -60,31 +74,29 @@ export function generateSitemap(
 		if (!sitemapOptions) {
 			return [];
 		}
-		// console.dir(
-		// 	{
-		// 		current: route.route!.injectedRoute.pattern,
-		// 		equivalent: equivalentRoutes.map(
-		// 			(route) => route.route!.injectedRoute.pattern,
-		// 		),
-		// 		// equivalentRoutes,
-		// 		index,
-		// 		sitemapOptions,
-		// 		// route,
-		// 	},
-		// 	{ depth: null },
-		// );
+
 		for (const equivalentRoute of equivalentRoutes) {
-			// console.log(equivalentRoute.route!.injectedRoute.pattern);
-			const options = sitemapOptions?.dynamicParams?.find(
-				(e) => e.locale === equivalentRoute.route!.locale,
-			);
-			let newPage = equivalentRoute.route!.injectedRoute.pattern;
+			const options = normalizeDynamicParams(
+				sitemapOptions?.dynamicParams,
+			).find((e) => e.locale === equivalentRoute.route.locale);
+
+			if (!options) {
+				// TODO: check how it could happen
+				continue;
+			}
+
+			let newPage = equivalentRoute.route.injectedRoute.pattern;
 			for (const [key, value] of Object.entries(options.params)) {
+				if (!value) {
+					// TODO: check how it could happen
+					continue;
+				}
+
 				newPage = newPage.replace(`[${key}]`, value);
 			}
 			newPage = `${new URL(page).origin}${newPage}`;
 			links.push({
-				lang: equivalentRoute.route!.locale,
+				lang: equivalentRoute.route.locale,
 				url: newPage,
 			});
 		}
@@ -99,9 +111,14 @@ export function generateSitemap(
 			console.log(page);
 			const links: Array<LinkItem> = [];
 			if (route.route) {
-				// console.dir(route, { depth: null });
-				// TODO: logic to get equivalent route in other locales
-				const _links = getLinksFromRoute(route, page);
+				const _links = getLinksFromRoute(
+					// Required because TS
+					{
+						...route,
+						route: route.route,
+					},
+					page,
+				);
 				links.push(..._links);
 			}
 

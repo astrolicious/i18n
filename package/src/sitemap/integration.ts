@@ -12,7 +12,7 @@ import { optionsSchema } from "./options.js";
 import { callbackSchema, type CallbackSchema } from "./route-config.js";
 import "./virtual.d.ts";
 import { normalizePath } from "vite";
-import type { Route } from "../types.js";
+import type { Route as InternalRoute } from "../types.js";
 import { withoutTrailingSlash } from "ufo";
 
 const OUTFILE = "sitemap-index.xml";
@@ -34,33 +34,34 @@ const formatConfigErrorMessage = (err: ZodError) => {
 	return errorList.join("\n");
 };
 
-export type _Route = {
-	pages: Array<string>;
-	// strictest forces us to do weird things
-	route:
-		| (Omit<Route, "injectedRoute"> & {
-				injectedRoute: Omit<InjectedRoute, "prerender"> & {
-					prerender?: boolean | undefined;
-				};
-		  })
-		| undefined;
-	routeData: RouteData | undefined;
-	sitemapOptions: Array<Exclude<CallbackSchema, false>>;
-	include: boolean | undefined;
+// strictest forces us to do weird things
+type _RouteRoute = Omit<InternalRoute, "injectedRoute"> & {
+	injectedRoute: Omit<InjectedRoute, "prerender"> & {
+		prerender?: boolean | undefined;
+	};
 };
+
+export type Route = {
+		pages: Array<string>;
+		route: _RouteRoute | undefined;
+		routeData: RouteData;
+		sitemapOptions: Array<Exclude<CallbackSchema, false>>;
+		include: boolean;
+	};
 
 export const integration = defineIntegration({
 	name: "astro-i18n/sitemap",
 	plugins: [routeConfigPlugin],
 	optionsSchema,
 	setup({ options }) {
-		const routes: Array<_Route> = options.internal.routes.map((route) => ({
-			pages: [],
-			route,
-			routeData: undefined,
-			sitemapOptions: [],
-			include: undefined,
-		}));
+		const initialRoutes: Array<Route> =
+			options.internal.routes.map((route) => ({
+				pages: [],
+				route,
+				routeData: undefined as unknown as RouteData,
+				sitemapOptions: [],
+				include: true,
+			}));
 
 		let config: AstroConfig;
 
@@ -84,9 +85,8 @@ export const integration = defineIntegration({
 							throw new Error("Invalid callback");
 						}
 						for (const r of routeData) {
-							const route = routes.find(
-								// biome-ignore lint/style/noNonNullAssertion: No undefined route at this stage
-								(e) => e.route!.injectedRoute.pattern === r.route,
+							const route = initialRoutes.find(
+								(e) => e.route?.injectedRoute.pattern === r.route,
 							);
 							if (!route) {
 								continue;
@@ -102,41 +102,39 @@ export const integration = defineIntegration({
 				});
 			},
 			"astro:build:done": async (params) => {
-				// console.dir(routes, { depth: null });
-				const { dir, routes: rawRoutes, pages, logger } = params;
-				// console.dir(rawRoutes, { depth: null });
-				for (const r of routes.filter((e) => !e.routeData)) {
-					r.routeData = rawRoutes.find(
+				const { logger } = params;
+
+				for (const r of initialRoutes.filter((e) => !e.routeData)) {
+					const routeData = params.routes.find(
 						(e) =>
-							// biome-ignore lint/style/noNonNullAssertion: No undefined route at this stage
-							withoutTrailingSlash(r.route!.injectedRoute.pattern) === e.route,
+							withoutTrailingSlash(r.route?.injectedRoute.pattern) === e.route,
 					);
-					if (r.routeData) {
-						r.include = true;
-					} else {
-						console.warn(r);
+					if (!routeData) {
 						// TODO: proper error
-						throw new Error("This should never happen");
+						throw new Error("This should never happen, please open an issue");
 					}
+					r.routeData = routeData;
+					r.include = true;
 				}
 
-				const _routes: Array<_Route> = [
-					...routes,
-					...rawRoutes
+				const _routes = [
+					...initialRoutes,
+					...params.routes
 						.filter(
-							// biome-ignore lint/style/noNonNullAssertion: Checked above
-							(e) => !routes.map((e) => e.routeData!.route).includes(e.route),
+							(e) =>
+								!initialRoutes.map((e) => e.routeData.route).includes(e.route),
 						)
-						.map(
-							(routeData) =>
-								({
-									include: true,
-									routeData,
-									pages: [],
-									route: undefined,
-									sitemapOptions: [],
-								}) satisfies _Route,
-						),
+						.map((routeData) => {
+							const route: Route = {
+								include: true,
+								routeData,
+								pages: [],
+								route: undefined,
+								sitemapOptions: [],
+							};
+
+							return route;
+						}),
 				];
 
 				try {
@@ -150,14 +148,14 @@ export const integration = defineIntegration({
 					const { customPages, entryLimit } = options;
 
 					if (!config.site) {
-						console.warn(
-							"The Sitemap integration requires the `site` astro.config option. Skipping.",
+						logger.warn(
+							"The `site` astro.config option is required. Skipping.",
 						);
 						return;
 					}
 					const finalSiteUrl = new URL(config.base, config.site);
 
-					let pageUrls = pages
+					let pageUrls = params.pages
 						.filter((p) => !isStatusCodePage(p.pathname))
 						.map((p) => {
 							if (p.pathname !== "" && !finalSiteUrl.pathname.endsWith("/"))
@@ -168,8 +166,10 @@ export const integration = defineIntegration({
 						});
 
 					const routeUrls = _routes.reduce<string[]>((urls, route) => {
-						// biome-ignore lint/style/noNonNullAssertion: Necessary checks have been made
-						const r = route.routeData!;
+						const r = route.routeData;
+						if (!r) {
+							return urls;
+						}
 						// Only expose pages, not endpoints or redirects
 						if (r.type !== "page") return urls;
 
@@ -239,22 +239,13 @@ export const integration = defineIntegration({
 						}
 					}
 
-					// console.dir(
-					// 	_routes.map((e) => ({
-					// 		pages: e.pages,
-					// 		routeData: e.routeData?.pattern,
-					// 		route: e.route?.injectedRoute.pattern,
-					// 	})),
-					// 	{ depth: null },
-					// );
-
 					const urlData = generateSitemap(
 						_routes.filter((e) => e.include),
 						finalSiteUrl.href,
 						options,
 					);
 
-					const destDir = fileURLToPath(dir);
+					const destDir = fileURLToPath(params.dir);
 					await simpleSitemapAndIndex({
 						hostname: finalSiteUrl.href,
 						destinationDir: destDir,
