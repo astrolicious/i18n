@@ -187,3 +187,21 @@ i18n({
     }
 })
 ```
+
+### `sitemap`
+
+**Type:** `boolean | SitemapOptions`
+
+```ts
+type SitemapOptions = {
+    customPages?: string[];
+    entryLimit?: number;
+    changefreq?: EnumChangefreq;
+    lastmod?: Date;
+    priority?: number;
+};
+```
+
+Allows to generate a sitemap that adapts to your i18n content. Options here
+are a subset of the official sitemap integration. You can see what they do in
+the [official docs](https://docs.astro.build/en/guides/integrations-guide/sitemap/#configuration).
