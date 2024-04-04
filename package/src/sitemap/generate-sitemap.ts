@@ -1,7 +1,7 @@
-import type { LinkItem, SitemapItemLoose } from "sitemap";
-import type { SitemapOptions } from "./options.js";
-import type { Route } from "./integration.js";
 import { AstroError } from "astro/errors";
+import type { LinkItem, SitemapItemLoose } from "sitemap";
+import type { Route } from "./integration.js";
+import type { SitemapOptions } from "./options.js";
 
 const normalizeDynamicParams = (
 	_params: Route["sitemapOptions"][number]["dynamicParams"],

@@ -7,12 +7,12 @@ import { hasIntegration } from "astro-integration-kit/utilities";
 import { AstroError } from "astro/errors";
 import { ZodError } from "astro/zod";
 import { simpleSitemapAndIndex } from "sitemap";
-import { generateSitemap } from "./generate-sitemap.js";
-import { optionsSchema } from "./options.js";
-import { callbackSchema, type CallbackSchema } from "./route-config.js";
+import { withoutTrailingSlash } from "ufo";
 import { normalizePath } from "vite";
 import type { Route as InternalRoute } from "../types.js";
-import { withoutTrailingSlash } from "ufo";
+import { generateSitemap } from "./generate-sitemap.js";
+import { optionsSchema } from "./options.js";
+import { type CallbackSchema, callbackSchema } from "./route-config.js";
 import { formatConfigErrorMessage, isStatusCodePage } from "./utils.ts";
 
 const OUTFILE = "sitemap-index.xml";
