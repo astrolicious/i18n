@@ -49,6 +49,31 @@ export const integration = defineIntegration({
 					locales: '"@@_LOCALES_@@"',
 				};
 
+				let dtsContent = virtualTypesStub
+					.replace(typesPlaceholders.id, VIRTUAL_MODULE_ID)
+					.replace(
+						typesPlaceholders.locale,
+						options.locales.map((locale) => `"${locale}"`).join(" | "),
+					)
+					.replace(
+						typesPlaceholders.localePathParams,
+						`{${defaultLocaleRoutes
+							.map(
+								(route) =>
+									`"${route.pattern}": ${
+										route.params.length === 0
+											? "never"
+											: `{
+											${route.params
+												.map((param) => `"${param}": string;`)
+												.join("\n")}
+											}`
+									}`,
+							)
+							.join(";\n")}}`,
+					)
+					.replace(typesPlaceholders.locales, JSON.stringify(options.locales));
+
 				if (options.sitemap) {
 					addIntegration({
 						...params,
@@ -63,41 +88,20 @@ export const integration = defineIntegration({
 							},
 						}),
 					});
-				}
 
-				// TODO: add dts for i18n:astro/sitemap if needed
+					const virtualSitemapTypesStub = readFileSync(
+						resolve("./stubs/sitemap.d.ts"),
+						"utf-8",
+					);
+
+					dtsContent += virtualSitemapTypesStub;
+				}
 
 				addDts({
 					logger,
 					...config,
 					name: "astro-i18n",
-					content: virtualTypesStub
-						.replace(typesPlaceholders.id, VIRTUAL_MODULE_ID)
-						.replace(
-							typesPlaceholders.locale,
-							options.locales.map((locale) => `"${locale}"`).join(" | "),
-						)
-						.replace(
-							typesPlaceholders.localePathParams,
-							`{${defaultLocaleRoutes
-								.map(
-									(route) =>
-										`"${route.pattern}": ${
-											route.params.length === 0
-												? "never"
-												: `{
-											${route.params
-												.map((param) => `"${param}": string;`)
-												.join("\n")}
-											}`
-										}`,
-								)
-								.join(";\n")}}`,
-						)
-						.replace(
-							typesPlaceholders.locales,
-							JSON.stringify(options.locales),
-						),
+					content: dtsContent,
 				});
 
 				const enabledClientFeatures = Object.entries(options.client)

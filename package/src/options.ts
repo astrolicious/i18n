@@ -148,7 +148,8 @@ export const optionsSchema = z
 			})
 			.optional(),
 		/**
-		 * TODO:
+		 * @description Allows to generate a sitemap that adapts to your i18n content
+		 * @link https://astro-i18n.netlify.app/usage/configuration/#sitemap
 		 */
 		sitemap: z
 			.union([z.boolean(), sitemapOptionsSchema])

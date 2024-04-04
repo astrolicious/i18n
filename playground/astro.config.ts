@@ -30,7 +30,7 @@ export default defineConfig({
 				translations: true,
 				paths: true,
 			},
-			sitemap: {},
+			sitemap: true,
 			// rootRedirect: {
 			//   status: 301,
 			//   destination: "/en",

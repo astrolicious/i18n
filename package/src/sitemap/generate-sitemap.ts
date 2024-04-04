@@ -1,6 +1,7 @@
 import type { LinkItem, SitemapItemLoose } from "sitemap";
 import type { SitemapOptions } from "./options.js";
 import type { Route } from "./integration.js";
+import { AstroError } from "astro/errors";
 
 const normalizeDynamicParams = (
 	_params: Route["sitemapOptions"][number]["dynamicParams"],
@@ -30,8 +31,6 @@ export function generateSitemap(
 	opts: SitemapOptions,
 ) {
 	const { changefreq, priority, lastmod: lastmodSrc } = opts;
-	// TODO: find way to respect <link rel="canonical"> URLs here
-
 	const lastmod = lastmodSrc?.toISOString();
 
 	const getLinksFromRoute = (route: NoUndefinedField<Route>, page: string) => {
@@ -81,15 +80,19 @@ export function generateSitemap(
 			).find((e) => e.locale === equivalentRoute.route.locale);
 
 			if (!options) {
-				// TODO: check how it could happen
-				continue;
+				throw new AstroError(
+					"This situation should never occur (no options were found)",
+					"Please open an issue on GitHub",
+				);
 			}
 
 			let newPage = equivalentRoute.route.injectedRoute.pattern;
 			for (const [key, value] of Object.entries(options.params)) {
 				if (!value) {
-					// TODO: check how it could happen
-					continue;
+					throw new AstroError(
+						"This situation should never occur (value is not set)",
+						"Please open an issue on GitHub",
+					);
 				}
 
 				newPage = newPage.replace(`[${key}]`, value);
@@ -108,7 +111,6 @@ export function generateSitemap(
 	const urlData: Array<SitemapItemLoose> = [];
 	for (const route of routes) {
 		for (const page of route.pages) {
-			console.log(page);
 			const links: Array<LinkItem> = [];
 			if (route.route) {
 				const _links = getLinksFromRoute(
@@ -139,7 +141,6 @@ export function generateSitemap(
 			}
 
 			urlData.push(obj);
-			console.log("---");
 		}
 	}
 

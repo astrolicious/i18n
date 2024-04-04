@@ -10,29 +10,12 @@ import { simpleSitemapAndIndex } from "sitemap";
 import { generateSitemap } from "./generate-sitemap.js";
 import { optionsSchema } from "./options.js";
 import { callbackSchema, type CallbackSchema } from "./route-config.js";
-import "./virtual.d.ts";
 import { normalizePath } from "vite";
 import type { Route as InternalRoute } from "../types.js";
 import { withoutTrailingSlash } from "ufo";
+import { formatConfigErrorMessage, isStatusCodePage } from "./utils.ts";
 
 const OUTFILE = "sitemap-index.xml";
-const STATUS_CODE_PAGES = new Set(["404", "500"]);
-
-const isStatusCodePage = (_pathname: string): boolean => {
-	let pathname = _pathname;
-	if (pathname.endsWith("/")) {
-		pathname = pathname.slice(0, -1);
-	}
-	const end = pathname.split("/").pop() ?? "";
-	return STATUS_CODE_PAGES.has(end);
-};
-
-const formatConfigErrorMessage = (err: ZodError) => {
-	const errorList = err.issues.map(
-		(issue) => ` ${issue.path.join(".")}  ${`${issue.message}.`}`,
-	);
-	return errorList.join("\n");
-};
 
 // strictest forces us to do weird things
 type _RouteRoute = Omit<InternalRoute, "injectedRoute"> & {
@@ -42,26 +25,27 @@ type _RouteRoute = Omit<InternalRoute, "injectedRoute"> & {
 };
 
 export type Route = {
-		pages: Array<string>;
-		route: _RouteRoute | undefined;
-		routeData: RouteData;
-		sitemapOptions: Array<Exclude<CallbackSchema, false>>;
-		include: boolean;
-	};
+	pages: Array<string>;
+	route: _RouteRoute | undefined;
+	routeData: RouteData;
+	sitemapOptions: Array<Exclude<CallbackSchema, false>>;
+	include: boolean;
+};
 
 export const integration = defineIntegration({
 	name: "astro-i18n/sitemap",
 	plugins: [routeConfigPlugin],
 	optionsSchema,
 	setup({ options }) {
-		const initialRoutes: Array<Route> =
-			options.internal.routes.map((route) => ({
+		const initialRoutes: Array<Route> = options.internal.routes.map(
+			(route) => ({
 				pages: [],
 				route,
 				routeData: undefined as unknown as RouteData,
 				sitemapOptions: [],
 				include: true,
-			}));
+			}),
+		);
 
 		let config: AstroConfig;
 
@@ -81,8 +65,10 @@ export const integration = defineIntegration({
 					callbackHandler: ({ routeData }, callback) => {
 						const response = callbackSchema.safeParse(callback);
 						if (!response.success) {
-							// TODO: proper error message
-							throw new Error("Invalid callback");
+							throw new AstroError(
+								formatConfigErrorMessage(response.error),
+								"Check your usage of `astro:i18n/sitemap`",
+							);
 						}
 						for (const r of routeData) {
 							const route = initialRoutes.find(
@@ -110,8 +96,10 @@ export const integration = defineIntegration({
 							withoutTrailingSlash(r.route?.injectedRoute.pattern) === e.route,
 					);
 					if (!routeData) {
-						// TODO: proper error
-						throw new Error("This should never happen, please open an issue");
+						throw new AstroError(
+							"This situation should never occur (a corresponding routeData should always be found)",
+							"Please open an issue on GitHub",
+						);
 					}
 					r.routeData = routeData;
 					r.include = true;
