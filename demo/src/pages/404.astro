@@ -1,0 +1,14 @@
+---
+import { getLocale } from "i18n:astro";
+import Layout from "~/layouts/Layout.astro";
+
+const locale = getLocale();
+const title = "Page not found";
+
+export const prerender = false;
+---
+
+<Layout {title}>
+  <h1>{title}</h1>
+  <p>Locale: {locale}</p>
+</Layout>

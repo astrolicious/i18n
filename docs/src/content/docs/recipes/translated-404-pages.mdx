@@ -1,0 +1,103 @@
+---
+title: Translated 404 pages
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+When having a translated website, it makes sense to have your 404 pages translated as well! This
+can be achieved fairly easily using this package.
+
+## Hybrid or server
+
+This method is actually the easiest. We are going to create a server rendered 404 page that will
+allow to show the content in the current locale dynamically!
+
+First, create a new page at `src/pages/404.astro`. It's important to put in the `pages` directory
+and not the `routes` directory to prevent the integration from generating one per locale.
+
+The important part here is to make sure the page is prerendered! If you're in hybrid mode, make sure
+to add `export const prerender = false`.
+
+You can then use any utility from this package without any issue! For example:
+
+```astro title="src/pages/404.astro" {5}
+---
+import Layout from "~/layouts/Layout.astro";
+import { getLocale, t } from "i18n:astro"
+
+export const prerender = false;
+
+const locale = getLocale()
+const title = t("404:pageNotFound");
+---
+
+<Layout {title}>
+  <h1>{title}</h1>
+  <p>Locale: {locale}</p>
+</Layout>
+```
+
+## Static
+
+If you want to keep your site fully static, you'll want to generate a 404 page per locale
+and rewrite paths with your hosting provider. Below we'll have a look with Vercel and Netlify.
+
+### Creating the page
+
+First, create a new page at `src/routes/404.astro`. You can use any utility from this package
+without any issue! For example:
+
+```astro title="src/pages/404.astro"
+---
+import Layout from "~/layouts/Layout.astro";
+import { getLocale, t } from "i18n:astro"
+
+const locale = getLocale()
+const title = t("404:pageNotFound");
+---
+
+<Layout {title}>
+  <h1>{title}</h1>
+  <p>Locale: {locale}</p>
+</Layout>
+```
+
+### Creating rewrites
+
+Now that we have 404 pages available (eg. at `/404` and `/fr/404`), we need to tell the host to
+rewrite the path to the right locale.
+
+<Tabs>
+    <TabItem label="Vercel">
+    ```json title="vercel.json" ins={4-8}
+    {
+        "$schema": "https://openapi.vercel.sh/vercel.json",
+        "rewrites": [
+            {
+                "source": "/(?<lang>[^/]*)/(.*)",
+                "destination": "/$lang/404/",
+                "status": 404
+            }
+        ]
+    }
+    ```
+    </TabItem>
+    <TabItem label="Netlify">
+    ```text title="public/_redirects" ins={1}
+    /:lang/* /:lang/404/ 404
+    ```
+    </TabItem>
+</Tabs>
+
+:::note
+Do you know how to do it for other adapters? Send a PR!
+:::
+
+### Handling the `"prefix"` strategy
+
+If you `strategy: "prefix"` in your integration config, we need to make an adjustement.
+Following the previous steps, the following 404 are available: `/en/404` and `/fr/404`.
+What happens if someone visits `/test`? It will show the default host 404, not ideal.
+
+What you can do instead is to duplicate your `src/routes/404.astro` to `src/pages/404.astro`
+to handle this case. No other action is required!
