@@ -24,6 +24,7 @@
 	"sideEffects": false,
 	"exports": {
 		".": "./src/index.ts",
+		"./internal": "./src/internal.ts",
 		"./components/I18nClient.astro": "./src/components/I18nClient.astro",
 		"./components/I18nHead.astro": "./src/components/I18nHead.astro"
 	},

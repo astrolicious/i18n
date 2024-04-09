@@ -1,6 +1,6 @@
 declare module "i18n:astro/sitemap" {
 	const sitemap: (
-		args: import("../sitemap/route-config.js").CallbackSchema,
+		args: import("@astrolicious/i18n/internal").CallbackSchema,
 	) => void;
 
 	export default sitemap;
