@@ -1,0 +1,71 @@
+---
+title: Sitemap
+---
+
+To enable the sitemap, set the `sitemap` option of the integration config to `true` or an object:
+
+```ts title="astro.config.mjs" ins={3}
+i18n({
+    // ...
+    sitemap: true // or {}
+})
+```
+
+After you run `astro sync`, you'll be able to import a new function from `i18n:astro/sitemap` on your Astro pages:
+
+```astro
+---
+import sitemap from "i18n:astro/sitemap"
+---
+```
+
+This allows you to set specific params at the route level. It's really interesting to generate i18n friendly sitemaps (with alternates):
+
+```ts
+import { getLocalePlaceholder, setDynamicParams } from "i18n:astro";
+import sitemap from "i18n:astro/sitemap";
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+
+export const getStaticPaths = (() => {
+	const locale = getLocalePlaceholder();
+
+	const slugs = [
+		{
+			en: "a",
+			fr: "d",
+		},
+		{
+			en: "b",
+			fr: "e",
+		},
+		{
+			en: "c",
+			fr: "f",
+		},
+	];
+
+	return slugs.map((slug) => {
+		const dynamicParams = Object.entries(slug).map(([locale, slug]) => ({
+			locale,
+			params: { slug },
+		}));
+		sitemap({
+			dynamicParams,
+		});
+		return {
+			params: {
+				slug: slug[locale],
+			},
+			props: {
+				dynamicParams,
+			},
+		};
+	});
+}) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+const { dynamicParams } = Astro.props;
+
+setDynamicParams(dynamicParams);
+```
