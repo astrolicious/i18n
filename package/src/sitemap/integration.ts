@@ -51,7 +51,7 @@ export const integration = defineIntegration({
 
 		return {
 			"astro:config:setup": ({ defineRouteConfig, ...params }) => {
-				const { logger } = params
+				const { logger } = params;
 
 				if (hasIntegration({ ...params, name: "@astrojs/sitemap" })) {
 					throw new AstroError(
@@ -83,8 +83,14 @@ export const integration = defineIntegration({
 							route.routeData = r;
 							route.include = response.data !== false;
 							if (response.data !== false) {
-								if (response.data.changefreq || response.data.lastmod || response.data.priority) {
-									logger.warn(`Setting \`changefreq\`, \`lastmod\` or \`priority\` on a route basis is not implemented yet (eg. on "${r.component}")`)
+								if (
+									response.data.changefreq ||
+									response.data.lastmod ||
+									response.data.priority
+								) {
+									logger.warn(
+										`Setting \`changefreq\`, \`lastmod\` or \`priority\` on a route basis is not implemented yet (eg. on "${r.component}")`,
+									);
 								}
 								route.sitemapOptions.push(response.data);
 							}

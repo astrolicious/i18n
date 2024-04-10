@@ -1,62 +1,66 @@
 ---
 import { getCollection } from "astro:content";
 import {
-	getLocalePlaceholder,
 	getDefaultLocalePlaceholder,
+	getLocalePlaceholder,
 	setDynamicParams,
 	t,
 } from "i18n:astro";
+import sitemap from "i18n:astro/sitemap";
 import type { GetStaticPaths } from "astro";
 import Layout from "~/layouts/Layout.astro";
-import sitemap from "i18n:astro/sitemap"
 
 export const getStaticPaths = (async () => {
 	const locale = getLocalePlaceholder();
-	const defaultLocale = getDefaultLocalePlaceholder()
+	const defaultLocale = getDefaultLocalePlaceholder();
 
 	const posts = await getCollection(
 		"posts",
 		({ slug }) => slug.split("/")[0] === locale,
 	);
 
-	return await Promise.all(posts.map(async (post) => {
-		const equivalentPosts = await getCollection("posts", (p) => {
-			if (locale === defaultLocale) {
+	return await Promise.all(
+		posts.map(async (post) => {
+			const equivalentPosts = await getCollection("posts", (p) => {
+				if (locale === defaultLocale) {
+					return (
+						p.slug === post.slug ||
+						p.data.defaultLocaleVersion?.slug === post.slug
+					);
+				}
 				return (
-					p.slug === post.slug || p.data.defaultLocaleVersion?.slug === post.slug
+					p.slug === post.data.defaultLocaleVersion?.slug ||
+					p.data.defaultLocaleVersion?.slug ===
+						post.data.defaultLocaleVersion?.slug
 				);
-			}
-			return (
-				p.slug === post.data.defaultLocaleVersion?.slug ||
-				p.data.defaultLocaleVersion?.slug === post.data.defaultLocaleVersion?.slug
-			);
-		});
+			});
 
-		const dynamicParams = equivalentPosts.map((post) => {
-			const [locale, slug] = post.slug.split("/");
+			const dynamicParams = equivalentPosts.map((post) => {
+				const [locale, slug] = post.slug.split("/");
+
+				return {
+					locale,
+					params: {
+						slug,
+					},
+				};
+			});
+
+			sitemap({
+				dynamicParams,
+			});
 
 			return {
-				locale,
 				params: {
-					slug,
+					slug: post.slug.split("/")[1],
+				},
+				props: {
+					post,
+					dynamicParams,
 				},
 			};
-		})
-
-		sitemap({
-			dynamicParams,
-		});
-
-		return {
-			params: {
-				slug: post.slug.split("/")[1],
-			},
-			props: {
-				post,
-				dynamicParams
-			},
-		}
-	}));
+		}),
+	);
 }) satisfies GetStaticPaths;
 
 const { post, dynamicParams } = Astro.props;
