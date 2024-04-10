@@ -95,6 +95,7 @@ export const optionsSchema = z
 		 * - `switchLocalePath`: `data`, `paths`
 		 * - `getSwitcherData`: `data`, `paths`
 		 * - `getLocalePlaceholder`: N/A, `getStaticPaths` only
+		 * - `getDefaultLocalePlaceholder`: N/A, `getStaticPaths` only
 		 *
 		 * @default `false`
 		 * @link https://astro-i18n.netlify.app/usage/configuration/#client

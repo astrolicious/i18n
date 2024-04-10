@@ -54,4 +54,5 @@ declare module "i18n:astro" {
 	}>;
 
 	export const getLocalePlaceholder: () => Locale;
+	export const getDefaultLocalePlaceholder: () => Locale;
 }

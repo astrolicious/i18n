@@ -1,0 +1,34 @@
+---
+title: getDefaultLocalePlaceholder
+---
+
+Allows you to get the default locale inside of `getStaticPaths`. It's a build time macro.
+That means it will be replaced by it's literal value. For instance:
+
+```astro
+---
+import { getDefaultLocalePlaceholder } from "i18n:astro"
+
+export const getStaticPaths = () => {
+    const defaultLocale = getDefaultLocalePlaceholder()
+
+    return []
+}
+---
+```
+
+Will be replaced by the following, no matter the context:
+
+```astro {5}
+---
+import { getDefaultLocalePlaceholder } from "i18n:astro"
+
+export const getStaticPaths = () => {
+    const defaultLocale = "en"
+
+    return []
+}
+---
+```
+
+Be careful not to use `getDefaultLocalePlaceholder` in interpolations or it could result in invalid code.

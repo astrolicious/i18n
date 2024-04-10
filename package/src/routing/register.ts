@@ -76,7 +76,9 @@ const generateRoute = (
 
 		let content = readFileSync(page.entrypoint, "utf-8");
 
-		content = content.replaceAll("getLocalePlaceholder()", `"${locale}"`);
+		content = content
+			.replaceAll("getLocalePlaceholder()", `"${locale}"`)
+			.replaceAll("getDefaultLocalePlaceholder()", `"${defaultLocale}"`);
 
 		let [, frontmatter, ...body] = content.split("---");
 		// Handle static imports

@@ -6,15 +6,16 @@ title: getStaticPaths
 routes but it runs before everything, even middlewares.
 
 Under the hood, the package uses a middleware so we can't access any of the standard utilities inside
-of `getStaticPaths`. Instead, we provide a `getLocalePlaceholder` function that is a build time macro.
+of `getStaticPaths`. Instead, we provide `getLocalePlaceholder` and `getDefaultLocalePlaceholder` function that is a build time macro.
 That means it will be replaced by it's literal value. For instance:
 
 ```astro
 ---
-import { getLocalePlaceholder } from "i18n:astro"
+import { getLocalePlaceholder, getDefaultLocalePlaceholder } from "i18n:astro"
 
 export const getStaticPaths = () => {
     const locale = getLocalePlaceholder()
+    const defaultLocale = getDefaultLocalePlaceholder()
 
     return []
 }
@@ -25,14 +26,15 @@ Will be replaced by the following, no matter the context:
 
 ```astro {5}
 ---
-import { getLocalePlaceholder } from "i18n:astro"
+import { getLocalePlaceholder, getDefaultLocalePlaceholder } from "i18n:astro"
 
 export const getStaticPaths = () => {
     const locale = "en"
+    const defaultLocale = "en"
 
     return []
 }
 ---
 ```
 
-Be careful not to use `getLocalePlaceholder` in interpolations or it could result in invalid code.
+Be careful not to use `getLocalePlaceholder` or `getDefaultLocalePlaceholder` in interpolations or it could result in invalid code.

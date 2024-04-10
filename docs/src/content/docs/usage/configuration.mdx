@@ -153,18 +153,19 @@ Enabling any of the following features requires importing the `<I18nClient/>` co
 
 #### `ClientConfig`
 
-| Utility                | Required features          |
-|------------------------|----------------------------|
-| `t`                    | `data`, `translations`     |
-| `getLocale`            | `data`                     |
-| `getLocales`           | `data`                     |
-| `getDefaultLocale`     | `data`                     |
-| `getHtmlAttrs`         | `data`                     |
-| `setDynamicParams`     | N/A, server only           |
-| `getLocalePath`        | `data`, `paths`            |
-| `switchLocalePath`     | `data`, `paths`            |
-| `getSwitcherData`      | `data`, `paths`            |
-| `getLocalePlaceholder` | N/A, `getStaticPaths` only |
+| Utility                       | Required features          |
+|-------------------------------|----------------------------|
+| `t`                           | `data`, `translations`     |
+| `getLocale`                   | `data`                     |
+| `getLocales`                  | `data`                     |
+| `getDefaultLocale`            | `data`                     |
+| `getHtmlAttrs`                | `data`                     |
+| `setDynamicParams`            | N/A, server only           |
+| `getLocalePath`               | `data`, `paths`            |
+| `switchLocalePath`            | `data`, `paths`            |
+| `getSwitcherData`             | `data`, `paths`            |
+| `getLocalePlaceholder`        | N/A, `getStaticPaths` only |
+| `getDefaultLocalePlaceholder` | N/A, `getStaticPaths` only |
 
 - `data`: `boolean`, defaults to `false`
 - `paths`: `boolean`, defaults to `false`

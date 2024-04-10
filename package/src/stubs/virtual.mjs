@@ -264,3 +264,9 @@ export const getLocalePlaceholder = () => {
 		"`getLocalePlaceholder` should only be called within `getStaticPaths`",
 	);
 };
+
+export const getDefaultLocalePlaceholder = () => {
+	throw new Error(
+		"`getDefaultLocalePlaceholder` should only be called within `getStaticPaths`",
+	);
+};
