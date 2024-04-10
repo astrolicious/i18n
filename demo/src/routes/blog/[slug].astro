@@ -1,61 +1,67 @@
 ---
 import { getCollection } from "astro:content";
 import {
-	getDefaultLocale,
-	getLocale,
 	getLocalePlaceholder,
+	getDefaultLocalePlaceholder,
 	setDynamicParams,
 	t,
 } from "i18n:astro";
 import type { GetStaticPaths } from "astro";
 import Layout from "~/layouts/Layout.astro";
+import sitemap from "i18n:astro/sitemap"
 
 export const getStaticPaths = (async () => {
 	const locale = getLocalePlaceholder();
+	const defaultLocale = getDefaultLocalePlaceholder()
 
 	const posts = await getCollection(
 		"posts",
 		({ slug }) => slug.split("/")[0] === locale,
 	);
 
-	return posts.map((post) => ({
-		params: {
-			slug: post.slug.split("/")[1],
-		},
-		props: {
-			post,
-		},
+	return await Promise.all(posts.map(async (post) => {
+		const equivalentPosts = await getCollection("posts", (p) => {
+			if (locale === defaultLocale) {
+				return (
+					p.slug === post.slug || p.data.defaultLocaleVersion?.slug === post.slug
+				);
+			}
+			return (
+				p.slug === post.data.defaultLocaleVersion?.slug ||
+				p.data.defaultLocaleVersion?.slug === post.data.defaultLocaleVersion?.slug
+			);
+		});
+
+		const dynamicParams = equivalentPosts.map((post) => {
+			const [locale, slug] = post.slug.split("/");
+
+			return {
+				locale,
+				params: {
+					slug,
+				},
+			};
+		})
+
+		sitemap({
+			dynamicParams,
+		});
+
+		return {
+			params: {
+				slug: post.slug.split("/")[1],
+			},
+			props: {
+				post,
+				dynamicParams
+			},
+		}
 	}));
 }) satisfies GetStaticPaths;
 
-const locale = getLocale();
-const defaultLocale = getDefaultLocale();
-const { post } = Astro.props;
+const { post, dynamicParams } = Astro.props;
 
-const equivalentPosts = await getCollection("posts", (p) => {
-	if (locale === defaultLocale) {
-		return (
-			p.slug === post.slug || p.data.defaultLocaleVersion?.slug === post.slug
-		);
-	}
-	return (
-		p.slug === post.data.defaultLocaleVersion?.slug ||
-		p.data.defaultLocaleVersion?.slug === post.data.defaultLocaleVersion?.slug
-	);
-});
-
-setDynamicParams(
-	equivalentPosts.map((post) => {
-		const [locale, slug] = post.slug.split("/");
-
-		return {
-			locale,
-			params: {
-				slug,
-			},
-		};
-	}),
-);
+setDynamicParams(dynamicParams);
 
 const title = `${t("blog")} - ${post.data.title}`;
 ---

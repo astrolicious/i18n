@@ -7,6 +7,7 @@ const title = t("home");
 
 <Layout {title}>
   <h1>{title}</h1>
+  <p><a href="/sitemap-0.xml">Sitemap</a></p>
   <script>
     const data = await fetch("/api/hello").then(res => res.text())
     console.log({ data })
