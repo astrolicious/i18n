@@ -1,0 +1,11 @@
+---
+title: Handle i18n slug
+---
+
+Allows you to retrieve the locale and the remaining slug, assuming your slug (or id) follow the `[locale]/[...parts]` pattern:
+
+```ts
+import { handleI18nSlug } from "@astrolicious/i18n/content-collections";
+
+const { locale, slug } = handleI18nSlug(entry.slug);
+```

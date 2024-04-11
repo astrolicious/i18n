@@ -22,7 +22,7 @@ type PickKeysByValue<T, ValueType> = {
 const getEntrySlug = (entry: ReferenceConstraint<EntryConstraint>) =>
 	"slug" in entry ? entry.slug : entry.id;
 
-const handleI18nSlug = (slug: string) => {
+export const handleI18nSlug = (slug: string) => {
 	const segments = slug.split("/");
 	if (segments.length < 2) {
 		throw new Error(
@@ -97,33 +97,4 @@ export const collectionFilters = {
 		// Wether or not the referenced entry is the same as the default locale entry
 		return getEntrySlug(reference) === getEntrySlug(currentEntryReference);
 	},
-};
-
-type Prettify<T> = {
-	[K in keyof T]: T[K];
-} & {};
-
-export const generateDynamicParams = <
-	TEntry extends EntryConstraint,
-	TExtraParams extends Record<string, unknown> = never,
->(
-	entries: Array<TEntry>,
-	extendParams?: (props: { entry: TEntry; locale: string }) => TExtraParams,
-) => {
-	return entries.map((entry) => {
-		const { locale, slug } = handleI18nSlug(getEntrySlug(entry));
-
-		return {
-			locale,
-			params: {
-				slug,
-				...extendParams?.({ entry, locale }),
-			} as Prettify<
-				{ slug: string } & ([TExtraParams] extends [never]
-					? // biome-ignore lint/complexity/noBannedTypes: <explanation>
-						{}
-					: TExtraParams)
-			>,
-		};
-	});
 };

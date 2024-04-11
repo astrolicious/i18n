@@ -85,6 +85,12 @@ export default defineConfig({
 					},
 				},
 				{
+					label: "Content collections",
+					autogenerate: {
+						directory: "reference/content-collections",
+					},
+				},
+				{
 					label: "Utilities",
 					autogenerate: {
 						directory: "reference/utilities",

@@ -1,18 +1,48 @@
 ---
+title: Collection filters
+---
+
+We expose a few utilities to help you handle i18n collections in `getStaticPaths`, through `collectionFilters`.
+
+```ts showLineNumbers=false
+import { collectionFilters } from "@astrolicious/i18n/content-collections"
+```
+
+## `byLocale`
+
+Allows you to filter by locale, assuming your entries slugs (or ids) follow the `[locale]/[...parts]` pattern:
+
+```ts "collectionFilters.byLocale"
+import { getCollection } from "astro:content";
+import { getLocalePlaceholder } from "i18n:astro";
+import { collectionFilters } from "@astrolicious/i18n/content-collections"
+
+export const getStaticPaths = (async () => {
+    // ...
+    const locale = getLocalePlaceholder();
+    const posts = await getCollection("posts", (post) =>
+	    collectionFilters.byLocale(post, { locale }),
+    );
+    // ...
+})
+```
+
+## `matchingEntries`
+
+Allows you to get all entries that match an entry you pass. The usecase is to generate dynamic params:
+
+```ts {24-29}
 import { getCollection } from "astro:content";
 import {
 	getDefaultLocalePlaceholder,
 	getLocalePlaceholder,
-	setDynamicParams,
-	t,
 } from "i18n:astro";
-import sitemap from "i18n:astro/sitemap";
 import {
 	collectionFilters,
-	handleI18nSlug,
+	generateDynamicParams,
+    handleI18nSlug,
 } from "@astrolicious/i18n/content-collections";
 import type { GetStaticPaths } from "astro";
-import Layout from "~/layouts/Layout.astro";
 
 export const getStaticPaths = (async () => {
 	const locale = getLocalePlaceholder();
@@ -60,14 +90,4 @@ export const getStaticPaths = (async () => {
 		}),
 	);
 }) satisfies GetStaticPaths;
-
-const { post, dynamicParams } = Astro.props;
-
-setDynamicParams(dynamicParams);
-
-const title = `${t("blog")} - ${post.data.title}`;
----
-
-<Layout {title}>
-  <h1>{title}</h1>
-</Layout>
+```
