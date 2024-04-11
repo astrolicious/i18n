@@ -134,7 +134,7 @@ export const optionsSchema = z
 							data: val,
 							translations: val,
 							paths: val,
-					  }
+						}
 					: val,
 			),
 		/**

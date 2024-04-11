@@ -162,7 +162,7 @@ export const setDynamicParams = (_params) => {
 					...e.params,
 				};
 				return obj;
-		  }, {})
+			}, {})
 		: _params;
 
 	config.paths.dynamicParams = {

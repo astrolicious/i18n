@@ -7,6 +7,10 @@ import {
 	t,
 } from "i18n:astro";
 import sitemap from "i18n:astro/sitemap";
+import {
+	collectionFilters,
+	generateDynamicParams,
+} from "@astrolicious/i18n/content-collections";
 import type { GetStaticPaths } from "astro";
 import Layout from "~/layouts/Layout.astro";
 
@@ -14,37 +18,22 @@ export const getStaticPaths = (async () => {
 	const locale = getLocalePlaceholder();
 	const defaultLocale = getDefaultLocalePlaceholder();
 
-	const posts = await getCollection(
-		"posts",
-		({ slug }) => slug.split("/")[0] === locale,
+	const posts = await getCollection("posts", (post) =>
+		collectionFilters.byLocale(post, { locale }),
 	);
 
 	return await Promise.all(
 		posts.map(async (post) => {
-			const equivalentPosts = await getCollection("posts", (p) => {
-				if (locale === defaultLocale) {
-					return (
-						p.slug === post.slug ||
-						p.data.defaultLocaleVersion?.slug === post.slug
-					);
-				}
-				return (
-					p.slug === post.data.defaultLocaleVersion?.slug ||
-					p.data.defaultLocaleVersion?.slug ===
-						post.data.defaultLocaleVersion?.slug
-				);
-			});
-
-			const dynamicParams = equivalentPosts.map((post) => {
-				const [locale, slug] = post.slug.split("/");
-
-				return {
+			const equivalentPosts = await getCollection("posts", (p) =>
+				collectionFilters.matchingEntries(p, {
+					currentEntry: post,
+					key: "defaultLocaleVersion",
 					locale,
-					params: {
-						slug,
-					},
-				};
-			});
+					defaultLocale,
+				}),
+			);
+
+			const dynamicParams = generateDynamicParams(equivalentPosts);
 
 			sitemap({
 				dynamicParams,
