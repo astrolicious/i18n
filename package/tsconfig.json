@@ -3,5 +3,5 @@
 	"compilerOptions": {
 		"jsx": "preserve"
 	},
-	"exclude": ["src/stubs/virtual.d.ts"]
+	"exclude": ["src/stubs/virtual.d.ts", "src/stubs/sitemap.d.ts"]
 }

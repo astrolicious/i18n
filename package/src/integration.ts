@@ -2,12 +2,14 @@ import { readFileSync } from "node:fs";
 import { createResolver, defineIntegration } from "astro-integration-kit";
 import {
 	addDts,
+	addIntegration,
 	addVirtualImports,
 	watchIntegration,
 } from "astro-integration-kit/utilities";
 import { handleI18next } from "./i18next/index.js";
 import { optionsSchema } from "./options.js";
 import { handleRouting } from "./routing/index.js";
+import { integration as sitemapIntegration } from "./sitemap/integration.js";
 
 const VIRTUAL_MODULE_ID = "i18n:astro";
 const CLIENT_ID = "__INTERNAL_ASTRO_I18N_CONFIG__";
@@ -47,37 +49,59 @@ export const integration = defineIntegration({
 					locales: '"@@_LOCALES_@@"',
 				};
 
-				addDts({
-					logger,
-					...config,
-					name: "astro-i18n",
-					content: virtualTypesStub
-						.replace(typesPlaceholders.id, VIRTUAL_MODULE_ID)
-						.replace(
-							typesPlaceholders.locale,
-							options.locales.map((locale) => `"${locale}"`).join(" | "),
-						)
-						.replace(
-							typesPlaceholders.localePathParams,
-							`{${defaultLocaleRoutes
-								.map(
-									(route) =>
-										`"${route.pattern}": ${
-											route.params.length === 0
-												? "never"
-												: `{
+				let dtsContent = virtualTypesStub
+					.replace(typesPlaceholders.id, VIRTUAL_MODULE_ID)
+					.replace(
+						typesPlaceholders.locale,
+						options.locales.map((locale) => `"${locale}"`).join(" | "),
+					)
+					.replace(
+						typesPlaceholders.localePathParams,
+						`{${defaultLocaleRoutes
+							.map(
+								(route) =>
+									`"${route.pattern}": ${
+										route.params.length === 0
+											? "never"
+											: `{
 											${route.params
 												.map((param) => `"${param}": string;`)
 												.join("\n")}
 											}`
-										}`,
-								)
-								.join(";\n")}}`,
-						)
-						.replace(
-							typesPlaceholders.locales,
-							JSON.stringify(options.locales),
-						),
+									}`,
+							)
+							.join(";\n")}}`,
+					)
+					.replace(typesPlaceholders.locales, JSON.stringify(options.locales));
+
+				if (options.sitemap) {
+					addIntegration({
+						...params,
+						integration: sitemapIntegration({
+							...options.sitemap,
+							internal: {
+								i18n: {
+									defaultLocale: options.defaultLocale,
+									locales: options.locales,
+								},
+								routes,
+							},
+						}),
+					});
+
+					const virtualSitemapTypesStub = readFileSync(
+						resolve("./stubs/sitemap.d.ts"),
+						"utf-8",
+					);
+
+					dtsContent += virtualSitemapTypesStub;
+				}
+
+				addDts({
+					logger,
+					...config,
+					name: "astro-i18n",
+					content: dtsContent,
 				});
 
 				const enabledClientFeatures = Object.entries(options.client)

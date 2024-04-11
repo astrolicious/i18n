@@ -1,7 +1,7 @@
 ---
 import { t } from "i18n:astro";
-import Layout from "~/layouts/Layout.astro";
 import HeroMessage from "~/components/HeroMessage.astro";
+import Layout from "~/layouts/Layout.astro";
 
 const title = t("home");
 ---
@@ -10,6 +10,7 @@ const title = t("home");
   <div class="justify-center items-center">
     <HeroMessage message="hero" />
   </div>
+  <p><a href="/sitemap-0.xml">Sitemap</a></p>
   <script>
     const data = await fetch("/api/hello").then(res => res.text())
     console.log({ data })

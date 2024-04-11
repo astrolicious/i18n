@@ -162,7 +162,7 @@ export const setDynamicParams = (_params) => {
 					...e.params,
 				};
 				return obj;
-		  }, {})
+			}, {})
 		: _params;
 
 	config.paths.dynamicParams = {
@@ -262,5 +262,11 @@ export const getSwitcherData = () => {
 export const getLocalePlaceholder = () => {
 	throw new Error(
 		"`getLocalePlaceholder` should only be called within `getStaticPaths`",
+	);
+};
+
+export const getDefaultLocalePlaceholder = () => {
+	throw new Error(
+		"`getDefaultLocalePlaceholder` should only be called within `getStaticPaths`",
 	);
 };

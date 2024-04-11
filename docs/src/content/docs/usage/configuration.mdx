@@ -153,18 +153,19 @@ Enabling any of the following features requires importing the `<I18nClient/>` co
 
 #### `ClientConfig`
 
-| Utility                | Required features          |
-|------------------------|----------------------------|
-| `t`                    | `data`, `translations`     |
-| `getLocale`            | `data`                     |
-| `getLocales`           | `data`                     |
-| `getDefaultLocale`     | `data`                     |
-| `getHtmlAttrs`         | `data`                     |
-| `setDynamicParams`     | N/A, server only           |
-| `getLocalePath`        | `data`, `paths`            |
-| `switchLocalePath`     | `data`, `paths`            |
-| `getSwitcherData`      | `data`, `paths`            |
-| `getLocalePlaceholder` | N/A, `getStaticPaths` only |
+| Utility                       | Required features          |
+|-------------------------------|----------------------------|
+| `t`                           | `data`, `translations`     |
+| `getLocale`                   | `data`                     |
+| `getLocales`                  | `data`                     |
+| `getDefaultLocale`            | `data`                     |
+| `getHtmlAttrs`                | `data`                     |
+| `setDynamicParams`            | N/A, server only           |
+| `getLocalePath`               | `data`, `paths`            |
+| `switchLocalePath`            | `data`, `paths`            |
+| `getSwitcherData`             | `data`, `paths`            |
+| `getLocalePlaceholder`        | N/A, `getStaticPaths` only |
+| `getDefaultLocalePlaceholder` | N/A, `getStaticPaths` only |
 
 - `data`: `boolean`, defaults to `false`
 - `paths`: `boolean`, defaults to `false`
@@ -187,3 +188,21 @@ i18n({
     }
 })
 ```
+
+### `sitemap`
+
+**Type:** `boolean | SitemapOptions`
+
+```ts
+type SitemapOptions = {
+    customPages?: string[];
+    entryLimit?: number;
+    changefreq?: EnumChangefreq;
+    lastmod?: Date;
+    priority?: number;
+};
+```
+
+Allows to generate a sitemap that adapts to your i18n content. Options here
+are a subset of the official sitemap integration. You can see what they do in
+the [official docs](https://docs.astro.build/en/guides/integrations-guide/sitemap/#configuration).

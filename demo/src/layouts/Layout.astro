@@ -3,8 +3,8 @@ import { ViewTransitions } from "astro:transitions";
 import { getHtmlAttrs } from "i18n:astro";
 import I18NClient from "@astrolicious/i18n/components/I18nClient.astro";
 import I18NHead from "@astrolicious/i18n/components/I18nHead.astro";
-import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
 
 interface Props {
 	title: string;
@@ -20,6 +20,7 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <I18NHead />
     <I18NClient />
     <ViewTransitions />

@@ -1,5 +1,9 @@
 import { z } from "astro/zod";
 import { withLeadingSlash, withoutTrailingSlash } from "ufo";
+import {
+	type SitemapOptions,
+	publicOptionsSchema as sitemapOptionsSchema,
+} from "./sitemap/options.js";
 
 const routeStringSchema = z.string().regex(/^[a-zA-Z0-9_/[\]-]+$/);
 const redirectStatusSchema = z
@@ -91,6 +95,7 @@ export const optionsSchema = z
 		 * - `switchLocalePath`: `data`, `paths`
 		 * - `getSwitcherData`: `data`, `paths`
 		 * - `getLocalePlaceholder`: N/A, `getStaticPaths` only
+		 * - `getDefaultLocalePlaceholder`: N/A, `getStaticPaths` only
 		 *
 		 * @default `false`
 		 * @link https://astro-i18n.netlify.app/usage/configuration/#client
@@ -129,7 +134,7 @@ export const optionsSchema = z
 							data: val,
 							translations: val,
 							paths: val,
-					  }
+						}
 					: val,
 			),
 		/**
@@ -143,6 +148,17 @@ export const optionsSchema = z
 				destination: z.string(),
 			})
 			.optional(),
+		/**
+		 * @description Allows to generate a sitemap that adapts to your i18n content
+		 * @link https://astro-i18n.netlify.app/usage/configuration/#sitemap
+		 */
+		sitemap: z
+			.union([z.boolean(), sitemapOptionsSchema])
+			.optional()
+			.default(false)
+			.transform((val) =>
+				val === false ? undefined : val === true ? ({} as SitemapOptions) : val,
+			),
 	})
 	.refine(({ locales, defaultLocale }) => locales.includes(defaultLocale), {
 		message: "`locales` must include the `defaultLocale`",
