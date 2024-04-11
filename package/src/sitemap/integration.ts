@@ -13,7 +13,11 @@ import type { Route as InternalRoute } from "../types.js";
 import { generateSitemap } from "./generate-sitemap.js";
 import { optionsSchema } from "./options.js";
 import { type CallbackSchema, callbackSchema } from "./route-config.js";
-import { formatConfigErrorMessage, isStatusCodePage } from "./utils.ts";
+import {
+	createImpossibleError,
+	formatConfigErrorMessage,
+	isStatusCodePage,
+} from "./utils.js";
 
 const OUTFILE = "sitemap-index.xml";
 
@@ -107,9 +111,8 @@ export const integration = defineIntegration({
 							withoutTrailingSlash(r.route?.injectedRoute.pattern) === e.route,
 					);
 					if (!routeData) {
-						throw new AstroError(
+						throw createImpossibleError(
 							"This situation should never occur (a corresponding routeData should always be found)",
-							"Please open an issue on GitHub",
 						);
 					}
 					r.routeData = routeData;

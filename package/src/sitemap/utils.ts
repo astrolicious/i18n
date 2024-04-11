@@ -1,3 +1,4 @@
+import { AstroError } from "astro/errors";
 import type { ZodError } from "astro/zod";
 
 const STATUS_CODE_PAGES = new Set(["404", "500"]);
@@ -17,3 +18,9 @@ export const formatConfigErrorMessage = (err: ZodError) => {
 	);
 	return errorList.join("\n");
 };
+
+export const createImpossibleError = (message: string) =>
+	new AstroError(
+		message,
+		"Please open an issue on GitHub at https://github.com/astrolicious/i18n/issues",
+	);

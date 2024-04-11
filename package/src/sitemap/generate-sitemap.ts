@@ -1,7 +1,7 @@
-import { AstroError } from "astro/errors";
 import type { LinkItem, SitemapItemLoose } from "sitemap";
 import type { Route } from "./integration.js";
 import type { SitemapOptions } from "./options.js";
+import { createImpossibleError } from "./utils.js";
 
 const normalizeDynamicParams = (
 	_params: Route["sitemapOptions"][number]["dynamicParams"],
@@ -80,18 +80,16 @@ export function generateSitemap(
 			).find((e) => e.locale === equivalentRoute.route.locale);
 
 			if (!options) {
-				throw new AstroError(
+				throw createImpossibleError(
 					"This situation should never occur (no options were found)",
-					"Please open an issue on GitHub",
 				);
 			}
 
 			let newPage = equivalentRoute.route.injectedRoute.pattern;
 			for (const [key, value] of Object.entries(options.params)) {
 				if (!value) {
-					throw new AstroError(
+					throw createImpossibleError(
 						"This situation should never occur (value is not set)",
-						"Please open an issue on GitHub",
 					);
 				}
 
