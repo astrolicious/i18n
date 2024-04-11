@@ -1,5 +1,13 @@
 # @astrolicious/i18n
 
+## 0.2.0
+
+### Minor Changes
+
+- 8bc6c8e: Adds a new `getDefaultLocalePlaceholder` utility
+- 8bc6c8e: Adds Content Collections helpers
+- 8bc6c8e: Adds sitemap support
+
 ## 0.1.2
 
 ### Patch Changes
