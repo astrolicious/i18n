@@ -74,10 +74,6 @@ export const getStaticPaths = (async () => {
 				};
 			});
 
-			sitemap({
-				dynamicParams,
-			});
-
 			return {
 				params: {
 					slug: handleI18nSlug(post.slug).slug,
