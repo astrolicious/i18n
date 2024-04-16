@@ -43,7 +43,7 @@ const getPaths = ({ config }: HookParameters<"astro:config:setup">) => {
 };
 
 const generateRoute = (
-	{ strategy, defaultLocale, pages }: Options,
+	{ strategy, defaultLocale, locales, pages }: Options,
 	locale: string,
 	page: InjectedRoute,
 	paths: ReturnType<typeof getPaths>,
@@ -78,6 +78,10 @@ const generateRoute = (
 
 		content = content
 			.replaceAll("getLocalePlaceholder()", `"${locale}"`)
+			.replaceAll(
+				"getLocalesPlaceholder()",
+				`[${locales.map((locale) => `"${locale}"`).join(", ")}]`,
+			)
 			.replaceAll("getDefaultLocalePlaceholder()", `"${defaultLocale}"`);
 
 		let [, frontmatter, ...body] = content.split("---");

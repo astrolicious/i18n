@@ -1,8 +1,11 @@
 ---
-import { t } from "i18n:astro";
+import { getLocalePath, t } from "i18n:astro";
 import Layout from "~/layouts/Layout.astro";
 
 const title = t("home:title");
+console.log(getLocalePath("/about", null, "fr"));
+console.log(getLocalePath("/abc", null, "en"));
+console.log(getLocalePath("/def", null, "fr"));
 ---
 
 <Layout {title}>

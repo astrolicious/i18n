@@ -63,15 +63,21 @@ declare module "@@_ID_@@" {
 			  }>,
 	) => void;
 
+	type Loose<T> = T | (`/${string}` & {});
+
+	type Strictify<T extends string> = T extends `${infer _}` ? T : never;
+
 	/**
 	 * @description TODO:
 	 * @link TODO:
 	 */
-	export const getLocalePath: <TPath extends LocalePath>(
+	export const getLocalePath: <TPath extends Loose<LocalePath>>(
 		path: TPath,
-		...params: LocalePathParams[TPath] extends never
-			? []
-			: [LocalePathParams[TPath]]
+		...args: TPath extends Strictify<LocalePath>
+			? LocalePathParams[TPath] extends never
+				? [params?: null | undefined, locale?: Locale | undefined]
+				: [params: LocalePathParams[TPath], locale?: Locale | undefined]
+			: [params?: null | undefined, locale?: Locale | undefined]
 	) => string;
 
 	/**
@@ -94,6 +100,12 @@ declare module "@@_ID_@@" {
 	 * @link TODO:
 	 */
 	export const getLocalePlaceholder: () => Locale;
+
+	/**
+	 * @description TODO:
+	 * @link TODO:
+	 */
+	export const getLocalesPlaceholder: () => ReturnType<typeof getLocales>;
 
 	/**
 	 * @description TODO:

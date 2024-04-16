@@ -39,11 +39,17 @@ declare module "i18n:astro" {
 			  }>,
 	) => void;
 
-	export const getLocalePath: <TPath extends LocalePath>(
+	type Loose<T> = T | (`/${string}` & {});
+
+	type Strictify<T extends string> = T extends `${infer _}` ? T : never;
+
+	export const getLocalePath: <TPath extends Loose<LocalePath>>(
 		path: TPath,
-		...params: LocalePathParams[TPath] extends never
-			? []
-			: [LocalePathParams[TPath]]
+		...args: TPath extends Strictify<LocalePath>
+			? LocalePathParams[TPath] extends never
+				? [params?: null | undefined, locale?: Locale | undefined]
+				: [params: LocalePathParams[TPath], locale?: Locale | undefined]
+			: [params?: null | undefined, locale?: Locale | undefined]
 	) => string;
 
 	export const switchLocalePath: (locale: Locale) => string;
@@ -54,5 +60,6 @@ declare module "i18n:astro" {
 	}>;
 
 	export const getLocalePlaceholder: () => Locale;
+	export const getLocalesPlaceholder: () => ReturnType<typeof getLocales>;
 	export const getDefaultLocalePlaceholder: () => Locale;
 }

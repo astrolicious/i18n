@@ -95,6 +95,7 @@ export const optionsSchema = z
 		 * - `switchLocalePath`: `data`, `paths`
 		 * - `getSwitcherData`: `data`, `paths`
 		 * - `getLocalePlaceholder`: N/A, `getStaticPaths` only
+		 * - `getLocalesPlaceholder`: N/A, `getStaticPaths` only
 		 * - `getDefaultLocalePlaceholder`: N/A, `getStaticPaths` only
 		 *
 		 * @default `false`

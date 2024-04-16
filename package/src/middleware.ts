@@ -40,6 +40,7 @@ export const onRequest = defineMiddleware((context, next) => {
 				pathname,
 				routes,
 				dynamicParams: {},
+				strategy: options.strategy,
 			},
 		},
 		next,

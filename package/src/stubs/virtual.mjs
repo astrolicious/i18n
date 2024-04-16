@@ -175,6 +175,7 @@ export const setDynamicParams = (_params) => {
  *
  * @param {string} path
  * @param {Record<string, string | undefined>} params
+ * @param {string} _locale
  */
 export const getLocalePath = (path, params = {}, _locale = getLocale()) => {
 	_envCheck("getLocalePath", { clientFeatures: ["data", "paths"] });
@@ -184,7 +185,13 @@ export const getLocalePath = (path, params = {}, _locale = getLocale()) => {
 		(route) => route.locale === _locale && route.pattern === path,
 	);
 	if (!route) {
-		throw new Error("Invalid path");
+		const prefix =
+			config.paths.strategy === "prefix"
+				? `/${_locale}`
+				: _locale === config.data.defaultLocale
+					? ""
+					: `/${_locale}`;
+		return `${prefix}${path}`;
 	}
 
 	let newPath = route.injectedRoute.pattern;
@@ -262,6 +269,12 @@ export const getSwitcherData = () => {
 export const getLocalePlaceholder = () => {
 	throw new Error(
 		"`getLocalePlaceholder` should only be called within `getStaticPaths`",
+	);
+};
+
+export const getLocalesPlaceholder = () => {
+	throw new Error(
+		"`getLocalesPlaceholder` should only be called within `getStaticPaths`",
 	);
 };
 
