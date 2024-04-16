@@ -8,14 +8,25 @@ Allows you get the right url for the current locale. It's strictly typed and eve
 `getLocalePath` does not take your `trailingSlash` configuration into account and always returns without a trailing slash.
 :::
 
-```astro
+```astro title="/fr/my-page"
 ---
+// Assuming stragegy is set to "prefixExceptDefault"
 import { getLocalePath } from "i18n:astro"
 
+// Routes defined in the integration config
+/* /fr */
 getLocalePath("/")
+/* /fr/a-propos */
 getLocalePath("/about")
-getLocalePath("/blog/[slug]", {
-    slug: "hello-world"
-})
+/* /fr/le-blog/hello-world */
+getLocalePath("/blog/[slug]", { slug: "hello-world" })
+/* /about */
+getLocalePath("/about", null, "en")
+
+// Routes not defined in the integration config
+/* /fr/abc */
+getLocalePath("/abc")
+/* /def */
+getLocalePath("/def", null, "en")
 ---
 ```
