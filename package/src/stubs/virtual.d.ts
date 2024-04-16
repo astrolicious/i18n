@@ -69,9 +69,9 @@ declare module "@@_ID_@@" {
 	 */
 	export const getLocalePath: <TPath extends LocalePath>(
 		path: TPath,
-		...params: LocalePathParams[TPath] extends never
-			? []
-			: [LocalePathParams[TPath]]
+		...args: LocalePathParams[TPath] extends never
+			? [params?: null | undefined, locale?: Locale | undefined]
+			: [params: LocalePathParams[TPath], locale?: Locale | undefined]
 	) => string;
 
 	/**

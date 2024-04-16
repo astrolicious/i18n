@@ -175,6 +175,7 @@ export const setDynamicParams = (_params) => {
  *
  * @param {string} path
  * @param {Record<string, string | undefined>} params
+ * @param {string} _locale
  */
 export const getLocalePath = (path, params = {}, _locale = getLocale()) => {
 	_envCheck("getLocalePath", { clientFeatures: ["data", "paths"] });
