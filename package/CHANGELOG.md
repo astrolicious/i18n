@@ -1,5 +1,16 @@
 # @astrolicious/i18n
 
+## 0.3.0
+
+### Minor Changes
+
+- e138d1b: Adds a new `getLocalesPlaceholder` utility to retrieve `locales` provided in the integration config from inside `getStaticPaths`
+- e138d1b: Allows passing custom paths to `getLocalePath` (not registered in the integration config). This will simply prefix paths based on the choosen strategy
+
+### Patch Changes
+
+- e138d1b: Fixes `getLocalePath` typing to allow specifying a locale
+
 ## 0.2.1
 
 ### Patch Changes
