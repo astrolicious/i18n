@@ -8,9 +8,11 @@ Allows you get the right url for the current locale. It's strictly typed and eve
 `getLocalePath` does not take your `trailingSlash` configuration into account and always returns without a trailing slash.
 :::
 
-```astro title="/fr/my-page"
+```astro
 ---
-// Assuming stragegy is set to "prefixExceptDefault"
+// Assuming:
+// 1. stragegy is set to "prefixExceptDefault"
+// 2. The request page is /fr/my-page
 import { getLocalePath } from "i18n:astro"
 
 // Routes defined in the integration config
