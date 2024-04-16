@@ -1,3 +1,4 @@
+import type { RouteData } from "astro";
 import { AstroError } from "astro/errors";
 import type { ZodError } from "astro/zod";
 
@@ -24,3 +25,15 @@ export const createImpossibleError = (message: string) =>
 		message,
 		"Please open an issue on GitHub at https://github.com/astrolicious/i18n/issues",
 	);
+
+export const getPathnameFromRouteData = ({ segments }: RouteData) => {
+	const pathname = segments
+		.map((segment) => {
+			return segment
+				.map((rp) => (rp.dynamic ? `[${rp.content}]` : rp.content))
+				.join("");
+		})
+		.join("/");
+
+	return `/${pathname}`;
+};

@@ -16,6 +16,7 @@ import { type CallbackSchema, callbackSchema } from "./route-config.js";
 import {
 	createImpossibleError,
 	formatConfigErrorMessage,
+	getPathnameFromRouteData,
 	isStatusCodePage,
 } from "./utils.js";
 
@@ -78,7 +79,9 @@ export const integration = defineIntegration({
 						}
 						for (const r of routeData) {
 							const route = initialRoutes.find(
-								(e) => e.route?.injectedRoute.pattern === r.route,
+								(e) =>
+									e.route?.injectedRoute.pattern ===
+									getPathnameFromRouteData(r),
 							);
 							if (!route) {
 								continue;
@@ -108,7 +111,8 @@ export const integration = defineIntegration({
 				for (const r of initialRoutes.filter((e) => !e.routeData)) {
 					const routeData = params.routes.find(
 						(e) =>
-							withoutTrailingSlash(r.route?.injectedRoute.pattern) === e.route,
+							withoutTrailingSlash(r.route?.injectedRoute.pattern) ===
+							getPathnameFromRouteData(e),
 					);
 					if (!routeData) {
 						throw createImpossibleError(
@@ -124,7 +128,9 @@ export const integration = defineIntegration({
 					...params.routes
 						.filter(
 							(e) =>
-								!initialRoutes.map((e) => e.routeData.route).includes(e.route),
+								!initialRoutes
+									.map((e) => getPathnameFromRouteData(e.routeData))
+									.includes(getPathnameFromRouteData(e)),
 						)
 						.map((routeData) => {
 							const route: Route = {
