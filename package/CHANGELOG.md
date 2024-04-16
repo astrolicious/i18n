@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.2.1
+
+### Patch Changes
+
+- c4950e5: Fixes a case where build would fail with the sitemap enabled and a route containing uppercase characters
+
 ## 0.2.0
 
 ### Minor Changes
