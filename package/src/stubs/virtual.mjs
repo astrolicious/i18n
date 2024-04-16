@@ -185,7 +185,13 @@ export const getLocalePath = (path, params = {}, _locale = getLocale()) => {
 		(route) => route.locale === _locale && route.pattern === path,
 	);
 	if (!route) {
-		throw new Error("Invalid path");
+		const prefix =
+			config.paths.strategy === "prefix"
+				? `/${_locale}`
+				: _locale === config.data.defaultLocale
+					? ""
+					: `/${_locale}`;
+		return `${prefix}${path}`;
 	}
 
 	let newPath = route.injectedRoute.pattern;

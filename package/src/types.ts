@@ -26,5 +26,6 @@ export type I18nConfig = {
 		pathname: string;
 		routes: Array<Route>;
 		dynamicParams: Record<string, Record<string, string>>;
+		strategy: import("./options.js").Options["strategy"];
 	};
 };
