@@ -99,5 +99,11 @@ declare module "@@_ID_@@" {
 	 * @description TODO:
 	 * @link TODO:
 	 */
+	export const getLocalesPlaceholder: () => ReturnType<typeof getLocales>;
+
+	/**
+	 * @description TODO:
+	 * @link TODO:
+	 */
 	export const getDefaultLocalePlaceholder: () => Locale;
 }

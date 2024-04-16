@@ -2,6 +2,7 @@
 import {
 	getDefaultLocalePlaceholder,
 	getLocalePlaceholder,
+	getLocalesPlaceholder,
 	setDynamicParams,
 	t,
 } from "i18n:astro";
@@ -11,8 +12,9 @@ import Layout from "~/layouts/Layout.astro";
 
 export const getStaticPaths = (() => {
 	const locale = getLocalePlaceholder();
+	const locales = getLocalesPlaceholder();
 	const defaultLocale = getDefaultLocalePlaceholder();
-	console.log({ defaultLocale });
+	console.log({ locale, locales, defaultLocale });
 
 	const slugs = [
 		{
