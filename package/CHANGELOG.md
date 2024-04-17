@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.3.1
+
+### Patch Changes
+
+- afcd189: Fixes `switchLocalePath` (and anything that depends on it like `getSwitcherData`) when not in dev mode
+
 ## 0.3.0
 
 ### Minor Changes
