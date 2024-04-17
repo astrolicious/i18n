@@ -107,6 +107,12 @@ const _dir = (locale) => {
 	return rtlLocales.includes(locale) ? "rtl" : "ltr";
 };
 
+/**
+ * @param {string} path
+ */
+const _withoutTrailingSlash = (path) =>
+	path.endsWith("/") ? path.slice(0, -1) : path;
+
 export const t = (...args) => {
 	_envCheck("t", { clientFeatures: ["data", "translations"] });
 	const config = _getConfig();
@@ -221,7 +227,11 @@ export const switchLocalePath = (locale) => {
 	// Static
 	let currentLocaleRoute = currentLocaleRoutes
 		.filter((route) => route.params.length === 0)
-		.find((route) => route.injectedRoute.pattern === config.paths.pathname);
+		.find(
+			(route) =>
+				route.injectedRoute.pattern ===
+				_withoutTrailingSlash(config.paths.pathname),
+		);
 
 	// Dynamic
 	if (!currentLocaleRoute) {
