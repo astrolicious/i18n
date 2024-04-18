@@ -1,6 +1,6 @@
 {
 	"name": "@astrolicious/i18n",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"description": "Yet another i18n integration for Astro with server and client utilities, type safety and translations built-in.",
 	"author": {
 		"email": "contact@florian-lefebvre.dev",

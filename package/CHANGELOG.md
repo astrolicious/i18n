@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.3.2
+
+### Patch Changes
+
+- 6159cd0: Allows using endpoints under `src/routes`
+
 ## 0.3.1
 
 ### Patch Changes
