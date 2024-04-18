@@ -1,5 +1,12 @@
 # @astrolicious/i18n
 
+## 0.3.3
+
+### Patch Changes
+
+- 551d663: Fixes a case where having `trailingSlash: "true"` when using the sitemap would not register routes
+- 7ba135e: Allows dynamic routes not to always have an equivalent in another locale when using the sitemap
+
 ## 0.3.2
 
 ### Patch Changes
