@@ -15,7 +15,7 @@ allow to show the content in the current locale dynamically!
 First, create a new page at `src/pages/404.astro`. It's important to put in the `pages` directory
 and not the `routes` directory to prevent the integration from generating one per locale.
 
-The important part here is to make sure the page is prerendered! If you're in hybrid mode, make sure
+The important part here is to make sure the page is not prerendered! If you're in hybrid mode, make sure
 to add `export const prerender = false`.
 
 You can then use any utility from this package without any issue! For example:
