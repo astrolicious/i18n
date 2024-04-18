@@ -7,7 +7,7 @@ import { hasIntegration } from "astro-integration-kit/utilities";
 import { AstroError } from "astro/errors";
 import { ZodError } from "astro/zod";
 import { simpleSitemapAndIndex } from "sitemap";
-import { withoutTrailingSlash } from "ufo";
+import { withTrailingSlash, withoutTrailingSlash } from "ufo";
 import { normalizePath } from "vite";
 import type { Route as InternalRoute } from "../types.js";
 import { generateSitemap } from "./generate-sitemap.js";
@@ -241,7 +241,7 @@ export const integration = defineIntegration({
 								`/${relative(config.base, new URL(rawPage).pathname)}`,
 							);
 							// biome-ignore lint/style/noNonNullAssertion: <explanation>
-							if (route.routeData!.pattern.test(page)) {
+							if (route.routeData!.pattern.test(withTrailingSlash(page))) {
 								route.pages.push(rawPage);
 							}
 						}
