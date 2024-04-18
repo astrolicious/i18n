@@ -80,9 +80,11 @@ export function generateSitemap(
 			).find((e) => e.locale === equivalentRoute.route.locale);
 
 			if (!options) {
-				throw createImpossibleError(
-					"This situation should never occur (no options were found)",
-				);
+				// A dynamic route is not required to always have an equivalent in another language eg.
+				// en: /blog/a
+				// fr: /fr/le-blog/b
+				// it: none
+				continue;
 			}
 
 			let newPage = equivalentRoute.route.injectedRoute.pattern;
