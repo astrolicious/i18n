@@ -7,6 +7,7 @@ import type {
 	InjectedRoute,
 } from "astro";
 import { addPageDir } from "astro-pages";
+import { AstroError } from "astro/errors";
 import { withLeadingSlash } from "ufo";
 import { normalizePath } from "vite";
 import type { Options } from "../options.js";
@@ -76,39 +77,49 @@ const generateRoute = (
 
 		let content = readFileSync(page.entrypoint, "utf-8");
 
-		content = content
-			.replaceAll("getLocalePlaceholder()", `"${locale}"`)
-			.replaceAll(
-				"getLocalesPlaceholder()",
-				`[${locales.map((locale) => `"${locale}"`).join(", ")}]`,
-			)
-			.replaceAll("getDefaultLocalePlaceholder()", `"${defaultLocale}"`);
+		if (page.entrypoint.endsWith(".astro")) {
+			try {
+				content = content
+					.replaceAll("getLocalePlaceholder()", `"${locale}"`)
+					.replaceAll(
+						"getLocalesPlaceholder()",
+						`[${locales.map((locale) => `"${locale}"`).join(", ")}]`,
+					)
+					.replaceAll("getDefaultLocalePlaceholder()", `"${defaultLocale}"`);
 
-		let [, frontmatter, ...body] = content.split("---");
-		// Handle static imports
-		frontmatter = frontmatter.replace(
-			/import\s+([\s\S]*?)\s+from\s+['"](.+?)['"]/g,
-			(_match, p1: string, p2: string) => {
-				const updatedPath =
-					p2.startsWith("./") || p2.startsWith("../")
-						? updateRelativeImports(p2, page.entrypoint, entrypoint)
-						: p2;
-				return `import ${p1} from '${updatedPath}'`;
-			},
-		);
-		// Handle dynamic imports
-		frontmatter = frontmatter.replace(
-			/import\s*\(\s*['"](.+?)['"]\s*\)/g,
-			(_match, p1: string) => {
-				const updatedPath =
-					p1.startsWith("./") || p1.startsWith("../")
-						? updateRelativeImports(p1, page.entrypoint, entrypoint)
-						: p1;
-				return `import('${updatedPath}')`;
-			},
-		);
+				let [, frontmatter, ...body] = content.split("---");
+				// Handle static imports
+				frontmatter = frontmatter.replace(
+					/import\s+([\s\S]*?)\s+from\s+['"](.+?)['"]/g,
+					(_match, p1: string, p2: string) => {
+						const updatedPath =
+							p2.startsWith("./") || p2.startsWith("../")
+								? updateRelativeImports(p2, page.entrypoint, entrypoint)
+								: p2;
+						return `import ${p1} from '${updatedPath}'`;
+					},
+				);
+				// Handle dynamic imports
+				frontmatter = frontmatter.replace(
+					/import\s*\(\s*['"](.+?)['"]\s*\)/g,
+					(_match, p1: string) => {
+						const updatedPath =
+							p1.startsWith("./") || p1.startsWith("../")
+								? updateRelativeImports(p1, page.entrypoint, entrypoint)
+								: p1;
+						return `import('${updatedPath}')`;
+					},
+				);
 
-		content = `---${frontmatter}---${body.join("---")}`;
+				content = `---${frontmatter}---${body.join("---")}`;
+			} catch (err) {
+				throw new AstroError(
+					`An error occured while transforming "${page.entrypoint}".`,
+					"Make sure it has a valid frontmatter, even empty",
+				);
+			}
+		}
+
 		writeFileSync(entrypoint, content, "utf-8");
 
 		return {
@@ -145,7 +156,7 @@ const generateRoute = (
 		injectedRoute: {
 			pattern,
 			entrypoint,
-			prerender,
+			...(prerender ? { prerender } : {}),
 		},
 	};
 };
