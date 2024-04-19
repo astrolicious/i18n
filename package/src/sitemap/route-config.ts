@@ -1,5 +1,5 @@
 import { z } from "astro/zod";
-import { publicOptionsSchema } from "./options";
+import { publicOptionsSchema } from "./options.js";
 
 export const callbackSchema = z
 	.union([

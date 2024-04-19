@@ -28,7 +28,8 @@ export const getResources = (
 				const content = JSON.parse(readFileSync(path, "utf-8"));
 
 				resources[locale] ??= {};
-				resources[locale][basename(fileName, extname(fileName))] = content;
+				// biome-ignore lint/style/noNonNullAssertion: fallback is set above
+				resources[locale]![basename(fileName, extname(fileName))] = content;
 			} catch (err) {
 				logger.warn(`Can't parse "${path}", skipping.`);
 			}

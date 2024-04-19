@@ -13,6 +13,7 @@ import { normalizePath } from "vite";
 import type { Options } from "../options.js";
 import type { Route } from "../types.js";
 import { ROUTES_DIR } from "./index.js";
+import { defineUtility } from "astro-integration-kit";
 
 const isPrerendered = (str: string) => {
 	const match = str.match(/export const prerender = (\w+)/);
@@ -25,12 +26,13 @@ const isPrerendered = (str: string) => {
 const getPages = (
 	params: HookParameters<"astro:config:setup">,
 ): Array<InjectedRoute> => {
+	// @ts-ignore TODO: update astro-apges when types are fixed
 	return Object.entries(addPageDir({ ...params, dir: ROUTES_DIR }).pages).map(
 		([pattern, entrypoint]) => ({ pattern, entrypoint }),
 	);
 };
 
-const getPaths = ({ config }: HookParameters<"astro:config:setup">) => {
+const getPaths = defineUtility("astro:config:setup")(({ config }) => {
 	const routesDir = fileURLToPath(new URL(ROUTES_DIR, config.srcDir));
 	const entrypointsDir = resolve(
 		fileURLToPath(config.root),
@@ -41,7 +43,7 @@ const getPaths = ({ config }: HookParameters<"astro:config:setup">) => {
 		routesDir,
 		entrypointsDir,
 	};
-};
+});
 
 const generateRoute = (
 	{ strategy, defaultLocale, locales, pages }: Options,
@@ -88,6 +90,9 @@ const generateRoute = (
 					.replaceAll("getDefaultLocalePlaceholder()", `"${defaultLocale}"`);
 
 				let [, frontmatter, ...body] = content.split("---");
+				if (!frontmatter) {
+					throw new Error("No frontmatter found");
+				}
 				// Handle static imports
 				frontmatter = frontmatter.replace(
 					/import\s+([\s\S]*?)\s+from\s+['"](.+?)['"]/g,

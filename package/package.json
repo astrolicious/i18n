@@ -35,8 +35,8 @@
 			"types": "./dist/content-collections.d.ts",
 			"default": "./dist/content-collections.js"
 		},
-		"./components/I18nClient.astro": "./src/components/I18nClient.astro",
-		"./components/I18nHead.astro": "./src/components/I18nHead.astro"
+		"./components/I18nClient.astro": "./assets/components/I18nClient.astro",
+		"./components/I18nHead.astro": "./assets/components/I18nHead.astro"
 	},
 	"files": ["dist", "assets"],
 	"scripts": {
