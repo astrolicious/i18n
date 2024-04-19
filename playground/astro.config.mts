@@ -1,8 +1,11 @@
 import node from "@astrojs/node";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
-import i18n from "@astrolicious/i18n";
 import { defineConfig } from "astro/config";
+import { createResolver } from "astro-integration-kit";
+import { hmrIntegration } from "astro-integration-kit/dev";
+
+const { default: i18n } = await import("@astrolicious/i18n");
 
 // https://astro.build/config
 export default defineConfig({
@@ -39,6 +42,9 @@ export default defineConfig({
 		}),
 		react(),
 		tailwind(),
+		hmrIntegration({
+			directory: createResolver(import.meta.url).resolve("../package/dist"),
+		}),
 	],
 	output: "hybrid",
 	adapter: node({
