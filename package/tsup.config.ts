@@ -13,7 +13,11 @@ export default defineConfig((options) => {
 		clean: true,
 		splitting: false,
 		minify: !dev,
-		external: [...Object.keys(peerDependencies)],
+		external: [
+			...Object.keys(peerDependencies),
+			"virtual:astro-i18n/als",
+			"virtual:astro-i18n/internal",
+		],
 		tsconfig: "tsconfig.json",
 	};
 });
