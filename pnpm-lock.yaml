@@ -96,8 +96,8 @@ importers:
   package:
     dependencies:
       '@inox-tools/aik-route-config':
-        specifier: ^0.4.0
-        version: 0.4.0(@types/node@20.12.7)(astro-integration-kit@0.11.0(@vitejs/plugin-react@4.2.1(vite@5.2.9(@types/node@20.12.7)))(astro@4.6.3(@types/node@20.12.7)(typescript@5.4.5))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(astro@4.6.3(@types/node@20.12.7)(typescript@5.4.5))
+        specifier: ^0.4.1
+        version: 0.4.1(@types/node@20.12.7)(astro-integration-kit@0.11.0(@vitejs/plugin-react@4.2.1(vite@5.2.9(@types/node@20.12.7)))(astro@4.6.3(@types/node@20.12.7)(typescript@5.4.5))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(astro@4.6.3(@types/node@20.12.7)(typescript@5.4.5))
       astro:
         specifier: ^4.4.11
         version: 4.6.3(@types/node@20.12.7)(typescript@5.4.5)
@@ -937,8 +937,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@inox-tools/aik-route-config@0.4.0':
-    resolution: {integrity: sha512-YHEmwOgE9gsIsDNMO9nko6WU2OvET5Q83a8ph48LkrQtT+av+FeAAhfcmiFn8GxbfFudpHgB/VQ08JDDuvQ95g==}
+  '@inox-tools/aik-route-config@0.4.1':
+    resolution: {integrity: sha512-8xJ8HyjPKGsNRlIAKsZe0msSVlwsk+QJqCfKjsErMeTVy0M5iyB+8mqC/RNEdb7oLo/4cK2i7SqxR9p7PDGLcA==}
     peerDependencies:
       astro: ^4.3.5
       astro-integration-kit: ~0.10
@@ -5190,7 +5190,7 @@ snapshots:
   '@img/sharp-win32-x64@0.33.3':
     optional: true
 
-  '@inox-tools/aik-route-config@0.4.0(@types/node@20.12.7)(astro-integration-kit@0.11.0(@vitejs/plugin-react@4.2.1(vite@5.2.9(@types/node@20.12.7)))(astro@4.6.3(@types/node@20.12.7)(typescript@5.4.5))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(astro@4.6.3(@types/node@20.12.7)(typescript@5.4.5))':
+  '@inox-tools/aik-route-config@0.4.1(@types/node@20.12.7)(astro-integration-kit@0.11.0(@vitejs/plugin-react@4.2.1(vite@5.2.9(@types/node@20.12.7)))(astro@4.6.3(@types/node@20.12.7)(typescript@5.4.5))(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(astro@4.6.3(@types/node@20.12.7)(typescript@5.4.5))':
     dependencies:
       astro: 4.6.3(@types/node@20.12.7)(typescript@5.4.5)
       astro-integration-kit: 0.11.0(@vitejs/plugin-react@4.2.1(vite@5.2.9(@types/node@20.12.7)))(astro@4.6.3(@types/node@20.12.7)(typescript@5.4.5))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
