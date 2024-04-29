@@ -96,8 +96,8 @@ importers:
   package:
     dependencies:
       '@inox-tools/aik-route-config':
-        specifier: ^0.4.2
-        version: 0.4.2(@types/node@20.12.7)(astro-integration-kit@0.13.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5)))(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))
+        specifier: ^0.5.0
+        version: 0.5.0(@types/node@20.12.7)(astro-integration-kit@0.13.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5)))(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))
       astro:
         specifier: ^4.4.11
         version: 4.7.0(@types/node@20.12.7)(typescript@5.4.5)
@@ -937,11 +937,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@inox-tools/aik-route-config@0.4.2':
-    resolution: {integrity: sha512-CiRw7+E8XWJBKHlhDe1z8hlpjR4wxt32rgv9N/UVGcerXjazpwEtO7XVH/xxYY8XOMYFaLMbA2G0xn8SiadZMA==}
+  '@inox-tools/aik-route-config@0.5.0':
+    resolution: {integrity: sha512-/jAGTiPFX2om8Pez5jWGUj/6aI/doVZflVRjNNP85VAy79gl5KwPhM99FYGH6JUPGeTLsDJOsLouyT+pJRBZfw==}
     peerDependencies:
       astro: ^4.3.5
-      astro-integration-kit: ~0.10 || ~0.11
+      astro-integration-kit: ~0.13
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -5030,7 +5030,7 @@ snapshots:
   '@img/sharp-win32-x64@0.33.3':
     optional: true
 
-  '@inox-tools/aik-route-config@0.4.2(@types/node@20.12.7)(astro-integration-kit@0.13.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5)))(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))':
+  '@inox-tools/aik-route-config@0.5.0(@types/node@20.12.7)(astro-integration-kit@0.13.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5)))(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))':
     dependencies:
       astro: 4.7.0(@types/node@20.12.7)(typescript@5.4.5)
       astro-integration-kit: 0.13.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))
