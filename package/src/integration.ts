@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 import {
-	createResolver,
-	defineIntegration,
 	addDts,
 	addIntegration,
 	addVirtualImports,
+	createResolver,
+	defineIntegration,
 } from "astro-integration-kit";
 import { handleI18next } from "./i18next/index.js";
 import { optionsSchema } from "./options.js";

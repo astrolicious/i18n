@@ -1,7 +1,7 @@
+import { defineUtility } from "astro-integration-kit";
 import type { Options } from "../options.js";
 import { handleRoutesHMR } from "./hmr.js";
 import { registerRoutes } from "./register.js";
-import { defineUtility } from "astro-integration-kit";
 
 export const ROUTES_DIR = "routes";
 const LOGGER_LABEL = "astro-i18n/routing";

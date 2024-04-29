@@ -1,6 +1,6 @@
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { watchDirectory, defineUtility } from "astro-integration-kit";
+import { defineUtility, watchDirectory } from "astro-integration-kit";
 import { normalizePath } from "vite";
 import type { Options } from "../options.js";
 import { getNamespaces } from "./namespaces.js";

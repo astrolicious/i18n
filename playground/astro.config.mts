@@ -1,9 +1,9 @@
 import node from "@astrojs/node";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
-import { defineConfig } from "astro/config";
 import { createResolver } from "astro-integration-kit";
 import { hmrIntegration } from "astro-integration-kit/dev";
+import { defineConfig } from "astro/config";
 
 const { default: i18n } = await import("@astrolicious/i18n");
 

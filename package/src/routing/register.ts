@@ -6,6 +6,7 @@ import type {
 	HookParameters,
 	InjectedRoute,
 } from "astro";
+import { defineUtility } from "astro-integration-kit";
 import { addPageDir } from "astro-pages";
 import { AstroError } from "astro/errors";
 import { withLeadingSlash } from "ufo";
@@ -13,7 +14,6 @@ import { normalizePath } from "vite";
 import type { Options } from "../options.js";
 import type { Route } from "../types.js";
 import { ROUTES_DIR } from "./index.js";
-import { defineUtility } from "astro-integration-kit";
 
 const isPrerendered = (str: string) => {
 	const match = str.match(/export const prerender = (\w+)/);
