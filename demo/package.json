@@ -13,16 +13,16 @@
 	"dependencies": {
 		"@astrojs/check": "^0.5.10",
 		"@astrojs/netlify": "^5.2.0",
-		"@astrojs/react": "^3.3.0",
+		"@astrojs/react": "^3.3.1",
 		"@astrojs/tailwind": "^5.1.0",
 		"@astrolicious/i18n": "workspace:*",
 		"@tailwindcss/forms": "^0.5.7",
-		"@types/react": "^18.2.79",
-		"@types/react-dom": "^18.2.25",
-		"astro": "^4.6.3",
-		"i18next": "^23.11.2",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
+		"@types/react": "^18.3.1",
+		"@types/react-dom": "^18.3.0",
+		"astro": "^4.7.0",
+		"i18next": "^23.11.3",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
 		"tailwindcss": "^3.4.3",
 		"typescript": "^5.4.5"
 	}

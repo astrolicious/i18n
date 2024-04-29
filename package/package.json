@@ -49,13 +49,13 @@
 		"i18next": "^23.0.0"
 	},
 	"dependencies": {
-		"@inox-tools/aik-route-config": "^0.4.1",
-		"astro-integration-kit": "^0.11.0",
-		"astro-pages": "^0.2.1",
+		"@inox-tools/aik-route-config": "^0.4.2",
+		"astro-integration-kit": "^0.13.1",
+		"astro-pages": "^0.3.0",
 		"sitemap": "^7.1.1",
 		"typescript": "^5.4.5",
 		"ufo": "^1.5.3",
-		"vite": "^5.2.9"
+		"vite": "^5.2.10"
 	},
 	"devDependencies": {
 		"@types/node": "^20.12.7",
