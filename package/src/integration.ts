@@ -29,7 +29,7 @@ export const integration = defineIntegration({
 					const { namespaces, resources } = handleI18next(params, options);
 
 					addMiddleware({
-						entrypoint: resolve("./middleware.ts"),
+						entrypoint: resolve("../assets/middleware.ts"),
 						order: "pre",
 					});
 

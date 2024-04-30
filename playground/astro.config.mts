@@ -20,6 +20,9 @@ export default defineConfig({
 				about: {
 					fr: "a-propos",
 				},
+				blog: {
+					fr: "le-blog",
+				},
 				"blog/[slug]": {
 					fr: "le-blog/[slug]",
 				},
