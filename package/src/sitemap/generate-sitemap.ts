@@ -71,6 +71,16 @@ export function generateSitemap(
 				sitemapOptions?.dynamicParams,
 			).find((e) => e.locale === equivalentRoute.route.locale);
 
+			// TODO: remove
+			console.dir(
+				{
+					page,
+					options,
+					sitemapOptions: normalizeDynamicParams(sitemapOptions?.dynamicParams),
+				},
+				{ depth: null },
+			);
+
 			if (!options) {
 				// A dynamic route is not required to always have an equivalent in another language eg.
 				// en: /blog/a
