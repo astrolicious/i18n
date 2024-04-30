@@ -1,6 +1,7 @@
-import type { RouteData } from "astro";
+import type { AstroConfig, RouteData } from "astro";
 import { AstroError } from "astro/errors";
 import type { ZodError } from "astro/zod";
+import type { Route } from "./integration.js";
 
 const STATUS_CODE_PAGES = new Set(["404", "500"]);
 
@@ -36,4 +37,31 @@ export const getPathnameFromRouteData = ({ segments }: RouteData) => {
 		.join("/");
 
 	return `/${pathname}`;
+};
+
+export const normalizeDynamicParams = (
+	_params: Route["sitemapOptions"][number]["dynamicParams"],
+) => {
+	if (!_params) {
+		return [];
+	}
+
+	if (Array.isArray(_params)) {
+		return _params;
+	}
+
+	return Object.entries(_params).map(([locale, params]) => ({
+		locale,
+		params,
+	}));
+};
+
+export const handleTrailingSlash = (url: string, config: AstroConfig) => {
+	if (config.trailingSlash === "never") {
+		return url;
+	}
+	if (config.build.format === "directory" && !url.endsWith("/")) {
+		return `${url}/`;
+	}
+	return url;
 };
