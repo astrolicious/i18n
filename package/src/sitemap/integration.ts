@@ -8,7 +8,7 @@ import {
 	withPlugins,
 } from "astro-integration-kit";
 import { AstroError } from "astro/errors";
-import { ZodError } from "astro/zod";
+import { z } from "astro/zod";
 import { simpleSitemapAndIndex } from "sitemap";
 import { withTrailingSlash, withoutTrailingSlash } from "ufo";
 import { normalizePath } from "vite";
@@ -274,7 +274,7 @@ export const integration = defineIntegration({
 							)}\``,
 						);
 					} catch (err) {
-						if (err instanceof ZodError) {
+						if (err instanceof z.ZodError) {
 							logger.warn(formatConfigErrorMessage(err));
 						} else {
 							throw err;
