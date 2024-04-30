@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.4.1
+
+### Patch Changes
+
+- 261316d: Fixes an issue with `ZodError`
+
 ## 0.4.0
 
 ### Minor Changes
