@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.4.0
+
+### Minor Changes
+
+- 9a97712: Reworks internals to use Astro Integration Kit 0.13, this is non breaking
+
 ## 0.3.3
 
 ### Patch Changes
