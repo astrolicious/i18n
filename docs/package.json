@@ -15,7 +15,7 @@
 		"@astrojs/starlight": "^0.21.5",
 		"@astrojs/starlight-tailwind": "^2.0.2",
 		"@astrojs/tailwind": "^5.1.0",
-		"@expressive-code/plugin-line-numbers": "^0.35.2",
+		"@expressive-code/plugin-line-numbers": "^0.33.5",
 		"astro": "^4.7.0",
 		"sharp": "^0.33.3",
 		"tailwind": "^4.0.0",
