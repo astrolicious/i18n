@@ -1,11 +1,11 @@
 import { readFileSync } from "node:fs";
-import { createResolver, defineIntegration } from "astro-integration-kit";
 import {
 	addDts,
 	addIntegration,
 	addVirtualImports,
-	watchIntegration,
-} from "astro-integration-kit/utilities";
+	createResolver,
+	defineIntegration,
+} from "astro-integration-kit";
 import { handleI18next } from "./i18next/index.js";
 import { optionsSchema } from "./options.js";
 import { handleRouting } from "./routing/index.js";
@@ -21,116 +21,116 @@ export const integration = defineIntegration({
 		const { resolve } = createResolver(import.meta.url);
 
 		return {
-			"astro:config:setup": (params) => {
-				const { addMiddleware, config, logger, updateConfig } = params;
+			hooks: {
+				"astro:config:setup": (params) => {
+					const { addMiddleware, logger, updateConfig } = params;
 
-				watchIntegration({ ...params, dir: resolve() });
+					const { routes } = handleRouting(params, options);
+					const { namespaces, resources } = handleI18next(params, options);
 
-				const { routes } = handleRouting(params)(options);
-				const { namespaces, resources } = handleI18next(params)(options);
+					addMiddleware({
+						entrypoint: resolve("../assets/middleware.ts"),
+						order: "pre",
+					});
 
-				addMiddleware({
-					entrypoint: resolve("./middleware.ts"),
-					order: "pre",
-				});
+					const defaultLocaleRoutes = routes.filter(
+						(route) => route.locale === options.defaultLocale,
+					);
 
-				const defaultLocaleRoutes = routes.filter(
-					(route) => route.locale === options.defaultLocale,
-				);
+					const virtualTypesStub = readFileSync(
+						resolve("../assets/stubs/virtual.d.ts"),
+						"utf-8",
+					);
+					const typesPlaceholders = {
+						id: "@@_ID_@@",
+						locale: '"@@_LOCALE_@@"',
+						localePathParams: '"@@_LOCALE_PATH_PARAMS_@@"',
+						locales: '"@@_LOCALES_@@"',
+					};
 
-				const virtualTypesStub = readFileSync(
-					resolve("./stubs/virtual.d.ts"),
-					"utf-8",
-				);
-				const typesPlaceholders = {
-					id: "@@_ID_@@",
-					locale: '"@@_LOCALE_@@"',
-					localePathParams: '"@@_LOCALE_PATH_PARAMS_@@"',
-					locales: '"@@_LOCALES_@@"',
-				};
-
-				let dtsContent = virtualTypesStub
-					.replace(typesPlaceholders.id, VIRTUAL_MODULE_ID)
-					.replace(
-						typesPlaceholders.locale,
-						options.locales.map((locale) => `"${locale}"`).join(" | "),
-					)
-					.replace(
-						typesPlaceholders.localePathParams,
-						`{${defaultLocaleRoutes
-							.map(
-								(route) =>
-									`"${route.pattern}": ${
-										route.params.length === 0
-											? "never"
-											: `{
+					let dtsContent = virtualTypesStub
+						.replace(typesPlaceholders.id, VIRTUAL_MODULE_ID)
+						.replace(
+							typesPlaceholders.locale,
+							options.locales.map((locale) => `"${locale}"`).join(" | "),
+						)
+						.replace(
+							typesPlaceholders.localePathParams,
+							`{${defaultLocaleRoutes
+								.map(
+									(route) =>
+										`"${route.pattern}": ${
+											route.params.length === 0
+												? "never"
+												: `{
 											${route.params
 												.map((param) => `"${param}": string;`)
 												.join("\n")}
 											}`
-									}`,
-							)
-							.join(";\n")}}`,
-					)
-					.replace(typesPlaceholders.locales, JSON.stringify(options.locales));
+										}`,
+								)
+								.join(";\n")}}`,
+						)
+						.replace(
+							typesPlaceholders.locales,
+							JSON.stringify(options.locales),
+						);
 
-				if (options.sitemap) {
-					addIntegration({
-						...params,
-						integration: sitemapIntegration({
-							...options.sitemap,
-							internal: {
-								i18n: {
-									defaultLocale: options.defaultLocale,
-									locales: options.locales,
+					if (options.sitemap) {
+						addIntegration(params, {
+							integration: sitemapIntegration({
+								...options.sitemap,
+								internal: {
+									i18n: {
+										defaultLocale: options.defaultLocale,
+										locales: options.locales,
+									},
+									routes,
 								},
-								routes,
-							},
-						}),
+							}),
+						});
+
+						const virtualSitemapTypesStub = readFileSync(
+							resolve("../assets/stubs/sitemap.d.ts"),
+							"utf-8",
+						);
+
+						dtsContent += virtualSitemapTypesStub;
+					}
+
+					addDts(params, {
+						name: "astro-i18n",
+						content: dtsContent,
 					});
 
-					const virtualSitemapTypesStub = readFileSync(
-						resolve("./stubs/sitemap.d.ts"),
+					const enabledClientFeatures = Object.entries(options.client)
+						.map(([name, enabled]) => ({ name, enabled }))
+						.filter((e) => e.enabled);
+					if (enabledClientFeatures.length > 0) {
+						logger.info(
+							`Client features enabled: ${enabledClientFeatures
+								.map((e) => `"${e.name}"`)
+								.join(
+									", ",
+								)}. Make sure to use the \`<I18nClient />\` component`,
+						);
+					}
+
+					const virtualModuleStub = readFileSync(
+						resolve("../assets/stubs/virtual.mjs"),
 						"utf-8",
 					);
+					const scriptPlaceholders = {
+						config: '"@@_CONFIG_@@"',
+						i18next: '"@@_I18NEXT_@@"',
+					};
 
-					dtsContent += virtualSitemapTypesStub;
-				}
-
-				addDts({
-					logger,
-					...config,
-					name: "astro-i18n",
-					content: dtsContent,
-				});
-
-				const enabledClientFeatures = Object.entries(options.client)
-					.map(([name, enabled]) => ({ name, enabled }))
-					.filter((e) => e.enabled);
-				if (enabledClientFeatures.length > 0) {
-					logger.info(
-						`Client features enabled: ${enabledClientFeatures
-							.map((e) => `"${e.name}"`)
-							.join(", ")}. Make sure to use the \`<I18nClient />\` component`,
-					);
-				}
-
-				const virtualModuleStub = readFileSync(
-					resolve("./stubs/virtual.mjs"),
-					"utf-8",
-				);
-				const scriptPlaceholders = {
-					config: '"@@_CONFIG_@@"',
-					i18next: '"@@_I18NEXT_@@"',
-				};
-
-				addVirtualImports({
-					...params,
-					name,
-					imports: [
-						{
-							id: "virtual:astro-i18n/internal",
-							content: `
+					addVirtualImports(params, {
+						name,
+						imports: [
+							{
+								id: "virtual:astro-i18n/internal",
+								content: `
 								export const options = ${JSON.stringify(options)};
 								export const routes = ${JSON.stringify(routes)};
 								export const i18nextConfig = ${JSON.stringify({
@@ -140,62 +140,63 @@ export const integration = defineIntegration({
 								})};
 								export const clientId = ${JSON.stringify(CLIENT_ID)};
 							`,
-						},
-						{
-							id: "virtual:astro-i18n/als",
-							content: `
+							},
+							{
+								id: "virtual:astro-i18n/als",
+								content: `
 								import { AsyncLocalStorage } from "node:async_hooks";
 								export const als = new AsyncLocalStorage;
 							`,
-						},
-						{
-							id: VIRTUAL_MODULE_ID,
-							content: `
+							},
+							{
+								id: VIRTUAL_MODULE_ID,
+								content: `
 								import { als } from "virtual:astro-i18n/als";
 								import _i18next from "i18next";
 								${virtualModuleStub
 									.replaceAll(scriptPlaceholders.config, "als.getStore()")
 									.replaceAll(scriptPlaceholders.i18next, "_i18next")}`,
-							context: "server",
-						},
-						{
-							id: VIRTUAL_MODULE_ID,
-							content: (() => {
-								let content = "";
-								if (options.client.translations) {
-									content += `import _i18next from "i18next"; `;
-								}
+								context: "server",
+							},
+							{
+								id: VIRTUAL_MODULE_ID,
+								content: (() => {
+									let content = "";
+									if (options.client.translations) {
+										content += `import _i18next from "i18next"; `;
+									}
 
-								content += virtualModuleStub.replaceAll(
-									scriptPlaceholders.config,
-									`JSON.parse(document.getElementById(${JSON.stringify(
-										CLIENT_ID,
-									)}).textContent)`,
-								);
-
-								if (options.client.translations) {
-									content = content.replaceAll(
-										scriptPlaceholders.i18next,
-										"_i18next",
+									content += virtualModuleStub.replaceAll(
+										scriptPlaceholders.config,
+										`JSON.parse(document.getElementById(${JSON.stringify(
+											CLIENT_ID,
+										)}).textContent)`,
 									);
-								}
 
-								return content;
-							})(),
-							context: "client",
-						},
-					],
-				});
+									if (options.client.translations) {
+										content = content.replaceAll(
+											scriptPlaceholders.i18next,
+											"_i18next",
+										);
+									}
 
-				logger.info("Types injected");
-
-				if (options.strategy === "prefix" && options.rootRedirect) {
-					updateConfig({
-						redirects: {
-							"/": options.rootRedirect,
-						},
+									return content;
+								})(),
+								context: "client",
+							},
+						],
 					});
-				}
+
+					logger.info("Types injected");
+
+					if (options.strategy === "prefix" && options.rootRedirect) {
+						updateConfig({
+							redirects: {
+								"/": options.rootRedirect,
+							},
+						});
+					}
+				},
 			},
 		};
 	},

@@ -1,15 +1,15 @@
 /// <reference types="astro/client" />
 
 declare module "virtual:astro-i18n/internal" {
-	export const options: import("./options.js").Options;
-	export const routes: Array<import("./types.js").Route>;
-	export const i18nextConfig: import("./types.js").I18nextConfig;
+	export const options: import("./src/options.js").Options;
+	export const routes: Array<import("./src/types.js").Route>;
+	export const i18nextConfig: import("./src/types.js").I18nextConfig;
 	export const clientId: string;
 }
 
 declare module "virtual:astro-i18n/als" {
 	export const als: import("node:async_hooks").AsyncLocalStorage<
-		import("./types.js").I18nConfig
+		import("./src/types.js").I18nConfig
 	>;
 }
 

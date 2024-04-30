@@ -1,19 +1,15 @@
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { HookParameters } from "astro";
-import { watchIntegration } from "astro-integration-kit/utilities";
+import { defineUtility, watchDirectory } from "astro-integration-kit";
 import { normalizePath } from "vite";
 import type { Options } from "../options.js";
 import { getNamespaces } from "./namespaces.js";
 import { getResources } from "./resources.js";
 import { injectTypes } from "./types.js";
 
-const getPaths = (
-	{ config }: HookParameters<"astro:config:setup">,
-	options: Options,
-) => {
+const getPaths = (root: URL, options: Options) => {
 	const localesDir = normalizePath(
-		fileURLToPath(new URL(options.localesDir, config.root)),
+		fileURLToPath(new URL(options.localesDir, root)),
 	);
 	const defaultLocalesDir = join(localesDir, options.defaultLocale);
 
@@ -25,12 +21,12 @@ const getPaths = (
 
 const LOGGER_LABEL = "astro-i18n/i18next";
 
-export const handleI18next =
-	(params: HookParameters<"astro:config:setup">) => (options: Options) => {
+export const handleI18next = defineUtility("astro:config:setup")(
+	(params, options: Options) => {
 		const logger = params.logger.fork(LOGGER_LABEL);
 
-		const paths = getPaths(params, options);
-		watchIntegration({ ...params, dir: paths.localesDir });
+		const paths = getPaths(params.config.root, options);
+		watchDirectory(params, paths.localesDir);
 		logger.info(
 			`Registered watcher for "${normalizePath(
 				relative(fileURLToPath(params.config.root), paths.localesDir),
@@ -49,4 +45,5 @@ export const handleI18next =
 			namespaces,
 			resources,
 		};
-	};
+	},
+);

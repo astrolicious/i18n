@@ -1,25 +1,25 @@
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { HookParameters } from "astro";
-import { addDts } from "astro-integration-kit/utilities";
+import { addDts, defineUtility } from "astro-integration-kit";
 import { normalizePath } from "vite";
 import type { Options } from "../options.js";
 import type { getNamespaces } from "./namespaces.js";
 
-export const injectTypes = (
-	{ logger, config }: HookParameters<"astro:config:setup">,
-	{ defaultNamespace }: Options,
-	importsData: ReturnType<typeof getNamespaces>["importsData"],
-	defaultLocalesDir: string,
-) => {
-	const relativeLocalesPrefix = `${normalizePath(
-		relative(
-			fileURLToPath(new URL("./.astro/", config.root)),
-			defaultLocalesDir,
-		),
-	)}/`;
+export const injectTypes = defineUtility("astro:config:setup")(
+	(
+		params,
+		{ defaultNamespace }: Options,
+		importsData: ReturnType<typeof getNamespaces>["importsData"],
+		defaultLocalesDir: string,
+	) => {
+		const relativeLocalesPrefix = `${normalizePath(
+			relative(
+				fileURLToPath(new URL("./.astro/", params.config.root)),
+				defaultLocalesDir,
+			),
+		)}/`;
 
-	const content = `
+		const content = `
     declare module "i18next" {
       interface CustomTypeOptions {
         defaultNS: "${defaultNamespace}";
@@ -38,5 +38,6 @@ export const injectTypes = (
     export {}
     `;
 
-	addDts({ logger, ...config, name: "i18next", content });
-};
+		addDts(params, { name: "i18next", content });
+	},
+);

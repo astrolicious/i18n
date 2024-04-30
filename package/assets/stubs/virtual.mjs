@@ -1,5 +1,5 @@
 /**
- * @returns {import("../types.js").I18nConfig}
+ * @returns {import("../../src/types.ts").I18nConfig}
  */
 const _getConfig = () => "@@_CONFIG_@@";
 /**

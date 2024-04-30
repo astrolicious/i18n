@@ -1,6 +1,6 @@
-import { defineMiddleware } from "astro:middleware";
 import { als } from "virtual:astro-i18n/als";
 import { i18nextConfig, options, routes } from "virtual:astro-i18n/internal";
+import { defineMiddleware } from "astro/middleware";
 
 const extractLocaleFromUrl = (pathname: string) => {
 	for (const locale of options.locales) {
