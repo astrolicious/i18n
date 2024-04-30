@@ -150,7 +150,7 @@ export const integration = defineIntegration({
 							);
 						}
 						r.routeData = routeData;
-						r.include = true;
+						r.include = routeData.type === "page";
 					}
 
 					const _routes = [
