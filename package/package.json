@@ -1,6 +1,6 @@
 {
 	"name": "@astrolicious/i18n",
-	"version": "0.4.1",
+	"version": "0.4.2",
 	"description": "Yet another i18n integration for Astro with server and client utilities, type safety and translations built-in.",
 	"author": {
 		"email": "contact@florian-lefebvre.dev",
@@ -38,7 +38,10 @@
 		"./components/I18nClient.astro": "./assets/components/I18nClient.astro",
 		"./components/I18nHead.astro": "./assets/components/I18nHead.astro"
 	},
-	"files": ["dist", "assets"],
+	"files": [
+		"dist",
+		"assets"
+	],
 	"scripts": {
 		"dev": "tsup --watch",
 		"build": "tsup"

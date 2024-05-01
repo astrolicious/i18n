@@ -1,5 +1,14 @@
 # @astrolicious/i18n
 
+## 0.4.2
+
+### Patch Changes
+
+- 2f00eb3: Fixes a case where non pages were included in the sitemap
+- 2f00eb3: Fixes trailing slash handling in sitemap
+- 2f00eb3: Fixes duplicated urls with complex routes
+- 2f00eb3: Fixes a case where invalid dynamic params would cause wrong alternates to be generated
+
 ## 0.4.1
 
 ### Patch Changes
