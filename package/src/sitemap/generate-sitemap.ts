@@ -61,24 +61,21 @@ export function generateSitemap(
 		}
 
 		const index = route.pages.indexOf(page);
-		const sitemapOptions = route.sitemapOptions[index];
-		if (!sitemapOptions) {
+		const sitemapOptions = route.sitemapOptions.filter(
+			(e) =>
+				e.dynamicParams &&
+				(Array.isArray(e.dynamicParams)
+					? e.dynamicParams
+					: Object.entries(e.dynamicParams)
+				).length > 0,
+		)[index];
+		if (!sitemapOptions || !sitemapOptions.dynamicParams) {
 			return [];
 		}
 
 		for (const equivalentRoute of equivalentRoutes) {
-			const options = normalizeDynamicParams(
-				sitemapOptions?.dynamicParams,
-			).find((e) => e.locale === equivalentRoute.route.locale);
-
-			// TODO: remove
-			console.dir(
-				{
-					page,
-					options,
-					sitemapOptions: normalizeDynamicParams(sitemapOptions?.dynamicParams),
-				},
-				{ depth: null },
+			const options = normalizeDynamicParams(sitemapOptions.dynamicParams).find(
+				(e) => e.locale === equivalentRoute.route.locale,
 			);
 
 			if (!options) {
