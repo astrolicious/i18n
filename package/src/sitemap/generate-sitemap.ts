@@ -1,24 +1,12 @@
+import type { AstroConfig } from "astro";
 import type { LinkItem, SitemapItemLoose } from "sitemap";
 import type { Route } from "./integration.js";
 import type { SitemapOptions } from "./options.js";
-import { createImpossibleError } from "./utils.js";
-
-const normalizeDynamicParams = (
-	_params: Route["sitemapOptions"][number]["dynamicParams"],
-) => {
-	if (!_params) {
-		return [];
-	}
-
-	if (Array.isArray(_params)) {
-		return _params;
-	}
-
-	return Object.entries(_params).map(([locale, params]) => ({
-		locale,
-		params,
-	}));
-};
+import {
+	createImpossibleError,
+	handleTrailingSlash,
+	normalizeDynamicParams,
+} from "./utils.js";
 
 type NoUndefinedField<T> = {
 	[P in keyof T]-?: NonNullable<T[P]>;
@@ -29,6 +17,7 @@ export function generateSitemap(
 	routes: Array<Route>,
 	_finalSiteUrl: string,
 	opts: SitemapOptions,
+	config: AstroConfig,
 ) {
 	const { changefreq, priority, lastmod: lastmodSrc } = opts;
 	const lastmod = lastmodSrc?.toISOString();
@@ -57,27 +46,37 @@ export function generateSitemap(
 			for (const equivalentRoute of equivalentRoutes) {
 				links.push({
 					lang: equivalentRoute.route.locale,
-					url: `${new URL(page).origin}${
-						equivalentRoute.route.injectedRoute.pattern
-					}`,
+					url: handleTrailingSlash(
+						`${new URL(page).origin}${
+							equivalentRoute.route.injectedRoute.pattern
+						}`,
+						config,
+					),
 				});
 			}
 
 			return [...links].sort((a, b) =>
-				a.url.localeCompare(b.url, "en", { numeric: true }),
+				a.lang.localeCompare(b.lang, "en", { numeric: true }),
 			);
 		}
 
 		const index = route.pages.indexOf(page);
-		const sitemapOptions = route.sitemapOptions[index];
-		if (!sitemapOptions) {
+		const sitemapOptions = route.sitemapOptions.filter(
+			(e) =>
+				e.dynamicParams &&
+				(Array.isArray(e.dynamicParams)
+					? e.dynamicParams
+					: Object.entries(e.dynamicParams)
+				).length > 0,
+		)[index];
+		if (!sitemapOptions || !sitemapOptions.dynamicParams) {
 			return [];
 		}
 
 		for (const equivalentRoute of equivalentRoutes) {
-			const options = normalizeDynamicParams(
-				sitemapOptions?.dynamicParams,
-			).find((e) => e.locale === equivalentRoute.route.locale);
+			const options = normalizeDynamicParams(sitemapOptions.dynamicParams).find(
+				(e) => e.locale === equivalentRoute.route.locale,
+			);
 
 			if (!options) {
 				// A dynamic route is not required to always have an equivalent in another language eg.
@@ -97,14 +96,17 @@ export function generateSitemap(
 
 				newPage = newPage.replace(`[${key}]`, value);
 			}
-			newPage = `${new URL(page).origin}${newPage}`;
+			newPage = handleTrailingSlash(
+				`${new URL(page).origin}${newPage}`,
+				config,
+			);
 			links.push({
 				lang: equivalentRoute.route.locale,
 				url: newPage,
 			});
 		}
 		return [...links].sort((a, b) =>
-			a.url.localeCompare(b.url, "en", { numeric: true }),
+			a.lang.localeCompare(b.lang, "en", { numeric: true }),
 		);
 	};
 

@@ -2,5 +2,8 @@
 	"editor.defaultFormatter": "biomejs.biome",
 	"[mdx]": {
 		"editor.defaultFormatter": "unifiedjs.vscode-mdx"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
 	}
 }

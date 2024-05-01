@@ -10,7 +10,7 @@ import {
 import { AstroError } from "astro/errors";
 import { z } from "astro/zod";
 import { simpleSitemapAndIndex } from "sitemap";
-import { withTrailingSlash, withoutTrailingSlash } from "ufo";
+import { withoutTrailingSlash } from "ufo";
 import { normalizePath } from "vite";
 import type { Route as InternalRoute } from "../types.js";
 import { generateSitemap } from "./generate-sitemap.js";
@@ -20,7 +20,9 @@ import {
 	createImpossibleError,
 	formatConfigErrorMessage,
 	getPathnameFromRouteData,
+	handleTrailingSlash,
 	isStatusCodePage,
+	normalizeDynamicParams,
 } from "./utils.js";
 
 const OUTFILE = "sitemap-index.xml";
@@ -105,6 +107,23 @@ export const integration = defineIntegration({
 										);
 									}
 									route.sitemapOptions.push(response.data);
+									if (route.route) {
+										const { locale, injectedRoute } = route.route;
+										const params = normalizeDynamicParams(
+											response.data.dynamicParams,
+										)?.find((e) => e.locale === locale);
+										if (params) {
+											let page = injectedRoute.pattern;
+											for (const [key, value] of Object.entries(
+												params.params,
+											)) {
+												if (value) {
+													page = page.replace(`[${key}]`, value);
+												}
+											}
+											route.pages.push(page);
+										}
+									}
 								}
 							}
 						},
@@ -112,6 +131,12 @@ export const integration = defineIntegration({
 				},
 				"astro:build:done": async (params) => {
 					const { logger } = params;
+
+					for (const route of initialRoutes) {
+						if (route.pages.length === 0 && route.route) {
+							route.pages.push(route.route.injectedRoute.pattern);
+						}
+					}
 
 					for (const r of initialRoutes.filter((e) => !e.routeData)) {
 						const routeData = params.routes.find(
@@ -125,7 +150,7 @@ export const integration = defineIntegration({
 							);
 						}
 						r.routeData = routeData;
-						r.include = true;
+						r.include = routeData.type === "page";
 					}
 
 					const _routes = [
@@ -202,16 +227,7 @@ export const integration = defineIntegration({
 
 								const newUrl = new URL(fullPath, finalSiteUrl).href;
 
-								if (config.trailingSlash === "never") {
-									urls.push(newUrl);
-								} else if (
-									config.build.format === "directory" &&
-									!newUrl.endsWith("/")
-								) {
-									urls.push(`${newUrl}/`);
-								} else {
-									urls.push(newUrl);
-								}
+								urls.push(handleTrailingSlash(newUrl, config));
 							}
 
 							return urls;
@@ -242,21 +258,21 @@ export const integration = defineIntegration({
 						}
 
 						for (const route of _routes.filter((e) => e.include)) {
-							for (const rawPage of pageUrls) {
-								const page = normalizePath(
-									`/${relative(config.base, new URL(rawPage).pathname)}`,
-								);
-								// biome-ignore lint/style/noNonNullAssertion: <explanation>
-								if (route.routeData!.pattern.test(withTrailingSlash(page))) {
-									route.pages.push(rawPage);
-								}
-							}
+							route.pages = route.pages.map((page) =>
+								page.startsWith("/")
+									? handleTrailingSlash(
+											new URL(page, finalSiteUrl).href,
+											config,
+										)
+									: page,
+							);
 						}
 
 						const urlData = generateSitemap(
 							_routes.filter((e) => e.include),
 							finalSiteUrl.href,
 							options,
+							config,
 						);
 
 						const destDir = fileURLToPath(params.dir);
