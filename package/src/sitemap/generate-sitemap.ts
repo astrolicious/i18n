@@ -1,3 +1,4 @@
+import type { AstroConfig } from "astro";
 import type { LinkItem, SitemapItemLoose } from "sitemap";
 import type { Route } from "./integration.js";
 import type { SitemapOptions } from "./options.js";
@@ -6,7 +7,6 @@ import {
 	handleTrailingSlash,
 	normalizeDynamicParams,
 } from "./utils.js";
-import type { AstroConfig } from "astro";
 
 type NoUndefinedField<T> = {
 	[P in keyof T]-?: NonNullable<T[P]>;
