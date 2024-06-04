@@ -13,7 +13,7 @@ This integration is incompatible with the [native Astro internationalization fea
 This package has a few required options:
 
 ```js title="astro.config.mjs" {7,8}
-import { definConfig } from "astro/config"
+import { defineConfig } from "astro/config"
 import i18n from "@astrolicious/i18n"
 
 export default defineConfig({
@@ -97,7 +97,7 @@ Using utilities from `i18n:astro` on the client is opt-in. You need 2 things:
 2. Enable client features in the integration configuration:
 
     ```js title="astro.config.mjs" ins={9-13}
-    import { definConfig } from "astro/config"
+    import { defineConfig } from "astro/config"
     import i18n from "@astrolicious/i18n"
 
     export default defineConfig({
