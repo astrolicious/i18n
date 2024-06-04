@@ -4,8 +4,9 @@ title: Installation
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-:::caution
-This package requires `astro` to be at least on version `4.4.11`.
+:::caution[Prerequisites]
+- `astro` must be at least on version `4.4.11`
+- `tsconfig.json` `compilerOptions.strict` should be set to `true`. If you're using Astro tsconfig presets, use either `astro/tsconfigs/strict` or `astro/tsconfigs/strictest`
 :::
 
 ## Automatic installation
