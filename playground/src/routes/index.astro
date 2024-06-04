@@ -6,6 +6,7 @@ const title = t("home:title");
 console.log(getLocalePath("/about", null, "fr"));
 console.log(getLocalePath("/abc", null, "en"));
 console.log(getLocalePath("/def", null, "fr"));
+console.log(t("home:array", { returnObjects: true }));
 ---
 
 <Layout {title}>

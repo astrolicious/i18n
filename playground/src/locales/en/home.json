@@ -1,4 +1,5 @@
 {
 	"title": "Home",
-	"description": "This is the home, see {{ value }}"
+	"description": "This is the home, see {{value}}",
+	"array": ["a", "b", "c"]
 }

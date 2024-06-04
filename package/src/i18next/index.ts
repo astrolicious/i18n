@@ -33,13 +33,13 @@ export const handleI18next = defineUtility("astro:config:setup")(
 			)}" directory`,
 		);
 
-		const { namespaces, importsData } = getNamespaces(
+		const { namespaces } = getNamespaces(
 			paths.defaultLocalesDir,
 			options.defaultNamespace,
 			logger,
 		);
 		const resources = getResources(logger, options, paths.localesDir);
-		injectTypes(params, options, importsData, paths.defaultLocalesDir);
+		injectTypes(params, options, resources[options.defaultLocale] ?? {});
 
 		return {
 			namespaces,
