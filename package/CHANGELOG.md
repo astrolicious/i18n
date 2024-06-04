@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.4.3
+
+### Patch Changes
+
+- ef0b3ee: Fixes an case where i18next typings would not be correct
+
 ## 0.4.2
 
 ### Patch Changes
