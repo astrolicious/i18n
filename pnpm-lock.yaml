@@ -97,13 +97,13 @@ importers:
     dependencies:
       '@inox-tools/aik-route-config':
         specifier: ^0.5.0
-        version: 0.5.0(@types/node@20.12.7)(astro-integration-kit@0.13.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5)))(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))
+        version: 0.5.0(@types/node@20.12.7)(astro-integration-kit@0.16.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5)))(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))
       astro:
         specifier: ^4.4.11
         version: 4.7.0(@types/node@20.12.7)(typescript@5.4.5)
       astro-integration-kit:
-        specifier: ^0.13.1
-        version: 0.13.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))
+        specifier: ^0.16.1
+        version: 0.16.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))
       astro-pages:
         specifier: ^0.3.0
         version: 0.3.0(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))
@@ -176,8 +176,8 @@ importers:
         specifier: ^0.5.7
         version: 0.5.7(tailwindcss@3.4.3)
       astro-integration-kit:
-        specifier: ^0.13.1
-        version: 0.13.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))
+        specifier: ^0.16.1
+        version: 0.16.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))
 
 packages:
 
@@ -1353,14 +1353,10 @@ packages:
     peerDependencies:
       astro: ^4.0.0-beta || ^3.3.0
 
-  astro-integration-kit@0.13.1:
-    resolution: {integrity: sha512-c/VEvRXJdnKa7/Y4s9CYr81L7Vvue7Bijtgp2TKuf9etCXiMDzEzQ3C5RdjMCzRI68VlKuVblfnLmY4iWizFdg==}
+  astro-integration-kit@0.16.1:
+    resolution: {integrity: sha512-N/iam0PAFrRT9azYZqscP1HowQhC77Dwlp912P0/72k+kwUVgO3m73F26XXukHYoZBsrHgrUrfsWBxuCH3kEUg==}
     peerDependencies:
-      '@astrojs/db': ^0.9 || ^0.10
-      astro: ^4.4.1
-    peerDependenciesMeta:
-      '@astrojs/db':
-        optional: true
+      astro: ^4.12.0
 
   astro-pages@0.3.0:
     resolution: {integrity: sha512-fHSXYA1qeTmNi7HA7d8VXn6nXI2r/cw9+ft3kbuizshk+bqXlTEepV/zqI7boWVJsp2uFG1ih/YeHF2mDYaoVQ==}
@@ -3283,8 +3279,8 @@ packages:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}
     engines: {node: '>=8.10.0'}
 
-  recast@0.23.6:
-    resolution: {integrity: sha512-9FHoNjX1yjuesMwuthAmPKabxYQdOgihFYmT5ebXfYGBcnqXZf3WOVz+5foEZ8Y83P4ZY6yQD5GMmtV+pgCCAQ==}
+  recast@0.23.9:
+    resolution: {integrity: sha512-Hx/BGIbwj+Des3+xy5uAtAbdCyqK9y9wbBcDFDYanLS9JnMqf7OeF87HQwUimE87OEc72mr6tkKUKMBBL+hF9Q==}
     engines: {node: '>= 4'}
 
   redent@3.0.0:
@@ -5007,11 +5003,11 @@ snapshots:
   '@img/sharp-win32-x64@0.33.3':
     optional: true
 
-  '@inox-tools/aik-route-config@0.5.0(@types/node@20.12.7)(astro-integration-kit@0.13.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5)))(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))':
+  '@inox-tools/aik-route-config@0.5.0(@types/node@20.12.7)(astro-integration-kit@0.16.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5)))(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))':
     dependencies:
       astro: 4.7.0(@types/node@20.12.7)(typescript@5.4.5)
-      astro-integration-kit: 0.13.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))
-      recast: 0.23.6
+      astro-integration-kit: 0.16.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5))
+      recast: 0.23.9
       vite: 5.2.10(@types/node@20.12.7)
     transitivePeerDependencies:
       - '@types/node'
@@ -5477,11 +5473,11 @@ snapshots:
       hast-util-to-html: 8.0.4
       remark-expressive-code: 0.33.5
 
-  astro-integration-kit@0.13.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5)):
+  astro-integration-kit@0.16.1(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5)):
     dependencies:
       astro: 4.7.0(@types/node@20.12.7)(typescript@5.4.5)
       pathe: 1.1.2
-      recast: 0.23.6
+      recast: 0.23.9
 
   astro-pages@0.3.0(astro@4.7.0(@types/node@20.12.7)(typescript@5.4.5)):
     dependencies:
@@ -7978,7 +7974,7 @@ snapshots:
     dependencies:
       picomatch: 2.3.1
 
-  recast@0.23.6:
+  recast@0.23.9:
     dependencies:
       ast-types: 0.16.1
       esprima: 4.0.1

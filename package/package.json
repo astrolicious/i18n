@@ -53,7 +53,7 @@
 	},
 	"dependencies": {
 		"@inox-tools/aik-route-config": "^0.5.0",
-		"astro-integration-kit": "^0.13.1",
+		"astro-integration-kit": "^0.16.1",
 		"astro-pages": "^0.3.0",
 		"sitemap": "^7.1.1",
 		"typescript": "^5.4.5",
