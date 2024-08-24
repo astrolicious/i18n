@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.5.0
+
+### Minor Changes
+
+- 87ed904: Upgrades some dependencies to fix an issue with Astro >= 4.14.0. The package now requires Astro >= 4.12.0
+
 ## 0.4.3
 
 ### Patch Changes
