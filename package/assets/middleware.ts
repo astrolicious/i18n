@@ -11,7 +11,7 @@ const extractLocaleFromUrl = (pathname: string) => {
 		} else if (options.strategy === "prefixExceptDefault") {
 			if (
 				locale !== options.defaultLocale &&
-				pathname.startsWith(`/${locale}/`)
+				pathname.startsWith(`/${locale}`)
 			) {
 				return locale;
 			}
