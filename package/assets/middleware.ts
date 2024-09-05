@@ -3,15 +3,15 @@ import { i18nextConfig, options, routes } from "virtual:astro-i18n/internal";
 import { defineMiddleware } from "astro/middleware";
 
 const extractLocaleFromUrl = (pathname: string) => {
-	for (const locale of options.locales) {
+	for (const locale of options.locales) { 
 		if (options.strategy === "prefix") {
-			if (pathname.startsWith(`/${locale}/`)) {
+			if (pathname.startsWith(`/${locale}/`)) { 
 				return locale;
 			}
 		} else if (options.strategy === "prefixExceptDefault") {
 			if (
 				locale !== options.defaultLocale &&
-				pathname.startsWith(`/${locale}/`)
+				pathname.startsWith(`/${locale}`)
 			) {
 				return locale;
 			}
