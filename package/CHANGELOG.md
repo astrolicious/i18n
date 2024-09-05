@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.5.1
+
+### Patch Changes
+
+- b81d4ed: Fixes an issue where locales would not be properly loaded depending on Astro `trailingSlash` value
+
 ## 0.5.0
 
 ### Minor Changes
