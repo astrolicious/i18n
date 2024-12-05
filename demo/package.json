@@ -19,7 +19,7 @@
 		"@tailwindcss/forms": "^0.5.7",
 		"@types/react": "^18.3.1",
 		"@types/react-dom": "^18.3.0",
-		"astro": "^4.7.0",
+		"astro": "^4.14.0",
 		"i18next": "^23.11.3",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
