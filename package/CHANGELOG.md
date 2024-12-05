@@ -1,5 +1,15 @@
 # @astrolicious/i18n
 
+## 0.6.0
+
+### Minor Changes
+
+- d91fd70: Bumps peer dependencies to support Astro 5. In order to use the integration with Astro 4, you now need to use at least `4.14.0`
+
+### Patch Changes
+
+- d91fd70: Fixes an issue with type generation when a project does not have a `src/env.d.ts` file
+
 ## 0.5.1
 
 ### Patch Changes
