@@ -1,3 +1,6 @@
+> [!WARNING]  
+> This integration is unmaintained due to lack of time. It should mostly work but do not expect fixes or new features.
+
 # @astrolicious/i18n
 
 Yet another i18n integration for [Astro](https://astro.build/) with server and client utilities, type safety and translations built-in.

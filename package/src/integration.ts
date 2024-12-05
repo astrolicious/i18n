@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs";
 import {
-	addDts,
 	addIntegration,
 	addVirtualImports,
 	createResolver,
@@ -20,13 +19,21 @@ export const integration = defineIntegration({
 	setup({ options, name }) {
 		const { resolve } = createResolver(import.meta.url);
 
+		let dtsContent: string;
+		let i18nextDtsContent: string;
+
 		return {
 			hooks: {
 				"astro:config:setup": (params) => {
 					const { addMiddleware, logger, updateConfig } = params;
 
 					const { routes } = handleRouting(params, options);
-					const { namespaces, resources } = handleI18next(params, options);
+					const {
+						namespaces,
+						resources,
+						dtsContent: _dtsContent,
+					} = handleI18next(params, options);
+					i18nextDtsContent = _dtsContent;
 
 					addMiddleware({
 						entrypoint: resolve("../assets/middleware.ts"),
@@ -48,7 +55,7 @@ export const integration = defineIntegration({
 						locales: '"@@_LOCALES_@@"',
 					};
 
-					let dtsContent = virtualTypesStub
+					dtsContent = virtualTypesStub
 						.replace(typesPlaceholders.id, VIRTUAL_MODULE_ID)
 						.replace(
 							typesPlaceholders.locale,
@@ -97,11 +104,6 @@ export const integration = defineIntegration({
 
 						dtsContent += virtualSitemapTypesStub;
 					}
-
-					addDts(params, {
-						name: "astro-i18n",
-						content: dtsContent,
-					});
 
 					const enabledClientFeatures = Object.entries(options.client)
 						.map(([name, enabled]) => ({ name, enabled }))
@@ -196,6 +198,16 @@ export const integration = defineIntegration({
 							},
 						});
 					}
+				},
+				"astro:config:done": (params) => {
+					params.injectTypes({
+						filename: "astro-i18n.d.ts",
+						content: dtsContent,
+					});
+					params.injectTypes({
+						filename: "i18next.d.ts",
+						content: i18nextDtsContent,
+					});
 				},
 			},
 		};

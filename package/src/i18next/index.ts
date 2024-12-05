@@ -5,7 +5,6 @@ import { normalizePath } from "vite";
 import type { Options } from "../options.js";
 import { getNamespaces } from "./namespaces.js";
 import { getResources } from "./resources.js";
-import { injectTypes } from "./types.js";
 
 const getPaths = (root: URL, options: Options) => {
 	const localesDir = normalizePath(
@@ -39,11 +38,22 @@ export const handleI18next = defineUtility("astro:config:setup")(
 			logger,
 		);
 		const resources = getResources(logger, options, paths.localesDir);
-		injectTypes(params, options, resources[options.defaultLocale] ?? {});
+		const dtsContent = `
+	type Resources = ${JSON.stringify(resources[options.defaultLocale] ?? {})}
+	
+    declare module "i18next" {
+      interface CustomTypeOptions {
+        defaultNS: "${options.defaultNamespace}";
+        resources: Resources;
+      }
+    }
+    export {}
+    `;
 
 		return {
 			namespaces,
 			resources,
+			dtsContent,
 		};
 	},
 );
