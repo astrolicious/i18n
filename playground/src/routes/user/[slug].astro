@@ -1,0 +1,63 @@
+---
+import {
+	getDefaultLocalePlaceholder,
+	getLocalePlaceholder,
+	getLocalesPlaceholder,
+	setDynamicParams,
+	t,
+} from "i18n:astro";
+import sitemap from "i18n:astro/sitemap";
+import type { GetStaticPaths } from "astro";
+import Layout from "~/layouts/Layout.astro";
+
+export const getStaticPaths = (() => {
+	const locale = getLocalePlaceholder();
+	const locales = getLocalesPlaceholder();
+	const defaultLocale = getDefaultLocalePlaceholder();
+	console.log({ locale, locales, defaultLocale });
+
+	const slugs = [
+		{
+			en: "a",
+			fr: "d",
+		},
+		{
+			en: "b",
+			fr: "e",
+		},
+		{
+			en: "c",
+			fr: "f",
+		},
+	];
+
+	return slugs.map((slug) => {
+		const dynamicParams = Object.entries(slug).map(([locale, slug]) => ({
+			locale,
+			params: { slug },
+		}));
+		sitemap({
+			dynamicParams,
+		});
+		return {
+			params: {
+				slug: slug[locale],
+			},
+			props: {
+				dynamicParams,
+			},
+		};
+	});
+}) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+const { dynamicParams } = Astro.props;
+
+setDynamicParams(dynamicParams);
+
+const title = t("user");
+---
+
+<Layout {title}>
+  <h1>{title} {slug}</h1>
+</Layout>

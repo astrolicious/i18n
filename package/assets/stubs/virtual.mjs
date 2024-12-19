@@ -237,13 +237,22 @@ export const switchLocalePath = (locale) => {
 	if (!currentLocaleRoute) {
 		currentLocaleRoute = currentLocaleRoutes
 			.filter((route) => route.params.length > 0)
-			.find(
-				(route) =>
-					JSON.stringify(route.params.sort()) ===
-					JSON.stringify(
-						Object.keys(config.paths.dynamicParams?.[locale] ?? {}).sort(),
-					),
-			);
+			.find((route) => {
+				// Convert the route pattern to a regex pattern
+
+				// Replace all dynamic params with the ".*" regex pattern
+				let pattern = route.injectedRoute.pattern.replace(/[*.]/g, "\\$&");
+				pattern = Object.keys(
+					config.paths.dynamicParams?.[locale] ?? {},
+				).reduce((acc, key) => acc.replace(`[${key}]`, ".*"), pattern);
+
+				// Escape all special characters
+				pattern = pattern.replace(/[-[\]{}()+?,\\^$|#\s]/g, "\\$&");
+
+				return new RegExp(`^${pattern}$`).test(
+					_withoutTrailingSlash(config.paths.pathname),
+				);
+			});
 	}
 
 	// Fallback
