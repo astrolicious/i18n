@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.6.1
+
+### Patch Changes
+
+- a2b75e9: Fixes matching of similar dynamic parameters
+
 ## 0.6.0
 
 ### Minor Changes
