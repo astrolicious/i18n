@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.6.2
+
+### Patch Changes
+
+- be727f4: Fixes a peer dependency issue related to `astro-integration-kit`
+
 ## 0.6.1
 
 ### Patch Changes
