@@ -1,11 +1,5 @@
 # @astrolicious/i18n
 
-## 0.6.2
-
-### Patch Changes
-
-- Updated astro-integration-kit from 0.16.1 to 0.18.0 to resolve peer dependency conflicts
-
 ## 0.6.1
 
 ### Patch Changes
