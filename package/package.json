@@ -1,6 +1,6 @@
 {
 	"name": "@astrolicious/i18n",
-	"version": "0.6.2",
+	"version": "0.6.1",
 	"description": "Yet another i18n integration for Astro with server and client utilities, type safety and translations built-in.",
 	"author": {
 		"email": "contact@florian-lefebvre.dev",
@@ -53,7 +53,7 @@
 	},
 	"dependencies": {
 		"@inox-tools/aik-route-config": "^0.7.1",
-		"astro-integration-kit": "^0.18.0",
+		"astro-integration-kit": "~0.18.0",
 		"astro-pages": "^0.3.0",
 		"sitemap": "^7.1.1",
 		"typescript": "^5.4.5",
