@@ -1,0 +1,74 @@
+---
+import { getCollection } from "astro:content";
+import { getLocalePath, getLocalePlaceholder, t } from "i18n:astro";
+import { collectionFilters } from "@astrolicious/i18n/content-collections";
+import type { GetStaticPaths, Page } from "astro";
+import Layout from "~/layouts/Layout.astro";
+
+export const getStaticPaths = (async ({ paginate }) => {
+    const locale = getLocalePlaceholder();
+
+    const posts = await getCollection("posts", (post) =>
+        collectionFilters.byLocale(post, { locale })
+    );
+
+    return paginate(posts, {
+        pageSize: 1,
+        params: { locale },
+    });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props as { page: Page; authors: any[] };
+
+const title = t("news");
+---
+
+<Layout {title}>
+    <h1>{title}</h1>
+    <ul>
+        {
+            page.data.map((post) => (
+                <li>
+                    <a
+                        href={getLocalePath("/blog/[slug]", {
+                            slug: post.slug.split("/")[1],
+                        })}
+                        class="underline"
+                    >
+                        # - {post.data.title}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+
+    {
+        page.url.prev ? (
+            <a
+                href={page.url.prev}
+                rel="previous"
+                class="button"
+                aria-label={t("previous")}
+            >
+                ← {t("previous")}
+            </a>
+        ) : (
+            ""
+        )
+    }
+
+    {
+        page.url.next ? (
+            <a
+                href={page.url.next}
+                rel="next"
+                class="button"
+                aria-label={t("next")}
+            >
+                {t("next")} →
+            </a>
+        ) : (
+            ""
+        )
+    }
+</Layout>

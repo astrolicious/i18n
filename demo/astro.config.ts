@@ -24,6 +24,11 @@ export default defineConfig({
 				"/blog/[slug]": {
 					fr: "/le-blog/[slug]",
 				},
+				"/news": {
+					fr: "/actualites",
+					it: "/notizie",
+				}
+				
 			},
 			client: {
 				data: true,

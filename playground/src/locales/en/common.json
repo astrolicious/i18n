@@ -2,5 +2,8 @@
 	"home": "Home",
 	"about": "About",
 	"blog": "The blog",
-	"user": "The user"
+	"user": "The user",
+	"news": "The news",
+	"next": "Next",
+	"previous": "Previous"
 }

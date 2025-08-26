@@ -5,37 +5,38 @@ import I18NHead from "@astrolicious/i18n/components/I18nHead.astro";
 import LocaleSwitcher from "~/components/LocaleSwitcher.astro";
 
 interface Props {
-	title: string;
+    title: string;
 }
 
 const { title } = Astro.props;
 ---
 
 <html {...getHtmlAttrs()}>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
-    <I18NHead />
-    <I18NClient />
-  </head>
-  <body>
-    <header
-      class="bg-gray-100 p-2 border-b border-gray-300 flex items-center justify-between"
-    >
-      <div class="font-bold text-xl">astro-i18n demo</div>
-      <div class="flex items-center justify-between space-x-2">
-        <a href={getLocalePath("/")}>{t("home:title")}</a>
-        <a href={getLocalePath("/about")}>{t("about")}</a>
-        <a href={getLocalePath("/blog")}>{t("blog")}</a>
-        <a href={getLocalePath("/user")}>{t("user")}</a>
-      </div>
-      <LocaleSwitcher />
-    </header>
-    <main>
-      <slot />
-    </main>
-  </body>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title}</title>
+        <I18NHead />
+        <I18NClient />
+    </head>
+    <body>
+        <header
+            class="bg-gray-100 p-2 border-b border-gray-300 flex items-center justify-between"
+        >
+            <div class="font-bold text-xl">astro-i18n demo</div>
+            <div class="flex items-center justify-between space-x-2">
+                <a href={getLocalePath("/")}>{t("home:title")}</a>
+                <a href={getLocalePath("/about")}>{t("about")}</a>
+                <a href={getLocalePath("/blog")}>{t("blog")}</a>
+                <a href={getLocalePath("/user")}>{t("user")}</a>
+                <a href={getLocalePath("/news")}>{t("news")}</a>
+            </div>
+            <LocaleSwitcher />
+        </header>
+        <main>
+            <slot />
+        </main>
+    </body>
 </html>

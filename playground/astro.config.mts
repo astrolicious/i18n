@@ -29,6 +29,9 @@ export default defineConfig({
 				"blog/[category]/[slug]": {
 					fr: "le-blog/[category]/[slug]",
 				},
+				"news/": {
+					fr: "/actualites",
+				}
 			},
 			localesDir: "./src/locales",
 			defaultNamespace: "common",
