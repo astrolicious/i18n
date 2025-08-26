@@ -192,8 +192,9 @@ export const getLocalePath = (path, params = {}, _locale = getLocale()) => {
 		(route) => route.locale === _locale && route.pattern === path,
 	);
 	
-	// If no direct match, try to find routes that start with the path (for parent routes)
-	if (!route) {
+	// If no direct match and path doesn't contain dynamic segments, 
+	// try to find child routes (for parent route lookups)
+	if (!route && !path.includes('[')) {
 		const potentialRoutes = config.paths.routes.filter(
 			(route) => route.locale === _locale && route.pattern.startsWith(path + "/") && route.pattern.includes('[')
 		);
@@ -370,6 +371,20 @@ export const switchLocalePath = (locale) => {
 		...(config.paths.dynamicParams?.[locale] ?? {}),
 		...currentParams,
 	};
+
+	// Check if we have all required parameters before calling getLocalePath
+	const missingParams = route.params.filter(param => !mergedParams[param]);
+	if (missingParams.length > 0) {
+		// Return base path for dynamic routes with missing params
+		const routeSegments = route.injectedRoute.pattern.split('/');
+		let basePath = '';
+		for (let i = 0; i < routeSegments.length; i++) {
+			if (routeSegments[i].includes('[')) break;
+			if (i === 0 && routeSegments[i] === '') continue;
+			basePath += '/' + routeSegments[i];
+		}
+		return basePath || '/';
+	}
 
 	return getLocalePath(
 		route.pattern,
