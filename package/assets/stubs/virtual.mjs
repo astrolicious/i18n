@@ -367,10 +367,32 @@ export const switchLocalePath = (locale) => {
 		throw new Error("Couldn't find a route. Open an issue");
 	}
 
-	const mergedParams = {
-		...(config.paths.dynamicParams?.[locale] ?? {}),
-		...currentParams,
-	};
+	// Map parameters between locales
+	const allDynamicParams = config.paths.dynamicParams ?? {};
+	const mergedParams = { ...currentParams };
+	
+	// For each parameter, try to find mapping across locales
+	for (const [paramName, currentValue] of Object.entries(currentParams)) {
+		let mappedValue = currentValue; // fallback
+		
+		// Search all locales to find where this value exists
+		for (const [searchLocale, localeParams] of Object.entries(allDynamicParams)) {
+			// Find key where this value exists
+			const foundKey = Object.keys(localeParams).find(key => localeParams[key] === currentValue);
+			if (foundKey) {
+				// Found the key, now get value for target locale
+				if (allDynamicParams[locale]?.[foundKey]) {
+					mappedValue = allDynamicParams[locale][foundKey];
+					break;
+				}
+			}
+		}
+		
+		mergedParams[paramName] = mappedValue;
+	}
+	
+	// Add any additional params from target locale
+	Object.assign(mergedParams, allDynamicParams[locale] ?? {});
 
 	// Check if we have all required parameters before calling getLocalePath
 	const missingParams = route.params.filter(param => !mergedParams[param]);

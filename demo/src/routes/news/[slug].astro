@@ -1,0 +1,73 @@
+---
+import { getCollection } from "astro:content";
+import {
+    getDefaultLocalePlaceholder,
+    getLocalePlaceholder,
+    setDynamicParams,
+    t,
+} from "i18n:astro";
+import sitemap from "i18n:astro/sitemap";
+import {
+    collectionFilters,
+    handleI18nSlug,
+} from "@astrolicious/i18n/content-collections";
+import type { GetStaticPaths } from "astro";
+import Layout from "~/layouts/Layout.astro";
+
+export const getStaticPaths = (async () => {
+    const locale = getLocalePlaceholder();
+    const defaultLocale = getDefaultLocalePlaceholder();
+
+    const posts = await getCollection("postsGlob", (post) =>
+        collectionFilters.byLocale(post, { locale })
+    );
+
+    return await Promise.all(
+        posts.map(async (post) => {
+            const equivalentPosts = await getCollection("postsGlob", (p) =>
+                collectionFilters.matchingEntries(p, {
+                    currentEntry: post,
+                    key: "defaultLocaleVersion",
+                    locale,
+                    defaultLocale,
+                })
+            );
+
+            const dynamicParams = equivalentPosts.map((entry) => {
+                const { locale, slug } = handleI18nSlug(entry.id);
+
+                return {
+                    locale,
+                    params: {
+                        slug,
+                    },
+                };
+            });
+
+            sitemap({
+                dynamicParams,
+            });
+
+            return {
+                params: {
+                    slug: handleI18nSlug(post.id).slug,
+                },
+                props: {
+                    post,
+                    dynamicParams,
+                },
+            };
+        })
+    );
+}) satisfies GetStaticPaths;
+
+const { post, dynamicParams } = Astro.props;
+
+setDynamicParams(dynamicParams);
+
+const title = `${t("news")} -> ${post.data.title}`;
+---
+
+<Layout {title}>
+    <h1>{title}</h1>
+</Layout>

@@ -3,12 +3,13 @@ import { getCollection } from "astro:content";
 import { getLocalePath, getLocalePlaceholder, t } from "i18n:astro";
 import { collectionFilters } from "@astrolicious/i18n/content-collections";
 import type { GetStaticPaths, Page } from "astro";
+import { handleI18nSlug } from "@astrolicious/i18n/content-collections";
 import Layout from "~/layouts/Layout.astro";
 
 export const getStaticPaths = (async ({ paginate }) => {
     const locale = getLocalePlaceholder();
 
-    const posts = await getCollection("posts", (post) =>
+    const posts = await getCollection("postsGlob", (post) =>
         collectionFilters.byLocale(post, { locale })
     );
 
@@ -27,18 +28,19 @@ const title = t("news");
     <h1>{title}</h1>
     <ul>
         {
-            page.data.map((post) => (
-                <li>
-                    <a
-                        href={getLocalePath("/blog/[slug]", {
-                            slug: post.slug.split("/")[1],
-                        })}
-                        class="underline"
-                    >
-                        # - {post.data.title}
-                    </a>
-                </li>
-            ))
+            page.data.map((post) => {
+                const { slug } = handleI18nSlug(post.id);
+                return (
+                    <li key={post.id}>
+                        <a
+                            href={getLocalePath("/news/[slug]", { slug })}
+                            class="underline"
+                        >
+                            # - {post.data.title}
+                        </a>
+                    </li>
+                );
+            })
         }
     </ul>
 
