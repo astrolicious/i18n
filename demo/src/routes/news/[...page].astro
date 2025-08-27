@@ -31,7 +31,7 @@ const title = t("news");
             page.data.map((post) => {
                 const { slug } = handleI18nSlug(post.id);
                 return (
-                    <li key={post.id}>
+                    <li>
                         <a
                             href={getLocalePath("/news/[slug]", { slug })}
                             class="underline"
