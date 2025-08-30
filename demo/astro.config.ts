@@ -9,8 +9,8 @@ import netlify from "@astrojs/netlify";
 export default defineConfig({
 	site: "https://astro-i18n-demo.netlify.app",
 	experimental: {
-      contentLayer: true
-    },
+		contentLayer: true,
+	},
 	integrations: [
 		i18n({
 			defaultLocale: "en",
@@ -30,8 +30,7 @@ export default defineConfig({
 				"/news": {
 					fr: "/actualites",
 					it: "/notizie",
-				}
-				
+				},
 			},
 			client: {
 				data: true,

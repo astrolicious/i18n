@@ -31,7 +31,7 @@ export default defineConfig({
 				},
 				"news/": {
 					fr: "/actualites",
-				}
+				},
 			},
 			localesDir: "./src/locales",
 			defaultNamespace: "common",

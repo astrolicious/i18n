@@ -12,17 +12,16 @@ const postsCollection = defineCollection({
 });
 
 const postsGlobCollection = defineCollection({
-    loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/data/posts" }),
-    schema: z.object({
+	loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/data/posts" }),
+	schema: z.object({
 		title: z.string(),
 		description: z.string(),
 		author: z.string(),
 		defaultLocaleVersion: reference("postsGlob").optional(),
-    }),
+	}),
 });
 
-
 export const collections = {
-    posts: postsCollection,
+	posts: postsCollection,
 	postsGlob: postsGlobCollection,
 };
