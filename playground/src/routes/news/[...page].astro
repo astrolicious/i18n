@@ -1,0 +1,88 @@
+---
+import { getLocalePath, getLocalePlaceholder, t } from "i18n:astro";
+import type { GetStaticPaths, Page } from "astro";
+import Layout from "~/layouts/Layout.astro";
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const locale = getLocalePlaceholder();
+
+	// Hardcoded fake blog posts
+	const fakePosts = [
+		{
+			title:
+				locale === "fr"
+					? "Premiere actualite importante"
+					: "First Important News",
+			id: "1",
+		},
+		{
+			title:
+				locale === "fr"
+					? "Developpement web moderne"
+					: "Modern Web Development",
+			id: "2",
+		},
+		{
+			title:
+				locale === "fr"
+					? "Intelligence artificielle"
+					: "Artificial Intelligence",
+			id: "3",
+		},
+		{
+			title: locale === "fr" ? "Design UX/UI" : "UX/UI Design",
+			id: "4",
+		},
+		{
+			title: locale === "fr" ? "JavaScript avance" : "Advanced JavaScript",
+			id: "5",
+		},
+	];
+
+	return paginate(fakePosts, {
+		pageSize: 2,
+		params: { locale },
+	});
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props as { page: Page; authors: any[] };
+
+const title = t("news");
+---
+
+<Layout {title}>
+    <h1>{title}</h1>
+    --
+    {page.data.map((post) => <h2>{post.title}</h2>)}
+    --
+    <div>
+        {
+            page.url.prev ? (
+                <a
+                    href={page.url.prev}
+                    rel="previous"
+                    class="button"
+                    aria-label={t("previous")}
+                >
+                    ← {t("previous")}
+                </a>
+            ) : (
+                ""
+            )
+        }
+        {
+            page.url.next ? (
+                <a
+                    href={page.url.next}
+                    rel="next"
+                    class="button"
+                    aria-label={t("next")}
+                >
+                    {t("next")} →
+                </a>
+            ) : (
+                ""
+            )
+        }
+    </div>
+</Layout>

@@ -2,5 +2,8 @@
 	"home": "Accueil",
 	"about": "A propos",
 	"blog": "Le blog",
-	"user": "Utilisateur"
+	"user": "Utilisateur",
+	"news": "Les actualités",
+	"next": "Suivant",
+	"previous": "Précédent"
 }

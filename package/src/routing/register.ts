@@ -56,11 +56,32 @@ const generateRoute = (
 		const isDefaultLocale = locale === defaultLocale;
 		const prefix =
 			isDefaultLocale && strategy === "prefixExceptDefault" ? "" : `/${locale}`;
-		const suffix = withLeadingSlash(
-			isDefaultLocale
-				? page.pattern
-				: pages?.[page.pattern]?.[locale] ?? page.pattern,
-		);
+
+		let translatedPath = page.pattern;
+		if (!isDefaultLocale) {
+			// First try direct match
+			translatedPath = pages?.[page.pattern]?.[locale] ?? page.pattern;
+			// If no direct match and it's a dynamic route, try to find parent route translation
+			if (translatedPath === page.pattern && page.pattern.includes("[")) {
+				// For routes like "/news/[...page]", try to find translation for "/news"
+				const segments = page.pattern.split("/");
+				for (let i = segments.length - 1; i > 0; i--) {
+					const parentPattern = segments.slice(0, i).join("/");
+					const parentTranslation = pages?.[parentPattern]?.[locale];
+					if (parentTranslation) {
+						const dynamicSegments = segments.slice(i);
+						translatedPath =
+							parentTranslation +
+							(dynamicSegments.length > 0
+								? "/" + dynamicSegments.join("/")
+								: "");
+						break;
+					}
+				}
+			}
+		}
+
+		const suffix = withLeadingSlash(translatedPath);
 		return prefix + suffix;
 	};
 
@@ -138,7 +159,8 @@ const generateRoute = (
 		const matches = pattern.match(/\[([^\]]+)]/g);
 		if (matches) {
 			for (const match of matches) {
-				params.push(match.slice(1, -1));
+				const param = match.slice(1, -1);
+				params.push(param.startsWith("...") ? param.slice(3) : param);
 			}
 		}
 

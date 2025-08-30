@@ -8,6 +8,9 @@ import netlify from "@astrojs/netlify";
 // https://astro.build/config
 export default defineConfig({
 	site: "https://astro-i18n-demo.netlify.app",
+	experimental: {
+		contentLayer: true,
+	},
 	integrations: [
 		i18n({
 			defaultLocale: "en",
@@ -23,6 +26,10 @@ export default defineConfig({
 				},
 				"/blog/[slug]": {
 					fr: "/le-blog/[slug]",
+				},
+				"/news": {
+					fr: "/actualites",
+					it: "/notizie",
 				},
 			},
 			client: {

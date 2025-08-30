@@ -6,5 +6,8 @@
 	"aboutMessage": "Questa è una pagina semplice",
 	"opensource": "Lo sapevi che questa pagina è disponibile su GitHub? No? Beh, ora lo sai!",
 	"opensourceCTA": "Vai a dare un'occhiata!",
-	"blog": "Blog"
+	"blog": "Blog",
+	"news": "Notizie",
+	"next": "Avanti",
+	"previous": "Precedente"
 }
