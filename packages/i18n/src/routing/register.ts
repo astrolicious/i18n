@@ -6,9 +6,9 @@ import type {
 	HookParameters,
 	InjectedRoute,
 } from "astro";
+import { AstroError } from "astro/errors";
 import { defineUtility } from "astro-integration-kit";
 import { addPageDir } from "astro-pages";
-import { AstroError } from "astro/errors";
 import { withLeadingSlash } from "ufo";
 import { normalizePath } from "vite";
 import type { Options } from "../options.js";
@@ -26,7 +26,6 @@ const isPrerendered = (str: string) => {
 const getPages = (
 	params: HookParameters<"astro:config:setup">,
 ): Array<InjectedRoute> => {
-	// @ts-ignore TODO: update astro-apges when types are fixed
 	return Object.entries(addPageDir({ ...params, dir: ROUTES_DIR }).pages).map(
 		([pattern, entrypoint]) => ({ pattern, entrypoint }),
 	);
@@ -59,7 +58,7 @@ const generateRoute = (
 		const suffix = withLeadingSlash(
 			isDefaultLocale
 				? page.pattern
-				: pages?.[page.pattern]?.[locale] ?? page.pattern,
+				: (pages?.[page.pattern]?.[locale] ?? page.pattern),
 		);
 		return prefix + suffix;
 	};
@@ -117,7 +116,7 @@ const generateRoute = (
 				);
 
 				content = `---${frontmatter}---${body.join("---")}`;
-			} catch (err) {
+			} catch {
 				throw new AstroError(
 					`An error occured while transforming "${page.entrypoint}".`,
 					"Make sure it has a valid frontmatter, even empty",

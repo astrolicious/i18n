@@ -5,7 +5,7 @@
 
 Yet another i18n integration for [Astro](https://astro.build/) with server and client utilities, type safety and translations built-in.
 
-To see how to get started, check out the [package README](./package/README.md)
+To see how to get started, check out the [package README](./packages/i18n/README.md)
 
 ## Licensing
 

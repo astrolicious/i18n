@@ -46,7 +46,7 @@ export default defineConfig({
 		react(),
 		tailwind(),
 		hmrIntegration({
-			directory: createResolver(import.meta.url).resolve("../package/dist"),
+			directory: createResolver(import.meta.url).resolve("../packages/i18n/dist"),
 		}),
 	],
 	output: "hybrid",
