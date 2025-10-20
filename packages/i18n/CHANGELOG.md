@@ -1,5 +1,11 @@
 # @astrolicious/i18n
 
+## 0.6.3
+
+### Patch Changes
+
+- [#48](https://github.com/astrolicious/i18n/pull/48) [`8806c6c`](https://github.com/astrolicious/i18n/commit/8806c6c632d0b5db97bef6958dedbdcdf0f28b5d) Thanks [@florian-lefebvre](https://github.com/florian-lefebvre)! - Bumps version, no code change
+
 ## 0.6.2
 
 ### Patch Changes
