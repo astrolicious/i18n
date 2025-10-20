@@ -2,13 +2,13 @@ import { relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import routeConfigPlugin from "@inox-tools/aik-route-config";
 import type { AstroConfig, InjectedRoute, RouteData } from "astro";
+import { AstroError } from "astro/errors";
+import { z } from "astro/zod";
 import {
 	defineIntegration,
 	hasIntegration,
 	withPlugins,
 } from "astro-integration-kit";
-import { AstroError } from "astro/errors";
-import { z } from "astro/zod";
 import { simpleSitemapAndIndex } from "sitemap";
 import { withoutTrailingSlash } from "ufo";
 import { normalizePath } from "vite";
@@ -244,7 +244,7 @@ export const integration = defineIntegration({
 
 							const excludedRoutes = _routes.filter((e) => !e.include);
 							for (const { routeData } of excludedRoutes) {
-								// biome-ignore lint/style/noNonNullAssertion: <explanation>
+								// biome-ignore lint/style/noNonNullAssertion: safe
 								if (routeData!.pattern.test(route)) {
 									return false;
 								}

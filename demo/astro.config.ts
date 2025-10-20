@@ -1,9 +1,8 @@
+import netlify from "@astrojs/netlify";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
 import i18n from "@astrolicious/i18n";
 import { defineConfig } from "astro/config";
-
-import netlify from "@astrojs/netlify";
 
 // https://astro.build/config
 export default defineConfig({

@@ -8,7 +8,8 @@ export const collections = {
 			extend: z.object({
 				// Add a default value to the built-in `banner` field.
 				banner: z.object({ content: z.string() }).default({
-					content: "This integration is unmaintained due to lack of time. It should mostly work but do not expect fixes or new features.",
+					content:
+						"This integration is unmaintained due to lack of time. It should mostly work but do not expect fixes or new features.",
 				}),
 			}),
 		}),

@@ -2,25 +2,7 @@
 	"name": "@astrolicious/i18n",
 	"version": "0.6.2",
 	"description": "Yet another i18n integration for Astro with server and client utilities, type safety and translations built-in.",
-	"author": {
-		"email": "contact@florian-lefebvre.dev",
-		"name": "Florian Lefebvre",
-		"url": "https://florian-lefebvre.dev"
-	},
-	"license": "MIT",
-	"keywords": [
-		"astro-integration",
-		"astro-component",
-		"withastro",
-		"astro",
-		"i18n",
-		"i18next",
-		"seo"
-	],
-	"homepage": "https://github.com/astrolicious/i18n",
-	"publishConfig": {
-		"access": "public"
-	},
+	"type": "module",
 	"sideEffects": false,
 	"exports": {
 		".": {
@@ -44,9 +26,26 @@
 	],
 	"scripts": {
 		"dev": "tsup --watch",
-		"build": "tsup"
+		"build": "tsup",
+		"prepublishOnly": "pnpm build"
 	},
-	"type": "module",
+	"keywords": [
+		"astro-integration",
+		"astro-component",
+		"withastro",
+		"astro",
+		"i18n",
+		"i18next",
+		"seo"
+	],
+	"author": "florian-lefebvre",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/astrolicious/i18n.git"
+	},
+	"bugs": "https://github.com/astrolicious/i18n/issues",
+	"homepage": "https://github.com/astrolicious/i18n#readme",
+	"license": "MIT",
 	"peerDependencies": {
 		"astro": "^4.14.0 || ^5.0.0",
 		"i18next": "^23.0.0"

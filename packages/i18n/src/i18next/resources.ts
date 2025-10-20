@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, extname, join } from "node:path";
 import type { AstroIntegrationLogger } from "astro";
 import { normalizePath } from "vite";
@@ -30,7 +30,7 @@ export const getResources = (
 				resources[locale] ??= {};
 				// biome-ignore lint/style/noNonNullAssertion: fallback is set above
 				resources[locale]![basename(fileName, extname(fileName))] = content;
-			} catch (err) {
+			} catch {
 				logger.warn(`Can't parse "${path}", skipping.`);
 			}
 		}
